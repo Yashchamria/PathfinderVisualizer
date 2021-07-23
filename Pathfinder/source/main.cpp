@@ -1,11 +1,12 @@
-#pragma once
-
 #include "FrameworkPCH.h"
+#include "GameCore/Game.h"
 
 int main()
 {
-    std::cout << "Hello!\n";
+    Game pathfinderVisualizer;
+	
+    pathfinderVisualizer.Run();
 
-    system("pause");
+    //system("pause");
     return 0;
 }

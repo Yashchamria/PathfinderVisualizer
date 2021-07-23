@@ -6,10 +6,13 @@ workspace "Pathfinder"
 	cppdialect      "C++17"
 	location		"build"
 
+filter "system:windows"
+	systemversion "latest"
+
 filter "configurations:Debug"
 	symbols		"on"
 	
-filter "configurations:Debug"
+filter "configurations:Release"
 	optimize	"on"
 
 --Pathfinder Project Setup
@@ -52,18 +55,6 @@ project "Pathfinder"
 			"sfml-graphics.lib",
 			"sfml-window.lib"
 		}
-
-
---Framework(SFML) Setup
-project "Framework"
-	location "build/%{prj.name}"
-	kind "StaticLib"
-
-	files
-	{
-		"%{prj.name}/include/SFML/**.hpp",
-		"%{prj.name}/include/SFML/**.inl"
-	}
 
 
 
