@@ -21,4 +21,5 @@ private:
 	sf::Event* m_pEvent;
 
 	class Scene* m_pScene;
+	class InputManager* m_pInputManager;
 };

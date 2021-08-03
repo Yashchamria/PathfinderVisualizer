@@ -1,35 +1,34 @@
 #include "FrameworkPCH.h"
 #include "Game.h"
 
-#include "../Game/Scene.h"
+#include "Game/Scene.h"
+#include "Game/Input/InputManager.h"
 
 Game::Game()
 {
 	//Creating the Game Window
 	sf::Vector2f screenSize = sf::Vector2f(GameConst::WINDOW_WIDTH, GameConst::WINDOW_HEIGHT);
-
-	sf::VideoMode VideoMode((unsigned int)screenSize.x, (unsigned int)screenSize.y);
-	m_pGameWindow = new sf::RenderWindow(VideoMode, GameConst::GAME_WINDOW_NAME, sf::Style::Default);
-
+	sf::VideoMode videoMode((unsigned int)screenSize.x, (unsigned int)screenSize.y);
+	m_pGameWindow = new sf::RenderWindow(videoMode, GameConst::GAME_WINDOW_NAME, sf::Style::Default);
 	m_pGameView = new sf::View(sf::Vector2f(0.0f, 0.0f), screenSize);
 
 	m_pEvent = new sf::Event();
-
-	m_pScene = new Scene();
-
+	m_pScene = new Scene(m_pGameWindow);
+	m_pInputManager = new InputManager(m_pScene);
 }
 
 Game::~Game()
 {
-	delete m_pGameWindow;
+	delete m_pInputManager;
+	delete m_pScene;
+	delete m_pEvent;
 	delete m_pGameView;
+	delete m_pGameWindow;
 }
 
 void Game::Init()
 {
 	m_pScene->Initialize();
-
-	m_pScene->PostInitialize();
 }
 
 void Game::ProcessGameWindowEvents()
@@ -52,8 +51,7 @@ void Game::ProcessGameWindowEvents()
 		case sf::Event::Resized:
 			currentWidth = (float)m_pGameWindow->getSize().x;
 			newHeight = currentWidth / GameConst::WINDOW_ASPECT_RATIO;
-
-
+		
 			m_pGameWindow->setSize(sf::Vector2u((unsigned int)currentWidth, (unsigned int)newHeight));
 			//m_pGameView->setSize(newHeight * GameConst::WINDOW_ASPECT_RATIO, newHeight);
 			break;
@@ -61,6 +59,8 @@ void Game::ProcessGameWindowEvents()
 		default:
 			break;
 		}
+
+		m_pInputManager->ProcessInputEvent(m_pEvent, m_pGameWindow);
 	}
 }
 
@@ -97,6 +97,7 @@ void Game::Run()
 			timeSinceLastUpdate -= GameConst::TIME_PER_FRAME;
 
 			ProcessGameWindowEvents();
+
 			Update(GameConst::TIME_PER_FRAME);
 		}
 

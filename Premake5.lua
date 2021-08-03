@@ -30,7 +30,8 @@ project "Pathfinder"
 	pchsource "%{prj.name}/source/main.cpp"
 	
 	includedirs{
-		"Framework/include"
+		"Framework/include",
+		"%{prj.name}/source"  --Test
 	}
 
 	libdirs{

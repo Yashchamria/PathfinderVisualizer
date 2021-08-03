@@ -8,7 +8,6 @@ public:
 
 	//Game Core Functions
 	virtual void Initialize();
-	virtual void PostInitialize();
 	virtual void Update(float deltaTime);
 	virtual void Draw(sf::RenderWindow* pWindow);
 };

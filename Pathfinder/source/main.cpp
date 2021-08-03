@@ -7,6 +7,6 @@ int main()
 	
     pathfinderVisualizer.Run();
 
-    //system("pause");
+    system("pause");
     return 0;
 }
