@@ -59,7 +59,6 @@ void Game::ProcessGameWindowEvents()
 		default:
 			break;
 		}
-
 		m_pInputManager->ProcessInputEvent(m_pEvent, m_pGameWindow);
 	}
 }

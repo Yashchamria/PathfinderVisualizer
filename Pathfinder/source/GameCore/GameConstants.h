@@ -13,6 +13,6 @@ namespace GameConst
 
 	const static float TIME_PER_FRAME = 1.0f / FIXED_FRAMERATE;
 
-	const static unsigned int GRID_COLUMNS = 128;
+	const static unsigned int GRID_COLUMNS = 32;
 	const static unsigned int GRID_ROWS    = (unsigned int)(GRID_COLUMNS / WINDOW_ASPECT_RATIO);
 };

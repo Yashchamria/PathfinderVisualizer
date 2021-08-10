@@ -1,5 +1,7 @@
 #pragma once
 
+enum class TileType : char;
+
 class Scene
 {
 public:	
@@ -18,8 +20,7 @@ private:
 private:
 	//Grid Variables
 	sf::Vector2u m_GridSize;
-	unsigned int m_GridZoomOnScreen = 16;
-
+	sf::Vector2u m_ZoomedGridSize;
 	class Grid* m_pGrid = nullptr;
 
 private:
@@ -27,12 +28,17 @@ private:
 
 public:
 	void ResizeGrid(unsigned int NumColumn);
+	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
+	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
 
 public:
 	//Grid Getter/Setters
-	sf::Vector2u GetGridSize() { return m_GridSize; }
+	void SetZoomedGridSize(unsigned int ColumnSize)
+	{
+		m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::WINDOW_ASPECT_RATIO));
+	}
 
-	void SetGridZoomOnScreen(unsigned int gridZoomOnScreen) { m_GridZoomOnScreen = gridZoomOnScreen; }
-	unsigned int GetGridZoomOnScreen() { return m_GridZoomOnScreen; }
+	sf::Vector2u GetGridSize() { return m_GridSize; }
+	sf::Vector2u GetZoomedGridSize() { return m_ZoomedGridSize; }
 
 };

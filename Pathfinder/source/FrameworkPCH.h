@@ -3,6 +3,7 @@
 //Core-Basic
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 #include "GameCore\GameConstants.h"
 
