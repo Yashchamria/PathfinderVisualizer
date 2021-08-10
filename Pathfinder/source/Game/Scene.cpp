@@ -63,6 +63,11 @@ void Scene::ResizeGrid(unsigned int NumColumn)
 	m_pGrid->ResizeGrid(NumColumn, m_pWindow);
 }
 
+void Scene::ClearGrid()
+{
+	m_pGrid->ClearGrid();
+}
+
 void Scene::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow)
 {
 	m_pGrid->UpdateTileSelector(mouseTileCoord, pWindow);

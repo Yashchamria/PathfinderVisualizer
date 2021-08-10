@@ -71,6 +71,14 @@ void Grid::ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow)
 	m_pTileSelector->RepositionTile(pWindow);
 }
 
+void Grid::ClearGrid()
+{
+	for (Tile* pTile : m_pTiles)
+	{
+		pTile->UpdateTileProperty(TileType::Default);
+	}
+}
+
 void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize, TileType tileType)
 {
 	//Storing & clearing the previous start tile.

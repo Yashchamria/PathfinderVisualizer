@@ -28,6 +28,7 @@ private:
 
 public:
 	void ResizeGrid(unsigned int NumColumn);
+	void ClearGrid();
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
 

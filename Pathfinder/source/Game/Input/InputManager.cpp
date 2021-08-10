@@ -71,6 +71,13 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 			if (m_MouseTileCoord.x > 0) { m_MouseTileCoord.x -= 1; }
 			m_pScene->UpdateTileSelector(m_MouseTileCoord, pWindow);
 		}
+
+		//Clear the Grid
+		if (pEvent->key.code == sf::Keyboard::Delete || pEvent->key.code == sf::Keyboard::Backspace)
+		{
+			m_pScene->ClearGrid();
+		}
+
 		break;
 
 	case sf::Event::MouseMoved:

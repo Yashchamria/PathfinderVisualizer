@@ -24,6 +24,7 @@ private:
 public:
 	void GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow);
 	void ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow);
+	void ClearGrid();
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize, TileType tileType);
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
 };
