@@ -5,8 +5,11 @@
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
 
+#include "Game/Algorithms/DijkstrasAlgorithm.h"
+
 InputManager::InputManager(Scene* &pScene) : m_pScene(pScene)
 {
+	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm();
 }
 
 InputManager::~InputManager()
@@ -19,7 +22,7 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 	{
 	case sf::Event::MouseWheelMoved:
 
-		//Grid Resizing Event
+		//Grid Resizing Event.
 		if (pEvent->mouseWheel.delta > 0)	   { ResizeGrid(-4, 5); }
 		else if (pEvent->mouseWheel.delta < 0) { ResizeGrid( 4, 5); }
 
@@ -27,32 +30,31 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 
 	case sf::Event::KeyPressed:
 
-		//Grid Resizing Event
+		//Grid Resizing Event.
 		if (pEvent->key.code == sf::Keyboard::Subtract || pEvent->key.code == sf::Keyboard::Dash)  { ResizeGrid(-4, 10); }
 		else if (pEvent->key.code == sf::Keyboard::Add || pEvent->key.code == sf::Keyboard::Equal) { ResizeGrid(4, 10); }
 		
-		//Set Start Tile
+		//Set Start Tile.
 		if (pEvent->key.code == sf::Keyboard::S)
 		{
 			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::StartTile);
 		}
 		
-		//Set End Tile
+		//Set End Tile.
 		if (pEvent->key.code == sf::Keyboard::E)
 		{
 			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::EndTile);
 		}
 
-		//Set Wall Tile
+		//Set Wall Tile.
 		if (pEvent->key.code == sf::Keyboard::W)
 		{
 			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::WallTile);
 		}
 		
-		//Mouse Selector Navigation
+		//Mouse Selector Navigation key bindings.
 		if (pEvent->key.code == sf::Keyboard::Down)
 		{
-			//if (m_MouseTileCoord.y < (m_pScene->GetGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
 			if (m_MouseTileCoord.y < (m_pScene->GetZoomedGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
 			m_pScene->UpdateTileSelector(m_MouseTileCoord, pWindow);
 		}
@@ -72,17 +74,23 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 			m_pScene->UpdateTileSelector(m_MouseTileCoord, pWindow);
 		}
 
-		//Clear the Grid
+		//Clear the Grid.
 		if (pEvent->key.code == sf::Keyboard::Delete || pEvent->key.code == sf::Keyboard::Backspace)
 		{
 			m_pScene->ClearGrid();
 		}
 
+		//Set the pathfinding algorithm to use.
+		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1)
+		{
+			m_pScene->SetAlgorithm(m_pDijkstrasAlgorithm);
+			m_pScene->ExecuteAlgorithm();
+		}
 		break;
 
 	case sf::Event::MouseMoved:
 
-		//Mouse Selector Navigation
+		//Mouse Selector Navigation.
 		m_MouseTileCoord = GetMouseTileCoord(sf::Mouse::getPosition(*pWindow), pWindow);
 		m_pScene->UpdateTileSelector(m_MouseTileCoord, pWindow);
 		break;	

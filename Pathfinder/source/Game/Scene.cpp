@@ -4,6 +4,7 @@
 #include "GameCore/Objects/GameObject.h"
 #include "Objects/Grid/Grid.h"
 #include "Input/InputManager.h"
+#include "Algorithms/IAlgorithm.h"
 
 Scene::Scene(sf::RenderWindow* pWindow)
 {
@@ -76,5 +77,10 @@ void Scene::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pW
 void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
 {
 	m_pGrid->UpdateTileProperty(mouseTileCoord, m_GridSize, tileType);
+}
+
+void Scene::ExecuteAlgorithm()
+{
+	m_pAlgorithm->Execute();
 }
 

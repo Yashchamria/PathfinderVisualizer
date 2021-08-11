@@ -22,6 +22,7 @@ private:
 	sf::Vector2u m_GridSize;
 	sf::Vector2u m_ZoomedGridSize;
 	class Grid* m_pGrid = nullptr;
+	class IAlgorithm* m_pAlgorithm = nullptr;
 
 private:
 	void InitializeGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, unsigned int NumColumnZoom);
@@ -36,8 +37,12 @@ public:
 	//Grid Getter/Setters
 	void SetZoomedGridSize(unsigned int ColumnSize)
 	{
-		m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::WINDOW_ASPECT_RATIO));
+		m_ZoomedGridSize = sf::Vector2u(ColumnSize, 
+										(unsigned int)((float)ColumnSize / GameConst::WINDOW_ASPECT_RATIO));
 	}
+
+	void SetAlgorithm(IAlgorithm* Algorithm) { m_pAlgorithm = Algorithm; }
+	void ExecuteAlgorithm();
 
 	sf::Vector2u GetGridSize() { return m_GridSize; }
 	sf::Vector2u GetZoomedGridSize() { return m_ZoomedGridSize; }
