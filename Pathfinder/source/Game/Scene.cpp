@@ -4,7 +4,9 @@
 #include "GameCore/Objects/GameObject.h"
 #include "Objects/Grid/Grid.h"
 #include "Input/InputManager.h"
+
 #include "Algorithms/IAlgorithm.h"
+#include "Game/Algorithms/DijkstrasAlgorithm.h"
 
 Scene::Scene(sf::RenderWindow* pWindow)
 {
@@ -16,6 +18,9 @@ Scene::Scene(sf::RenderWindow* pWindow)
 	m_pGameObjects.push_back(m_pGrid);
 
 	SetZoomedGridSize(16);
+
+	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm(m_pGrid);
+
 }
 
 Scene::~Scene()
@@ -81,6 +86,8 @@ void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
 
 void Scene::ExecuteAlgorithm()
 {
+	//StoreTileState();
 	m_pAlgorithm->Execute();
+	//RestoreTileState(); //Should be before another execution or something
 }
 

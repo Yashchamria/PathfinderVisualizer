@@ -40,6 +40,8 @@ unsigned int Grid::GetTilesArrayIndex(sf::Vector2u TileCoord, sf::Vector2u GridS
 
 void Grid::GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow)
 {
+	m_gridSize = gridSize;
+
 	m_pTiles.clear();
 	m_pTiles.reserve(gridSize.x * gridSize.y);
 
@@ -77,6 +79,9 @@ void Grid::ClearGrid()
 	{
 		pTile->UpdateTileProperty(TileType::Default);
 	}
+
+	m_pStartTile = nullptr;
+	m_pEndTile = nullptr;
 }
 
 void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize, TileType tileType)
@@ -110,4 +115,24 @@ void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWi
 {
 	m_pTileSelector->SetTileCoord(mouseTileCoord, pWindow);
 	m_pTileSelector->RepositionTile(pWindow);
+}
+
+bool Grid::IsTileCoordValid(sf::Vector2u tileCoord)
+{
+	if(tileCoord.x < 0 || (tileCoord.x > m_gridSize.x -1))
+		return false;
+	if (tileCoord.y < 0 || (tileCoord.y > m_gridSize.y - 1))
+		return false;
+
+	return true;
+}
+
+TileType Grid::GetTileState(sf::Vector2u tileCoord)
+{
+	if (IsTileCoordValid(tileCoord))
+	{
+		return m_pTiles[GetTilesArrayIndex(tileCoord, m_gridSize)]->GetTileState();
+	}
+	
+	return TileType::InValid;
 }

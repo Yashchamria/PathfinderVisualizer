@@ -9,7 +9,6 @@
 
 InputManager::InputManager(Scene* &pScene) : m_pScene(pScene)
 {
-	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm();
 }
 
 InputManager::~InputManager()
@@ -83,7 +82,7 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		//Set the pathfinding algorithm to use.
 		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1)
 		{
-			m_pScene->SetAlgorithm(m_pDijkstrasAlgorithm);
+			m_pScene->SetAlgorithm(static_cast<IAlgorithm*>(m_pScene->m_pDijkstrasAlgorithm));
 			m_pScene->ExecuteAlgorithm();
 		}
 		break;

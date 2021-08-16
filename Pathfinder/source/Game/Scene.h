@@ -1,6 +1,10 @@
 #pragma once
 
 enum class TileType : char;
+class GameObject;
+class Grid;
+class IAlgorithm;
+class DijkstrasAlgorithm;
 
 class Scene
 {
@@ -15,14 +19,14 @@ public:
 
 private:
 	sf::RenderWindow* m_pWindow;
-	std::vector<class GameObject*> m_pGameObjects;
+	std::vector<GameObject*> m_pGameObjects;
 
 private:
 	//Grid Variables
 	sf::Vector2u m_GridSize;
 	sf::Vector2u m_ZoomedGridSize;
-	class Grid* m_pGrid = nullptr;
-	class IAlgorithm* m_pAlgorithm = nullptr;
+	Grid* m_pGrid = nullptr;
+	IAlgorithm* m_pAlgorithm = nullptr;
 
 private:
 	void InitializeGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, unsigned int NumColumnZoom);
@@ -46,5 +50,10 @@ public:
 
 	sf::Vector2u GetGridSize() { return m_GridSize; }
 	sf::Vector2u GetZoomedGridSize() { return m_ZoomedGridSize; }
+
+public:
+
+	//Algorithms declaration
+	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
 
 };

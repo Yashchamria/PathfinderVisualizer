@@ -7,6 +7,15 @@ enum class TileType : char
 	StartTile,
 	EndTile,
 	WallTile,
+	InValid,
+};
+enum class TileAnimation : char
+{
+	Idle,
+	Processing,
+	Processed,
+	Found,
+	Wall,
 };
 
 class Tile : public GameObject
@@ -22,6 +31,8 @@ private:
 	sf::Vector2u m_tileCoord;
 	TileType m_tileType = TileType::Default;
 
+	unsigned int m_Weight = 10;
+
 public:
 	void RepositionTile(sf::RenderWindow* pWindow);
 	void UpdateTileProperty(TileType tileType);
@@ -31,4 +42,9 @@ public:
 	void SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor);
 	void SetTileColor(sf::Color fillColor = sf::Color::White, sf::Color OutlineColor = sf::Color::Black);
 	void SetTileSelectorBody(sf::Color OutlineColor);
+
+public:
+	sf::Vector2u GetTileCoord() { return m_tileCoord; }
+	unsigned int GetTileWeight() { return m_Weight; }
+	TileType GetTileState() { return m_tileType; }
 };
