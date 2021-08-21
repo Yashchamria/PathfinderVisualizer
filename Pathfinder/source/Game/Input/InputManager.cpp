@@ -27,6 +27,20 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 
 		break;
 
+	case sf::Event::MouseButtonPressed:
+		
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::WallTile);	  
+			if (m_pScene->GetCurrentAlgorithm()) { HandleOngoingAlgorithm(true); }
+		}																		  
+																				  
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))						  
+		{																		  
+			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::Default);	  
+			if (m_pScene->GetCurrentAlgorithm()) { HandleOngoingAlgorithm(true); }
+		}
+
 	case sf::Event::KeyPressed:
 
 		//Grid Resizing Event.
@@ -37,18 +51,28 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		if (pEvent->key.code == sf::Keyboard::S)
 		{
 			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::StartTile);
+			if (m_pScene->GetCurrentAlgorithm()) { HandleOngoingAlgorithm(true); }
 		}
 		
 		//Set End Tile.
 		if (pEvent->key.code == sf::Keyboard::E)
 		{
 			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::EndTile);
+			if (m_pScene->GetCurrentAlgorithm()) { HandleOngoingAlgorithm(true); } 
 		}
 
 		//Set Wall Tile.
 		if (pEvent->key.code == sf::Keyboard::W)
 		{
 			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::WallTile);
+			if (m_pScene->GetCurrentAlgorithm()) { HandleOngoingAlgorithm(true); }
+		}
+
+		//Set Default Tile.
+		if (pEvent->key.code == sf::Keyboard::D)
+		{
+			m_pScene->UpdateTileProperty(m_MouseTileCoord, TileType::Default);
+			if (m_pScene->GetCurrentAlgorithm()) { HandleOngoingAlgorithm(true); }
 		}
 		
 		//Mouse Selector Navigation key bindings.
@@ -74,14 +98,24 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		}
 
 		//Clear the Grid.
-		if (pEvent->key.code == sf::Keyboard::Delete || pEvent->key.code == sf::Keyboard::Backspace)
+		if (pEvent->key.code == sf::Keyboard::Delete)
 		{
+			if (m_pScene->IsAlogrithmRunning()) { HandleOngoingAlgorithm(false); }
 			m_pScene->ClearGrid();
+		}
+
+		//Clear only the algorithm search colors from the grid.
+		if(pEvent->key.code == sf::Keyboard::Backspace)
+		{
+			if (m_pScene->IsAlogrithmRunning()) { HandleOngoingAlgorithm(false); }
+			m_pScene->ClearAlgorithmSearch();
 		}
 
 		//Set the pathfinding algorithm to use.
 		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1)
 		{
+			if (m_pScene->IsAlogrithmRunning()) { HandleOngoingAlgorithm(false); }
+
 			m_pScene->SetAlgorithm(static_cast<IAlgorithm*>(m_pScene->m_pDijkstrasAlgorithm));
 			m_pScene->ExecuteAlgorithm();
 		}
@@ -92,7 +126,7 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		//Mouse Selector Navigation.
 		m_MouseTileCoord = GetMouseTileCoord(sf::Mouse::getPosition(*pWindow), pWindow);
 		m_pScene->UpdateTileSelector(m_MouseTileCoord, pWindow);
-		break;	
+		break;
 				
 	default:
 		break;
@@ -148,4 +182,21 @@ sf::Vector2u InputManager::GetMouseTileCoord(sf::Vector2i mousePosition, sf::Ren
 	mouseTileCoord = sf::Vector2u((unsigned int)floor(tileCoordX), (unsigned int)floor(tileCoordY));
 
 	return mouseTileCoord;
+}
+
+void InputManager::HandleOngoingAlgorithm(bool bReRunAlgorithm)
+{
+	std::cout << "Halt Algorithm!\n\n";
+
+	m_pScene->StopAlgorithm();
+
+	m_pScene->ClearAlgorithmSearch();
+
+	if (bReRunAlgorithm)
+	{
+		if (m_pScene->GetCurrentAlgorithm())
+		{
+			m_pScene->ExecuteAlgorithm();
+		}
+	}
 }

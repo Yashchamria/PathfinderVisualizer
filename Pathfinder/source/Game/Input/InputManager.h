@@ -19,4 +19,5 @@ private:
 	void ResizeGrid(int ColumnIncrement, unsigned int ScrollSteps = 6);
 	sf::Vector2u GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow);
 
+	void HandleOngoingAlgorithm(bool bReRunAlgorithm = false);
 };

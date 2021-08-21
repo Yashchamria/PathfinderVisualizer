@@ -48,6 +48,11 @@ void Scene::Update(float deltaTime)
 	{
 		pGameObject->Update(deltaTime);
 	}
+
+	if (m_AlgorithmExecuted)
+	{
+		m_AlgorithmExecuted = !(m_pAlgorithm->PlayVisualization(0.3f, deltaTime));
+	}
 }
 
 void Scene::Draw(sf::RenderWindow* pWindow)
@@ -74,6 +79,11 @@ void Scene::ClearGrid()
 	m_pGrid->ClearGrid();
 }
 
+void Scene::ClearAlgorithmSearch()
+{
+	m_pGrid->ClearAlgorithmSearch();
+}
+
 void Scene::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow)
 {
 	m_pGrid->UpdateTileSelector(mouseTileCoord, pWindow);
@@ -84,10 +94,15 @@ void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
 	m_pGrid->UpdateTileProperty(mouseTileCoord, m_GridSize, tileType);
 }
 
+
 void Scene::ExecuteAlgorithm()
 {
-	//StoreTileState();
-	m_pAlgorithm->Execute();
-	//RestoreTileState(); //Should be before another execution or something
+	m_AlgorithmExecuted = m_pAlgorithm->Execute();
+}
+
+void Scene::StopAlgorithm()
+{
+	m_AlgorithmExecuted = false;
+	m_pAlgorithm->Stop();
 }
 

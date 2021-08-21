@@ -9,5 +9,5 @@ public:
 	//Game Core Functions
 	virtual void Initialize();
 	virtual void Update(float deltaTime);
-	virtual void Draw(sf::RenderWindow* pWindow);
+	virtual void Draw(class sf::RenderWindow* pWindow);
 };

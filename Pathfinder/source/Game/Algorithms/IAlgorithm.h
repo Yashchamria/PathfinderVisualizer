@@ -6,5 +6,8 @@
 class IAlgorithm
 {
 public:
-	virtual void Execute() = 0;
+	virtual bool Execute() = 0;
+	virtual bool PlayVisualization(float switchTime, float deltaTime) = 0;
+
+	virtual void Stop() = 0;
 };

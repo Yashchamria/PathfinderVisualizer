@@ -5,11 +5,14 @@ Tile::Tile(sf::Vector2u TileCoord, sf::Vector2f TileSize)
 {
 	SetTileSize(TileSize, 20.0f);
 	SetTileColor(sf::Color::White, sf::Color::Black);
+
+	m_TileBody.setScale(0.92f, 0.92f);
 }
 
 Tile::~Tile()
 {
 }
+
 
 void Tile::Draw(sf::RenderWindow* pWindow)
 {
@@ -41,6 +44,16 @@ void Tile::SetTileSelectorBody(sf::Color OutlineColor)
 	m_TileBody.setOutlineColor(OutlineColor);
 }
 
+void Tile::SetTileProperty(TileType tileType)
+{
+	m_tileType = tileType;
+}
+
+void Tile::SetTileAnimationProperty(TileAnimationState tileAnimationState)
+{
+	m_tileAnimationState = tileAnimationState;
+}
+
 void Tile::RepositionTile(sf::RenderWindow* pWindow)
 {
 	//Setting the tile position according to the tile coord and Screen size.
@@ -55,11 +68,10 @@ void Tile::RepositionTile(sf::RenderWindow* pWindow)
 	m_TileBody.setPosition(tilePos);
 }
 
-void Tile::UpdateTileProperty(TileType tileType)
+void Tile::UpdateTileProperty()
 {
-	m_tileType = tileType;
 
-	switch (tileType)
+	switch (m_tileType)
 	{
 	case TileType::StartTile:
 		SetTileColor(sf::Color::Green);
@@ -78,6 +90,28 @@ void Tile::UpdateTileProperty(TileType tileType)
 		break;
 
 	default:
+		break;
+	}
+}
+
+void Tile::UpdateTileAnimationProperty()
+{
+	switch (m_tileAnimationState)
+	{
+	case TileAnimationState::Idle:
+		SetTileColor(sf::Color::White);
+		break;
+
+	case TileAnimationState::Processing:
+		SetTileColor(sf::Color::Cyan);
+		break;
+
+	case TileAnimationState::Processed:
+		SetTileColor(sf::Color::Magenta);
+		break;
+
+	case TileAnimationState::Found:
+		SetTileColor(sf::Color::Yellow);
 		break;
 	}
 }

@@ -70,7 +70,7 @@ void Game::Update(float deltaTime)
 
 void Game::Draw()
 {
-	m_pGameWindow->clear(sf::Color::Green);
+	m_pGameWindow->clear(sf::Color::Black);
 
 	m_pGameWindow->setView(*m_pGameView);
 

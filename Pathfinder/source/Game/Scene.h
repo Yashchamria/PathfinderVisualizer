@@ -2,6 +2,7 @@
 
 enum class TileType : char;
 class GameObject;
+class Animation;
 class Grid;
 class IAlgorithm;
 class DijkstrasAlgorithm;
@@ -34,26 +35,26 @@ private:
 public:
 	void ResizeGrid(unsigned int NumColumn);
 	void ClearGrid();
+	void ClearAlgorithmSearch();
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
 
 public:
 	//Grid Getter/Setters
-	void SetZoomedGridSize(unsigned int ColumnSize)
-	{
-		m_ZoomedGridSize = sf::Vector2u(ColumnSize, 
-										(unsigned int)((float)ColumnSize / GameConst::WINDOW_ASPECT_RATIO));
-	}
+	void SetZoomedGridSize(unsigned int ColumnSize){m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::WINDOW_ASPECT_RATIO));}
 
 	void SetAlgorithm(IAlgorithm* Algorithm) { m_pAlgorithm = Algorithm; }
 	void ExecuteAlgorithm();
+	bool IsAlogrithmRunning() { return m_AlgorithmExecuted; }
+	void StopAlgorithm();
+	IAlgorithm* GetCurrentAlgorithm() { return m_pAlgorithm; }
 
 	sf::Vector2u GetGridSize() { return m_GridSize; }
 	sf::Vector2u GetZoomedGridSize() { return m_ZoomedGridSize; }
 
 public:
-
+	bool m_AlgorithmExecuted = false;
+	bool m_AnimationPending = false;
 	//Algorithms declaration
 	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
-
 };
