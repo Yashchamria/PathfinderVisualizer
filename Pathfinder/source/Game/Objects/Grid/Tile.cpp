@@ -54,7 +54,7 @@ void Tile::SetTileAnimationProperty(TileAnimationState tileAnimationState)
 	m_tileAnimationState = tileAnimationState;
 }
 
-void Tile::RepositionTile(sf::RenderWindow* pWindow)
+void Tile::RepositionTile(sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
 {
 	//Setting the tile position according to the tile coord and Screen size.
 	sf::Vector2f tilePos;
@@ -63,7 +63,7 @@ void Tile::RepositionTile(sf::RenderWindow* pWindow)
 
 	//TilePos = TileCoord * TileSize + OffsetTileCentre - OffsetToWindowsTopMostCorner
 	tilePos.x = (m_tileCoord.x * tileSize.x) + (tileSize.x / 2.0f) - ((float)windowSize.x / 2.0f);
-	tilePos.y = (m_tileCoord.y * tileSize.y) + (tileSize.y / 2.0f) - ((float)windowSize.y / 2.0f);
+	tilePos.y = (m_tileCoord.y * tileSize.y) + (tileSize.y / 2.0f) - ((float)windowSize.y / 2.0f) + TopWidgetSize.y;
 
 	m_TileBody.setPosition(tilePos);
 }

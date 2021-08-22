@@ -31,7 +31,7 @@ project "Pathfinder"
 	
 	includedirs{
 		"Framework/include",
-		"%{prj.name}/source"  --Test
+		"%{prj.name}/source" 
 	}
 
 	libdirs{
@@ -40,7 +40,8 @@ project "Pathfinder"
 
 	files{
 		"%{prj.name}/source/**.h",
-		"%{prj.name}/source/**.cpp"
+		"%{prj.name}/source/**.cpp",
+		"%{prj.name}/data/font/**.ttf"
 	}
 	
 	filter "configurations:Debug"

@@ -33,7 +33,7 @@ void Grid::Draw(sf::RenderWindow* pWindow)
 	m_pTileSelector->Draw(pWindow);
 }
 
-void Grid::GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow)
+void Grid::GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
 {
 	m_gridSize = gridSize;
 
@@ -46,25 +46,25 @@ void Grid::GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow)
 		{
 			Tile* pTile = new Tile();
 			pTile->SetTileCoord(sf::Vector2u(x, y), pWindow);
-			pTile->RepositionTile(pWindow);
+			pTile->RepositionTile(pWindow, TopWidgetSize);
 
 			m_pTiles.push_back(pTile);
 		}
 	}
 }
 
-void Grid::ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow)
+void Grid::ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
 {
 	float tileSize = pWindow->getSize().x / (float)numberOfColumns;
 
 	for (Tile* pTile : m_pTiles)
 	{
 		pTile->SetTileSize(sf::Vector2f(tileSize, tileSize), 20.0f);
-		pTile->RepositionTile(pWindow);
+		pTile->RepositionTile(pWindow, TopWidgetSize);
 	}
 
 	m_pTileSelector->SetTileSize(sf::Vector2f(tileSize, tileSize), 8.0f);
-	m_pTileSelector->RepositionTile(pWindow);
+	m_pTileSelector->RepositionTile(pWindow, TopWidgetSize);
 }
 
 void Grid::ClearGrid()
@@ -92,71 +92,73 @@ void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize
 {
 	if (!IsTileCoordValid(mouseTileCoord)) { return; }
 
-	switch (tileType)
+	if (tileType == TileType::StartTile)
 	{
-	case TileType::StartTile:
-		
+		if (m_pEndTile)
+		{
+			if (m_pEndTile->GetTileCoord() == mouseTileCoord)
+			{
+				m_pEndTile = nullptr;
+			}
+		}
+
 		if (m_pStartTile)
 		{
 			//Clearing the previous start tile.
 			m_pStartTile->SetTileProperty(TileType::Default);
 			m_pStartTile->UpdateTileProperty();
+			m_pStartTile = nullptr;
+		}
+		m_pStartTile = m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)];
+	}
+
+	if (tileType == TileType::EndTile)
+	{
+		if (m_pStartTile)
+		{
+			if (m_pStartTile->GetTileCoord() == mouseTileCoord)
+			{
+				m_pStartTile = nullptr;
+			}
 		}
 
-		m_pStartTile = m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)];
-		break;
-
-	case TileType::EndTile:
 		if (m_pEndTile)
 		{
 			//Clearing the previous end tile.
 			m_pEndTile->SetTileProperty(TileType::Default);
 			m_pEndTile->UpdateTileProperty();
+			m_pEndTile = nullptr; 
 		}
 
 		m_pEndTile = m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)];
-		break;
-
-	case TileType::WallTile:
-
-		if (m_pStartTile)
-		{
-			//Set the previous start tile to null
-			if (mouseTileCoord == m_pStartTile->GetTileCoord()) { m_pStartTile = nullptr; }
-		}
-		if (m_pEndTile)
-		{
-			//Set the previous end tile to null
-			if (mouseTileCoord == m_pEndTile->GetTileCoord()) { m_pEndTile = nullptr; }
-		}
-		break;
-
-	case TileType::Default:
-
-		if (m_pStartTile)
-		{
-			//Set the previous start tile to null
-			if (mouseTileCoord == m_pStartTile->GetTileCoord()) { m_pStartTile = nullptr; }
-		}
-		if (m_pEndTile)
-		{
-			//Set the previous end tile to null
-			if (mouseTileCoord == m_pEndTile->GetTileCoord()) { m_pEndTile = nullptr; }
-		}
-		break;
-
-	default:
-		break;
 	}
-	
+
+	if (tileType == TileType::Default || tileType == TileType::WallTile)
+	{
+		if (m_pStartTile)
+		{
+			if (m_pStartTile->GetTileCoord() == mouseTileCoord)
+			{
+				m_pStartTile = nullptr;
+			}
+		}
+		if (m_pEndTile)
+		{
+			if (m_pEndTile->GetTileCoord() == mouseTileCoord)
+			{
+				m_pEndTile = nullptr;
+			}
+		}
+	} 
+
 	m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)]->SetTileProperty(tileType);
 	m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)]->UpdateTileProperty();
 }
 
-void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow)
+void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
 {
 	m_pTileSelector->SetTileCoord(mouseTileCoord, pWindow);
-	m_pTileSelector->RepositionTile(pWindow);
+	m_pTileSelector->RepositionTile(pWindow, TopWidgetSize);
 }
 
 bool Grid::IsTileCoordValid(sf::Vector2u tileCoord)

@@ -21,11 +21,11 @@ private:
 	class Tile* m_pEndTile = nullptr;
 
 public:
-	void GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow);
-	void ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow);
+	void GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
+	void ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
 
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize, TileType tileType);
-	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
+	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
 
 	void ClearGrid();
 	void ClearAlgorithmSearch();

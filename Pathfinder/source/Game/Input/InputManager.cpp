@@ -22,8 +22,8 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 	case sf::Event::MouseWheelMoved:
 
 		//Grid Resizing Event.
-		if (pEvent->mouseWheel.delta > 0)	   { ResizeGrid(-4, 5); }
-		else if (pEvent->mouseWheel.delta < 0) { ResizeGrid( 4, 5); }
+		if (pEvent->mouseWheel.delta > 0)	   { ResizeGrid(-8, 5); }
+		else if (pEvent->mouseWheel.delta < 0) { ResizeGrid( 8, 5); }
 
 		break;
 
@@ -44,8 +44,8 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 	case sf::Event::KeyPressed:
 
 		//Grid Resizing Event.
-		if (pEvent->key.code == sf::Keyboard::Subtract || pEvent->key.code == sf::Keyboard::Dash)  { ResizeGrid(-4, 10); }
-		else if (pEvent->key.code == sf::Keyboard::Add || pEvent->key.code == sf::Keyboard::Equal) { ResizeGrid(4, 10); }
+		if (pEvent->key.code == sf::Keyboard::Subtract || pEvent->key.code == sf::Keyboard::Dash)  { ResizeGrid(-8, 10); }
+		else if (pEvent->key.code == sf::Keyboard::Add || pEvent->key.code == sf::Keyboard::Equal) { ResizeGrid( 8, 10); }
 		
 		//Set Start Tile.
 		if (pEvent->key.code == sf::Keyboard::S)
@@ -149,7 +149,7 @@ void InputManager::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 				m_pScene->SetZoomedGridSize(m_pScene->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomOutSteps = 0;
-				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x);
+				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, m_pScene->GetTopWidgetSize());
 			}
 		}
 
@@ -163,7 +163,7 @@ void InputManager::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 				m_pScene->SetZoomedGridSize(m_pScene->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomInSteps = 0;
-				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x);
+				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, m_pScene->GetTopWidgetSize());
 			}
 		}
 	}
@@ -171,15 +171,15 @@ void InputManager::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 
 sf::Vector2u InputManager::GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow)
 {
-	sf::Vector2u mouseTileCoord;
+	sf::Vector2f currentTileSizeOnScreen;
+	currentTileSizeOnScreen.x = (float)pWindow->getSize().x / (float)m_pScene->GetZoomedGridSize().x;
+	currentTileSizeOnScreen.y = ((float)pWindow->getSize().y - m_pScene->GetTopWidgetSize().y) / (float)m_pScene->GetZoomedGridSize().y;
 
-	float currentTileSizeOnScreen = (float)pWindow->getSize().x/(float)m_pScene->GetZoomedGridSize().x;
-
-	float tileCoordX = (float)mousePosition.x / currentTileSizeOnScreen;
-	float tileCoordY = (float)mousePosition.y / currentTileSizeOnScreen;
+	float tileCoordX = (float)mousePosition.x / currentTileSizeOnScreen.x;
+	float tileCoordY = (((float)mousePosition.y - m_pScene->GetTopWidgetSize().y) / currentTileSizeOnScreen.y);
 
 
-	mouseTileCoord = sf::Vector2u((unsigned int)floor(tileCoordX), (unsigned int)floor(tileCoordY));
+	sf::Vector2u mouseTileCoord = sf::Vector2u((unsigned int)floor(tileCoordX), (unsigned int)floor(tileCoordY));
 
 	return mouseTileCoord;
 }

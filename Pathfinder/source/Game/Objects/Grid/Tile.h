@@ -34,7 +34,7 @@ private:
 	unsigned int m_Weight = 10;
 
 public:
-	void RepositionTile(sf::RenderWindow* pWindow);
+	void RepositionTile(sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
 	void UpdateTileProperty();
 	void UpdateTileAnimationProperty();
 

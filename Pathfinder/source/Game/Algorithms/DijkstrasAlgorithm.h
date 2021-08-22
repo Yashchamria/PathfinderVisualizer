@@ -12,7 +12,7 @@ public:
 	DijkstrasAlgorithm(Grid* grid);
 
 	virtual bool Execute() override;
-	virtual bool PlayVisualization(float switchTime, float deltaTime) override;
+	virtual bool PlayVisualization(float speed, float deltaTime) override;
 	virtual void Stop() override;
 	
 private:

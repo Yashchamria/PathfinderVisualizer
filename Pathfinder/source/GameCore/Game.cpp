@@ -9,7 +9,7 @@ Game::Game()
 	//Creating the Game Window
 	sf::Vector2f screenSize = sf::Vector2f(GameConst::WINDOW_WIDTH, GameConst::WINDOW_HEIGHT);
 	sf::VideoMode videoMode((unsigned int)screenSize.x, (unsigned int)screenSize.y);
-	m_pGameWindow = new sf::RenderWindow(videoMode, GameConst::GAME_WINDOW_NAME, sf::Style::Default);
+	m_pGameWindow = new sf::RenderWindow(videoMode, GameConst::GAME_WINDOW_NAME, sf::Style::Titlebar);
 	m_pGameView = new sf::View(sf::Vector2f(0.0f, 0.0f), screenSize);
 
 	m_pEvent = new sf::Event();

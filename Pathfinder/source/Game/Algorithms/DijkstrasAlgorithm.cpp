@@ -12,7 +12,7 @@ DijkstrasAlgorithm::DijkstrasAlgorithm(Grid* grid)
 bool DijkstrasAlgorithm::Execute()
 {
 	//Check for start and end tile
-	if (m_pGrid->GetStartTile() == nullptr || m_pGrid->GetEndTile() == nullptr)
+	if (m_pGrid->GetStartTile() == nullptr || m_pGrid->GetEndTile() == nullptr || m_pGrid->GetStartTile()->GetTileCoord() == m_pGrid->GetEndTile()->GetTileCoord())
 	{
 		std::cout << "\nPlease set a start tile by pressing 'S' & set a End tile by pressing 'E'\n";
 		return false;
@@ -159,7 +159,7 @@ Tile* DijkstrasAlgorithm::GetPriorityTile()
 	return MinDistanceTile.first;
 }
 
-bool DijkstrasAlgorithm::PlayVisualization(float switchTime, float deltaTime)
+bool DijkstrasAlgorithm::PlayVisualization(float speed, float deltaTime)
 {
 	if (m_PendingTileAnimation.empty()) 
 	{
@@ -167,9 +167,9 @@ bool DijkstrasAlgorithm::PlayVisualization(float switchTime, float deltaTime)
 		return true;
 	}
 
-	m_switchSpeed += (deltaTime * 3.0f);
+	m_switchSpeed += (deltaTime * speed);
 
-	if (m_switchSpeed >= switchTime)
+	if (m_switchSpeed >= 1.0f)
 	{
 		m_PendingTileAnimation[m_pendingAnimationIndex].first->SetTileAnimationProperty(m_PendingTileAnimation[m_pendingAnimationIndex].second);
 		m_PendingTileAnimation[m_pendingAnimationIndex].first->UpdateTileAnimationProperty();
