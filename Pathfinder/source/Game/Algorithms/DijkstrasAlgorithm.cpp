@@ -1,23 +1,20 @@
 #include "FrameworkPCH.h"
 #include "DijkstrasAlgorithm.h"
+#include "AlgorithmEnum.h"
 
+#include "Game/Scene.h"
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
 
-DijkstrasAlgorithm::DijkstrasAlgorithm(Grid* grid)
+DijkstrasAlgorithm::DijkstrasAlgorithm(Grid* pGrid) 
 {
-	m_pGrid = grid;
+	m_pGrid = pGrid;
+
+	m_AlgorithmState = AlgorithmState::Executed;
 }
 
-bool DijkstrasAlgorithm::Execute()
+bool DijkstrasAlgorithm::Execute(AlgorithmType algorithmType)
 {
-	//Check for start and end tile
-	if (m_pGrid->GetStartTile() == nullptr || m_pGrid->GetEndTile() == nullptr || m_pGrid->GetStartTile()->GetTileCoord() == m_pGrid->GetEndTile()->GetTileCoord())
-	{
-		std::cout << "\nPlease set a start tile by pressing 'S' & set a End tile by pressing 'E'\n";
-		return false;
-	}
-
 	//To calculate the time algorithm took
 	auto algorithmStart = std::chrono::steady_clock::now();
 
@@ -37,6 +34,7 @@ bool DijkstrasAlgorithm::Execute()
 	auto algorithmDuration = algorithmEnd - algorithmStart;
 	std::cout << "Dijkstra's Duration - " << std::chrono::duration <double, std::milli>(algorithmDuration).count() << " ms\n";
 
+	m_AlgorithmState = AlgorithmState::Visualizing;
 
 	if (m_pathfound)
 	{
@@ -53,7 +51,7 @@ bool DijkstrasAlgorithm::Execute()
 
 void DijkstrasAlgorithm::Init()
 {
-	std::cout << "\n\nExecuting Dijkstra...\n";
+	m_AlgorithmState = AlgorithmState::Executing;
 
 	//Intializing all the tiles to unvisited and setting the distance to infinite.
 	for (unsigned int x = 0; x < m_pGrid->GetGridSize().x; x++)
@@ -163,6 +161,8 @@ bool DijkstrasAlgorithm::PlayVisualization(float speed, float deltaTime)
 {
 	if (m_PendingTileAnimation.empty()) 
 	{
+		m_AlgorithmState = AlgorithmState::Executed;
+
 		std::cout << "Finished Path Visualization!\n\n";
 		return true;
 	}
@@ -182,6 +182,7 @@ bool DijkstrasAlgorithm::PlayVisualization(float speed, float deltaTime)
 		{
 			Cleanup();
 
+			m_AlgorithmState = AlgorithmState::Executed;
 			std::cout << "Finished Path Visualization!\n\n";
 			return true;
 		}
@@ -195,6 +196,11 @@ bool DijkstrasAlgorithm::PlayVisualization(float speed, float deltaTime)
 void DijkstrasAlgorithm::Stop()
 {
 	Cleanup();
+}
+
+AlgorithmState DijkstrasAlgorithm::GetAlgorithmState()
+{
+	return m_AlgorithmState;
 }
 
 //Function to draw the final path found

@@ -7,8 +7,8 @@
 #include "Game/Objects/UI/TopHUDWidget.h"
 #include "Objects/Grid/Grid.h"
 
-#include "Algorithms/IAlgorithm.h"
-#include "Game/Algorithms/DijkstrasAlgorithm.h"
+#include "Algorithms/Algorithm.h"
+#include "Algorithms/AlgorithmEnum.h"
 
 Scene::Scene(sf::RenderWindow* pWindow)
 {
@@ -21,9 +21,11 @@ Scene::Scene(sf::RenderWindow* pWindow)
 	m_pGameObjects.push_back(m_pGrid);
 	SetZoomedGridSize(16);
 
-	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm(m_pGrid);
+	m_pAlgorithm = new Algorithm(m_pGrid);
 
 	m_pGameObjects.push_back(m_pTopHUDWidget);
+
+	m_AlgorithmSpeed = AlgorithmVisualSpeed::Average;
 }
 
 Scene::~Scene()
@@ -100,9 +102,9 @@ void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
 }
 
 
-void Scene::ExecuteAlgorithm()
+void Scene::ExecuteAlgorithm(AlgorithmType algorithmType)
 {
-	m_AlgorithmExecuted = m_pAlgorithm->Execute();
+	m_AlgorithmExecuted = m_pAlgorithm->Execute(algorithmType);
 }
 
 void Scene::StopAlgorithm()
@@ -114,4 +116,9 @@ void Scene::StopAlgorithm()
 sf::Vector2f Scene::GetTopWidgetSize()
 {
 	return m_pTopHUDWidget->GetWidgetBoxSize();
+}
+
+AlgorithmState Scene::GetAlgorithmState()
+{
+	return m_pAlgorithm->GetAlgorithmState();
 }

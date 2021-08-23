@@ -5,15 +5,18 @@
 class Grid;
 class Tile;
 enum class TileAnimationState : char;
+enum class AlgorithmState : char;
 
 class DijkstrasAlgorithm : public IAlgorithm
 {
 public:
-	DijkstrasAlgorithm(Grid* grid);
+	DijkstrasAlgorithm(Grid* pGrid);
 
-	virtual bool Execute() override;
+	virtual bool Execute(AlgorithmType algorithmType) override;
 	virtual bool PlayVisualization(float speed, float deltaTime) override;
 	virtual void Stop() override;
+	virtual AlgorithmState GetAlgorithmState() override;
+
 	
 private:
 	void Init();
@@ -42,4 +45,6 @@ private:
 	bool m_pathfound = false;
 	unsigned int m_pendingAnimationIndex = 0;
 	float m_switchSpeed = 3.0f;
+
+	AlgorithmState m_AlgorithmState;
 };
