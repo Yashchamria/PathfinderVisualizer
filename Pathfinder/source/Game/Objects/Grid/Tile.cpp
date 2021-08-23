@@ -1,8 +1,12 @@
 #include "FrameworkPCH.h"
 #include "Tile.h"
+#include "TileEnum.h"
 
 Tile::Tile(sf::Vector2u TileCoord, sf::Vector2f TileSize)
 {
+	m_tileType = TileType::Default;
+	m_tileAnimationState = TileAnimationState::Idle;
+
 	SetTileSize(TileSize, 20.0f);
 	SetTileColor(sf::Color::White, sf::Color::Black);
 

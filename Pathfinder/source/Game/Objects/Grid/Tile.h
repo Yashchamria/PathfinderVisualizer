@@ -1,22 +1,8 @@
 #pragma once
 #include "GameCore/Objects/GameObject.h"
 
-enum class TileType : char
-{
-	Default,
-	StartTile,
-	EndTile,
-	WallTile,
-	InValid,
-};
-
-enum class TileAnimationState : char
-{
-	Idle,
-	Processing,
-	Processed,
-	Found,
-};
+enum class TileAnimationState : char;
+enum class TileType : char;
 
 class Tile : public GameObject
 {
@@ -29,8 +15,8 @@ public:
 private:
 	sf::RectangleShape m_TileBody;
 	sf::Vector2u m_tileCoord;
-	TileType m_tileType = TileType::Default;
-	TileAnimationState m_tileAnimationState = TileAnimationState::Idle;
+	TileType m_tileType;
+	TileAnimationState m_tileAnimationState;
 	unsigned int m_Weight = 10;
 
 public:

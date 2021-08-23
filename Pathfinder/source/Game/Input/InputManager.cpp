@@ -2,7 +2,8 @@
 #include "InputManager.h"
 
 #include "Command.h"
-#include "Game/Objects/Grid/Tile.h"
+
+#include "Game/Objects/Grid/TileEnum.h"
 #include "Game/Algorithms/AlgorithmEnum.h"
 
 InputManager::InputManager(Scene* pScene)

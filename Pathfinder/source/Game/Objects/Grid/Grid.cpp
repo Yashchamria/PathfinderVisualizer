@@ -2,6 +2,7 @@
 #include "Grid.h"
 
 #include "Tile.h"
+#include "TileEnum.h"
 
 Grid::Grid()
 {

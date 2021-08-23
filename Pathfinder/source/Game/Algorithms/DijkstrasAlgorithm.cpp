@@ -5,6 +5,7 @@
 #include "Game/Scene.h"
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
+#include "Game/Objects/Grid/TileEnum.h"
 
 DijkstrasAlgorithm::DijkstrasAlgorithm(Grid* pGrid) 
 {
