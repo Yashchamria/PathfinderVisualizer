@@ -33,7 +33,8 @@ bool DijkstrasAlgorithm::Execute(AlgorithmType algorithmType)
 	//To calculate the time algorithm took
 	auto algorithmEnd = std::chrono::steady_clock::now();
 	auto algorithmDuration = algorithmEnd - algorithmStart;
-	std::cout << "Dijkstra's Duration - " << std::chrono::duration <double, std::milli>(algorithmDuration).count() << " ms\n";
+
+	m_algorithmDuration = (std::to_string)(std::chrono::duration <double, std::milli>(algorithmDuration).count()) + " ms";
 
 	m_AlgorithmState = AlgorithmState::Visualizing;
 
@@ -132,7 +133,9 @@ void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 			{
 				m_PendingTileAnimation.push_back(std::make_pair(pTile, TileAnimationState::Processing)); //For Visualization
 			}
+
 			m_pOpenTiles.push_back(pTile);
+			m_tilesExplored++;
 		}
 	}
 }
@@ -248,4 +251,7 @@ void DijkstrasAlgorithm::Cleanup()
 	m_totalCostfromStartTile.clear();
 	m_ClosestPreviousTile.clear();
 	m_IsTileVisited.clear();
+
+	m_algorithmDuration = "";
+	m_tilesExplored = 0;
 }

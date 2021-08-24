@@ -13,5 +13,11 @@ public:
 	virtual bool Execute(AlgorithmType algorithmType) = 0;
 	virtual bool PlayVisualization(float speed, float deltaTime) = 0;
 	virtual void Stop() = 0;
+
 	virtual AlgorithmState GetAlgorithmState() = 0;
+	virtual std::string GetAlgorithmName() = 0;
+	virtual std::string GetTimeTaken() = 0;
+	virtual std::string GetTotalCost() = 0;
+	virtual std::string GetTilesExplored() = 0;
+
 };

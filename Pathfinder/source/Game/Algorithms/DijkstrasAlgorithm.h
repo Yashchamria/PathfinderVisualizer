@@ -46,5 +46,13 @@ private:
 	unsigned int m_pendingAnimationIndex = 0;
 	float m_switchSpeed = 3.0f;
 
+	std::string m_algorithmDuration;
 	AlgorithmState m_AlgorithmState;
+	unsigned int m_tilesExplored;
+
+public:
+	virtual std::string GetAlgorithmName() override { return "Dijkstra's"; }
+	virtual std::string GetTimeTaken() override { return m_algorithmDuration; }
+	virtual std::string GetTotalCost() override { return 0; }
+	virtual std::string GetTilesExplored() override { return (std::to_string(m_tilesExplored)); }
 };

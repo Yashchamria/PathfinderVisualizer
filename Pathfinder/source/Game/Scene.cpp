@@ -14,7 +14,7 @@ Scene::Scene(sf::RenderWindow* pWindow)
 {
 	m_pWindow = pWindow;
 
-	m_pTopHUDWidget = new TopHUDWidget(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color::White, pWindow);
+	m_pTopHUDWidget = new TopHUDWidget(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color::Cyan, pWindow);
 
 	m_pGrid = new Grid();
 	m_GridSize = sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS);
@@ -49,6 +49,8 @@ void Scene::Initialize()
 
 void Scene::Update(float deltaTime)
 {
+	m_pTopHUDWidget->UpdateLabel(1, "hello");
+
 	for (GameObject* pGameObject : m_pGameObjects)
 	{
 		pGameObject->Update(deltaTime);
