@@ -22,4 +22,7 @@ private:
 
 	class Scene* m_pScene;
 	class InputManager* m_pInputManager;
+
+private:
+	void PrintGameInfo();
 };

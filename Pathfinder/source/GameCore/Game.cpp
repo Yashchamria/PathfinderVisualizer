@@ -28,6 +28,7 @@ Game::~Game()
 
 void Game::Init()
 {
+	PrintGameInfo();
 	m_pScene->Initialize();
 }
 
@@ -77,6 +78,40 @@ void Game::Draw()
 	m_pScene->Draw(m_pGameWindow);
 
 	m_pGameWindow->display();
+}
+
+void Game::PrintGameInfo()
+{
+	std::cout << "Welcome to Pathfinder Visualizer!!\n\n";
+
+	std::cout << "Let's go over the simple shortcuts to navigate through the application.\n\n";
+
+	std::cout << "Use 'Mouse pointer' - To change the Tile Selector location.\n";
+	std::cout << "Or, Use 'Arrow Keys' - To change the Tile Selector location.\n\n";
+
+	std::cout << "Use 'Scroll Wheel' - To Zoom In or Zoom Out the Grid.\n";
+	std::cout << "Or, Press '+' - To Zoom Out.\n";
+	std::cout << "And Press '-' - To Zoom In.\n\n";
+	
+	std::cout << "Press 'S' - To set the Start Tile.\n";
+	std::cout << "Press 'E' - To set the End Tile.\n";
+	std::cout << "Press 'W' - To create the Wall Tile.\n";
+	std::cout << "Press 'D' - To reset the tile to Default Tile.\n\n";
+	
+	std::cout << "Press 'Delete' - To clear the entire grid.\n\n";
+	
+	std::cout << "Press '1' - To run Dijkstra's Algorithm.\n";
+	std::cout << "Press '2' - .\n";
+	std::cout << "Press '3' - .\n";
+	std::cout << "Press '4' - .\n";
+	std::cout << "Press '5' - .\n\n";
+	
+	std::cout << "Press '<' - To decrease the Visualization Speed.\n";
+	std::cout << "Press '>' - To increase the Visualization Speed.\n\n";
+	
+	std::cout << "Press 'Backspace' - To clear the algorithm search from the grid.\n\n";
+
+	std::cout << "That's all. Have a great day!!";
 }
 
 void Game::Run()
