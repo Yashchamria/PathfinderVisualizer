@@ -14,31 +14,49 @@ Scene::Scene(sf::RenderWindow* pWindow)
 {
 	m_pWindow = pWindow;
 
-	m_pTopHUDWidget = new TopHUDWidget(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color::Cyan, pWindow);
+	m_pTopHUDWidget = new TopHUDWidget(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color(242, 166, 73), pWindow);
 
 	m_pGrid = new Grid();
 	m_GridSize = sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS);
 	m_pGameObjects.push_back(m_pGrid);
 	SetZoomedGridSize(16);
 
-	m_pAlgorithm = new Algorithm(m_pGrid);
+	m_pCurrentAlgorithmData = new AlgorithmData();
+	m_pPreviousAlgorithmData = new AlgorithmData();
+
+	m_pAlgorithm = new Algorithm(m_pGrid, this);
+	m_pCurrentAlgorithmData->SetName(m_pAlgorithm->GetAlgorithmName());
 
 	m_pGameObjects.push_back(m_pTopHUDWidget);
 
 	m_AlgorithmSpeed = AlgorithmVisualSpeed::Average;
+	UpdateTopWidgetLabels(3, VisualSpeedToString(m_AlgorithmSpeed));
+
 }
 
 Scene::~Scene()
 {
+
+	delete m_pCurrentAlgorithmData;
+	delete m_pPreviousAlgorithmData;
+
 	for (GameObject* pGameObject : m_pGameObjects)
 	{
 		delete pGameObject;
 	}
+	m_pGameObjects.clear();
+	m_pGameObjects.shrink_to_fit();
+
+	if (m_pAlgorithm) { delete m_pAlgorithm; }
+
+	m_pTopHUDWidget = nullptr;
+	m_pGrid = nullptr;
+	m_pWindow = nullptr;
 }
 
 void Scene::Initialize()
 {
-	//Renders the entire grid from the very begenning, might effect the initial load time
+	//Renders the entire grid from the get-go, might effect the initial load time
 	InitializeGrid(m_GridSize, m_pWindow, m_ZoomedGridSize.x, m_pTopHUDWidget->GetWidgetBoxSize());
 
 	for (GameObject* pGameObject : m_pGameObjects) 
@@ -49,17 +67,23 @@ void Scene::Initialize()
 
 void Scene::Update(float deltaTime)
 {
-	m_pTopHUDWidget->UpdateLabel(1, "hello");
-
 	for (GameObject* pGameObject : m_pGameObjects)
 	{
 		pGameObject->Update(deltaTime);
 	}
 
+	AutoUpdateTopWidget();
+
 	if (m_AlgorithmExecuted)
 	{
 		m_AlgorithmExecuted = !(m_pAlgorithm->PlayVisualization((float)m_AlgorithmSpeed, deltaTime));
+
+		if (GetAlgorithmState() == AlgorithmState::Visualized)
+		{
+			UpdateWidgetLog("Path Visualized!!");
+		}
 	}
+
 }
 
 void Scene::Draw(sf::RenderWindow* pWindow)
@@ -106,7 +130,20 @@ void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
 
 void Scene::ExecuteAlgorithm(AlgorithmType algorithmType)
 {
+	if (m_pAlgorithm->GetAlgorithmState() != AlgorithmState::UnExecuted)
+	{
+		m_pPreviousAlgorithmData->SetName(m_pAlgorithm->GetAlgorithmName());
+		m_pPreviousAlgorithmData->SetTimeTaken(m_pAlgorithm->GetTimeTaken());
+		m_pPreviousAlgorithmData->SetTilesExplored(m_pAlgorithm->GetTilesExplored());
+		m_pPreviousAlgorithmData->SetPathCost(m_pAlgorithm->GetTotalCost());
+	}
+
 	m_AlgorithmExecuted = m_pAlgorithm->Execute(algorithmType);
+
+	m_pCurrentAlgorithmData->SetName(m_pAlgorithm->GetAlgorithmName());
+	m_pCurrentAlgorithmData->SetTimeTaken(m_pAlgorithm->GetTimeTaken());
+	m_pCurrentAlgorithmData->SetTilesExplored(m_pAlgorithm->GetTilesExplored());
+	m_pCurrentAlgorithmData->SetPathCost(m_pAlgorithm->GetTotalCost());
 }
 
 void Scene::StopAlgorithm()
@@ -123,4 +160,26 @@ sf::Vector2f Scene::GetTopWidgetSize()
 AlgorithmState Scene::GetAlgorithmState()
 {
 	return m_pAlgorithm->GetAlgorithmState();
+}
+
+void Scene::UpdateTopWidgetLabels(unsigned int LabelNum, std::string AppendString)
+{
+	m_pTopHUDWidget->UpdateLabel(LabelNum, AppendString);
+}
+
+void Scene::UpdateWidgetLog(std::string AppendString)
+{
+	UpdateTopWidgetLabels(6, AppendString);
+}
+
+void Scene::AutoUpdateTopWidget()
+{
+	UpdateTopWidgetLabels(1, m_pCurrentAlgorithmData->GetName());
+	UpdateTopWidgetLabels(2, m_pCurrentAlgorithmData->GetTimeTaken());
+	UpdateTopWidgetLabels(4, m_pCurrentAlgorithmData->GetPathCost());
+	UpdateTopWidgetLabels(5, m_pCurrentAlgorithmData->GetTilesExplored());
+
+	UpdateTopWidgetLabels(7, m_pPreviousAlgorithmData->GetName());
+	UpdateTopWidgetLabels(8, m_pPreviousAlgorithmData->GetTimeTaken());
+	UpdateTopWidgetLabels(9, m_pPreviousAlgorithmData->GetPathCost());
 }

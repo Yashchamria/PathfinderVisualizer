@@ -4,12 +4,13 @@ enum class TileType : char;
 enum class AlgorithmType : char;
 enum class AlgorithmState : char;
 enum class AlgorithmVisualSpeed : int;
+struct AlgorithmData;
 
 
 class GameObject;
 class TopHUDWidget;
 class Grid;
-class IAlgorithm;
+class Algorithm;
 
 class Scene
 {
@@ -33,7 +34,7 @@ private:
 	sf::Vector2u m_GridSize;
 	sf::Vector2u m_ZoomedGridSize;
 	
-	IAlgorithm* m_pAlgorithm = nullptr;
+	Algorithm* m_pAlgorithm = nullptr;
 	AlgorithmVisualSpeed m_AlgorithmSpeed;
 
 private:
@@ -61,6 +62,14 @@ public:
 	AlgorithmVisualSpeed GetAlgorithmVisualSpeed() { return m_AlgorithmSpeed; }
 	AlgorithmState GetAlgorithmState();
 
+
+	AlgorithmData* m_pCurrentAlgorithmData = nullptr;
+	AlgorithmData* m_pPreviousAlgorithmData = nullptr;
+
 	//Top Widget helper function
+	void AutoUpdateTopWidget();
+	void UpdateTopWidgetLabels(unsigned int LabelNum, std::string AppendString);
+	void UpdateWidgetLog(std::string AppendString);
+
 	sf::Vector2f GetTopWidgetSize();
 };

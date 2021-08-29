@@ -8,7 +8,7 @@ Tile::Tile(sf::Vector2u TileCoord, sf::Vector2f TileSize)
 	m_tileAnimationState = TileAnimationState::Idle;
 
 	SetTileSize(TileSize, 20.0f);
-	SetTileColor(sf::Color::White, sf::Color::Black);
+	SetTileColor(sf::Color(225, 225,225), sf::Color(25, 25, 25));
 
 	m_TileBody.setScale(0.92f, 0.92f);
 }
@@ -78,11 +78,11 @@ void Tile::UpdateTileProperty()
 	switch (m_tileType)
 	{
 	case TileType::StartTile:
-		SetTileColor(sf::Color::Green);
+		SetTileColor(sf::Color(57, 191, 66));
 		break;
 
 	case TileType::EndTile:
-		SetTileColor(sf::Color::Red);
+		SetTileColor(sf::Color(200, 60, 60));
 		break;
 
 	case TileType::WallTile:
@@ -90,7 +90,7 @@ void Tile::UpdateTileProperty()
 		break;
 
 	case TileType::Default:
-		SetTileColor(sf::Color::White);
+		SetTileColor(sf::Color(225, 225, 225));
 		break;
 
 	default:
@@ -103,19 +103,19 @@ void Tile::UpdateTileAnimationProperty()
 	switch (m_tileAnimationState)
 	{
 	case TileAnimationState::Idle:
-		SetTileColor(sf::Color::White);
+		SetTileColor(sf::Color(225, 225, 225));
 		break;
 
 	case TileAnimationState::Processing:
-		SetTileColor(sf::Color::Cyan);
+		SetTileColor(sf::Color(5, 199, 242));
 		break;
 
 	case TileAnimationState::Processed:
-		SetTileColor(sf::Color::Magenta);
+		SetTileColor(sf::Color(189, 54, 191));
 		break;
 
 	case TileAnimationState::Found:
-		SetTileColor(sf::Color::Yellow);
+		SetTileColor(sf::Color(242, 200, 5));
 		break;
 	}
 }

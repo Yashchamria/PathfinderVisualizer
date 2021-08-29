@@ -4,12 +4,16 @@
 #include "IAlgorithm.h"
 
 class Grid;
+class Scene;
+
+struct AlgorithmData;
 class DijkstrasAlgorithm;
+class DepthFirstSearch;
 
 class Algorithm : public IAlgorithm
 {
 public:
-	Algorithm(Grid* pGrid);
+	Algorithm(Grid* pGrid, Scene* pScene);
 	~Algorithm();
 
 public:
@@ -17,18 +21,22 @@ public:
 	virtual bool PlayVisualization(float speed, float deltaTime) override;
 	virtual void Stop() override;
 	virtual AlgorithmState GetAlgorithmState() override;
+	virtual bool IsPathFound() override;
 
 public:
-	virtual std::string GetAlgorithmName() override { return 0; }
-	virtual std::string GetTimeTaken() override { return 0; }
-	virtual std::string GetTotalCost() override { return 0; }
-	virtual std::string GetTilesExplored() override { return 0; }
+	virtual std::string GetAlgorithmName() override;
+	virtual std::string GetTimeTaken() override;
+	virtual std::string GetTotalCost() override;
+	virtual std::string GetTilesExplored() override;
 
 private:
 	Grid* m_pGrid = nullptr;
+	Scene* m_pScene = nullptr;
 
 	IAlgorithm* m_pCurrentAlgorithm = nullptr;
 	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
+	DepthFirstSearch* m_pDepthFirstSearch = nullptr;
 
-
+private:
+	std::string m_previousTime;
 };

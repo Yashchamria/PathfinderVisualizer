@@ -47,4 +47,5 @@ private:
 private:
 	sf::Vector2u GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow);
 	void HandleOngoingAlgorithm(bool bReRunAlgorithm = false);
+	bool m_AlgorithmStopped = false;
 };

@@ -49,7 +49,8 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		else if (pEvent->key.code == sf::Keyboard::Period) { m_pCommand->ChangeVisualizationSpeed(VisualSpeed::Increase); }
 
 		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1) { m_pCommand->ExecuteAlgorithm(AlgorithmType::Dijkstra); }
-		
+		if (pEvent->key.code == sf::Keyboard::Num2 || pEvent->key.code == sf::Keyboard::Numpad2) { m_pCommand->ExecuteAlgorithm(AlgorithmType::DepthFirstSearch); }
+
 		break;
 
 	case sf::Event::MouseMoved:

@@ -7,7 +7,7 @@ TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor,
 	//Setting up the widget box
 	m_pWidgetBox = new sf::RectangleShape(WidgetBoxSize);
 	m_pWidgetBox->setFillColor(WidgetBoxColor);
-	m_pWidgetBox->setOutlineColor(sf::Color::Black);
+	m_pWidgetBox->setOutlineColor(sf::Color(25, 25, 25));
 	m_pWidgetBox->setOutlineThickness(-WidgetBoxSize.y / 30.0f);
 
 	RePositionWidgetBox(pWindow);
@@ -18,6 +18,15 @@ TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor,
 TopHUDWidget::~TopHUDWidget()
 {
 	delete m_pWidgetBox;
+	delete m_pGridSizeLabel;
+
+	for (sf::Text* pText : m_pLabels)
+	{
+		delete pText;
+	}
+
+	m_pLabels.clear();
+	m_pLabels.shrink_to_fit();
 }
 
 void TopHUDWidget::Draw(sf::RenderWindow* pWindow)
@@ -39,7 +48,6 @@ void TopHUDWidget::RePositionWidgetBox(sf::RenderWindow* pWindow)
 	sf::Vector2f widgetPosition(0.0f, 0.0f);
 	sf::Vector2u windowSize = pWindow->getSize();
 
-	//TilePos = TileCoord * TileSize + OffsetTileCentre - OffsetToWindowsTopMostCorner
 	widgetPosition.x = widgetPosition.x - ((float)windowSize.x / 2.0f);
 	widgetPosition.y = widgetPosition.y - ((float)windowSize.y / 2.0f);
 
@@ -80,8 +88,8 @@ void TopHUDWidget::InitLabels(sf::RenderWindow* pWindow)
 	gridSize.append((std::to_string)((int)GameConst::GRID_ROWS));
 
 	m_pGridSizeLabel = new sf::Text(gridSize, m_pFont, m_fontSize + m_fontSize / 2);
-	m_pGridSizeLabel->setFillColor(sf::Color::Red);
-	m_pGridSizeLabel->setOutlineThickness(0.5f);
+	m_pGridSizeLabel->setFillColor(sf::Color(242, 166, 73));
+	m_pGridSizeLabel->setOutlineThickness(4.0f);
 	m_pGridSizeLabel->setOutlineColor(sf::Color::Black);
 
 	sf::Vector2u windowSize = pWindow->getSize();
@@ -92,10 +100,10 @@ void TopHUDWidget::InitLabels(sf::RenderWindow* pWindow)
 	m_pGridSizeLabel->setPosition(LabelPosition);
 }
 
-void TopHUDWidget::UpdateLabel(unsigned int LabelNum, std::string algorithmName)
+void TopHUDWidget::UpdateLabel(unsigned int LabelNum, std::string AppendString)
 {
 	LabelNum--;
 
 	if (LabelNum < m_NumLabels)
-		m_pLabels[LabelNum]->setString(m_Labels[LabelNum] + algorithmName);
+		m_pLabels[LabelNum]->setString(m_Labels[LabelNum] + AppendString);
 }

@@ -3,43 +3,59 @@
 #include "Algorithm.h"
 
 #include "Game/Objects/Grid/Grid.h"
+#include "Game/Scene.h"
 #include "Game/Objects/Grid/Tile.h"
 
 #include "AlgorithmEnum.h"
 #include "DijkstrasAlgorithm.h"
+#include "DepthFirstSearch.h"
 
-Algorithm::Algorithm(Grid* pGrid)
+Algorithm::Algorithm(Grid* pGrid, Scene* pScene)
 {
 	m_pGrid = pGrid;
+	m_pScene = pScene;
 
 	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm(pGrid);
-
-
-	m_pCurrentAlgorithm = m_pDijkstrasAlgorithm; // Default Algorithm
+	m_pDepthFirstSearch = new DepthFirstSearch(pGrid);
 }
 
 Algorithm::~Algorithm()
 {
 	m_pCurrentAlgorithm = nullptr;
+	m_pGrid = nullptr;
+	m_pScene = nullptr;
+
 	delete m_pDijkstrasAlgorithm;
+	delete m_pDepthFirstSearch;
 }
 
 bool Algorithm::Execute(AlgorithmType algorithmType)
 {
 	//Check for start and end tile
-	if (m_pGrid->GetStartTile() == nullptr || m_pGrid->GetEndTile() == nullptr || 
-		m_pGrid->GetStartTile()->GetTileCoord() == m_pGrid->GetEndTile()->GetTileCoord())
+	if (m_pGrid->GetStartTile() == nullptr)
 	{
-		std::cout << "\nPlease set a start tile by pressing 'S' & set a End tile by pressing 'E'\n";
+		m_pScene->UpdateWidgetLog("Select Start Tile (Press 'S')");
+		return false;
+	} 
+	if (m_pGrid->GetEndTile() == nullptr)
+	{
+		m_pScene->UpdateWidgetLog("Select End Tile (Press 'E')");
 		return false;
 	}
+	if (m_pGrid->GetStartTile()->GetTileCoord() == m_pGrid->GetEndTile()->GetTileCoord()) { return false; }
+
+	m_pScene->UpdateWidgetLog("Executing Algorithm");
 
 	switch (algorithmType)
 	{
 	case AlgorithmType::Dijkstra:
 		
-		std::cout << "\n\nExecuting Dijkstra...\n";
 		m_pCurrentAlgorithm = m_pDijkstrasAlgorithm;
+		break;
+
+	case AlgorithmType::DepthFirstSearch:
+
+		m_pCurrentAlgorithm = m_pDepthFirstSearch;
 		break;
 
 	default:
@@ -51,6 +67,15 @@ bool Algorithm::Execute(AlgorithmType algorithmType)
 
 bool Algorithm::PlayVisualization(float speed, float deltaTime)
 {
+	if (IsPathFound())
+	{
+		m_pScene->UpdateWidgetLog("Path Found! Visualizing Path!");
+	}
+	else
+	{
+		m_pScene->UpdateWidgetLog("Path Not Found! Visualizing Path!");
+	}
+
 	if (m_pCurrentAlgorithm)
 	{
 		return m_pCurrentAlgorithm->PlayVisualization(speed, deltaTime);
@@ -75,4 +100,54 @@ AlgorithmState Algorithm::GetAlgorithmState()
 	}
 
 	return AlgorithmState::Executed;
+}
+
+bool Algorithm::IsPathFound()
+{
+	if (m_pCurrentAlgorithm)
+	{
+		return m_pCurrentAlgorithm->IsPathFound();
+	}
+
+	return false;
+}
+
+std::string Algorithm::GetAlgorithmName()
+{
+	if (m_pCurrentAlgorithm)
+	{
+		return m_pCurrentAlgorithm->GetAlgorithmName();
+	}
+
+	return "Not Selected!";
+}
+
+std::string Algorithm::GetTimeTaken()
+{
+	if (m_pCurrentAlgorithm)
+	{
+		return m_pCurrentAlgorithm->GetTimeTaken();
+	}
+
+	return "Not Selected!";
+}
+
+std::string Algorithm::GetTotalCost()
+{
+	if (m_pCurrentAlgorithm)
+	{
+		return m_pCurrentAlgorithm->GetTotalCost();
+	}
+
+	return "Not Selected!";
+}
+
+std::string Algorithm::GetTilesExplored()
+{
+	if (m_pCurrentAlgorithm)
+	{
+		return m_pCurrentAlgorithm->GetTilesExplored();
+	}
+
+	return "Not Selected!";
 }

@@ -11,11 +11,13 @@ DijkstrasAlgorithm::DijkstrasAlgorithm(Grid* pGrid)
 {
 	m_pGrid = pGrid;
 
-	m_AlgorithmState = AlgorithmState::Executed;
+	m_AlgorithmState = AlgorithmState::UnExecuted;
 }
 
 bool DijkstrasAlgorithm::Execute(AlgorithmType algorithmType)
 {
+	m_AlgorithmState = AlgorithmState::Executed;
+
 	//To calculate the time algorithm took
 	auto algorithmStart = std::chrono::steady_clock::now();
 
@@ -40,19 +42,17 @@ bool DijkstrasAlgorithm::Execute(AlgorithmType algorithmType)
 
 	if (m_pathfound)
 	{
-		std::cout << "Dijkstra Path found!\nVisualizing Path...";
 		GetFinalPathAnimationSequence();
 	}
-	else
-	{
-		std::cout << "Dijkstra Path not found!\nVisualizing Path...";
-	}
-
+	
 	return true;
 }
 
 void DijkstrasAlgorithm::Init()
 {
+	m_tilesExplored = 0;
+	m_pathCost = 0;
+
 	m_AlgorithmState = AlgorithmState::Executing;
 
 	//Intializing all the tiles to unvisited and setting the distance to infinite.
@@ -78,6 +78,7 @@ void DijkstrasAlgorithm::Init()
 
 	ProcessNeighbourTiles(StartTile);
 	m_IsTileVisited[StartTile] = true;
+	m_tilesExplored++; // Adding start tile to explored count.
 }
 
 void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
@@ -165,9 +166,7 @@ bool DijkstrasAlgorithm::PlayVisualization(float speed, float deltaTime)
 {
 	if (m_PendingTileAnimation.empty()) 
 	{
-		m_AlgorithmState = AlgorithmState::Executed;
-
-		std::cout << "Finished Path Visualization!\n\n";
+		m_AlgorithmState = AlgorithmState::Visualized;
 		return true;
 	}
 
@@ -184,10 +183,8 @@ bool DijkstrasAlgorithm::PlayVisualization(float speed, float deltaTime)
 		}
 		else
 		{
+			m_AlgorithmState = AlgorithmState::Visualized;
 			Cleanup();
-
-			m_AlgorithmState = AlgorithmState::Executed;
-			std::cout << "Finished Path Visualization!\n\n";
 			return true;
 		}
 
@@ -231,7 +228,10 @@ void DijkstrasAlgorithm::GetFinalPathAnimationSequence()
 	for (int i = FinalPath.size() - 2; i >= 1; i--)
 	{
 		m_PendingTileAnimation.push_back(std::make_pair(FinalPath[i], TileAnimationState::Found)); //For Visualization
+		m_pathCost += FinalPath[i]->GetTileWeight(); //Adding cost for all the intermediate tiles from Start to End
 	}
+
+	m_pathCost += pEndTile->GetTileWeight(); //Adding cost to go to the end tile.
 }
 
 void DijkstrasAlgorithm::Cleanup()
@@ -252,6 +252,14 @@ void DijkstrasAlgorithm::Cleanup()
 	m_ClosestPreviousTile.clear();
 	m_IsTileVisited.clear();
 
-	m_algorithmDuration = "";
-	m_tilesExplored = 0;
+	//m_algorithmDuration = "";
+	//m_AlgorithmState = AlgorithmState::UnExecuted;
+
+}
+
+DijkstrasAlgorithm::~DijkstrasAlgorithm()
+{
+	m_pGrid = nullptr;
+
+	Cleanup();
 }

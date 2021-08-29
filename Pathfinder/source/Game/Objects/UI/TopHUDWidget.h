@@ -16,13 +16,13 @@ private:
 	const static unsigned int m_NumLabels = 9;
 	unsigned int m_fontSize = 20;
 	
+	sf::Text* m_pGridSizeLabel;
 	std::vector<sf::Text*> m_pLabels;
 
-	std::string m_Labels[m_NumLabels] = {"Algorithm - ",		  "Time Taken - ",			"Visualization Speed - ",
-										 "Algorithm Cost- ",	  "Tiles Explored - ",		"Log - ",
-										 "Previous Algorithm - ", "Previous Time Taken - ", "Previous Cost - "      };
+	std::string m_Labels[m_NumLabels] = {"Algorithm - "         ,	 "Time Taken - "         ,		"Visualization Speed - ",
+										 "Path Cost- "          ,	 "Tiles Explored - "     ,		"Log - ",
+										 "Previous Algorithm - ",    "Previous Time Taken - ",		"Previous Cost - "      };
 
-	sf::Text* m_pGridSizeLabel;
 
 
 private:
@@ -34,5 +34,5 @@ public:
 	sf::Vector2f GetWidgetBoxSize() { return m_pWidgetBox->getSize(); }
 
 public:
-	void UpdateLabel(unsigned int LabelNum, std::string algorithmName);
+	void UpdateLabel(unsigned int LabelNum, std::string AppendString);
 };

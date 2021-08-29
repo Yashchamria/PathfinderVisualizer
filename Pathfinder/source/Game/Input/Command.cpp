@@ -14,6 +14,7 @@ Command::Command(Scene* pScene)
 
 Command::~Command()
 {
+	m_pScene = nullptr;
 }
 
 void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
@@ -88,6 +89,8 @@ void Command::UpdateTileProperty(TileType tileType)
 
 void Command::ExecuteAlgorithm(AlgorithmType algorithmType)
 {
+	m_AlgorithmStopped = false;
+
 	HandleOngoingAlgorithm(false);
 	m_CurrentAlgorithm = algorithmType;
 	m_pScene->ExecuteAlgorithm(algorithmType);
@@ -95,12 +98,16 @@ void Command::ExecuteAlgorithm(AlgorithmType algorithmType)
 
 void Command::ClearAlgorithmSearch()
 {
+	m_AlgorithmStopped = true;
+
 	HandleOngoingAlgorithm(false);
 	m_pScene->ClearAlgorithmSearch();
 }
 
 void Command::ClearGrid()
 {
+	m_AlgorithmStopped = true;
+
 	HandleOngoingAlgorithm(false);
 	m_pScene->ClearGrid();
 }
@@ -123,6 +130,7 @@ void Command::ChangeVisualizationSpeed(VisualSpeed visualSpeed)
 	}
 
 	m_pScene->SetAlgorithmVisualSpeed(newSpeed);
+	m_pScene->UpdateTopWidgetLabels(3, VisualSpeedToString(newSpeed));
 }
 
 
@@ -144,13 +152,11 @@ sf::Vector2u Command::GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWi
 
 void Command::HandleOngoingAlgorithm(bool bReRunAlgorithm)
 {
-	std::cout << "Halt Algorithm!\n\n";
-
 	m_pScene->StopAlgorithm();
 
 	m_pScene->ClearAlgorithmSearch();
 
-	if (bReRunAlgorithm)
+	if (bReRunAlgorithm && !m_AlgorithmStopped)
 	{
 		if (m_pScene->GetAlgorithmState() != AlgorithmState::Executed)
 		{

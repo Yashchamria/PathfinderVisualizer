@@ -11,12 +11,13 @@ class DijkstrasAlgorithm : public IAlgorithm
 {
 public:
 	DijkstrasAlgorithm(Grid* pGrid);
+	~DijkstrasAlgorithm();
 
 	virtual bool Execute(AlgorithmType algorithmType) override;
 	virtual bool PlayVisualization(float speed, float deltaTime) override;
 	virtual void Stop() override;
 	virtual AlgorithmState GetAlgorithmState() override;
-
+	virtual bool IsPathFound() override { return m_pathfound; }
 	
 private:
 	void Init();
@@ -48,11 +49,12 @@ private:
 
 	std::string m_algorithmDuration;
 	AlgorithmState m_AlgorithmState;
-	unsigned int m_tilesExplored;
+	unsigned int m_tilesExplored = 0;
+	unsigned int m_pathCost = 0;
 
 public:
-	virtual std::string GetAlgorithmName() override { return "Dijkstra's"; }
+	virtual std::string GetAlgorithmName() override { return "Dijkstra's Algorithm"; }
 	virtual std::string GetTimeTaken() override { return m_algorithmDuration; }
-	virtual std::string GetTotalCost() override { return 0; }
+	virtual std::string GetTotalCost() override { return (std::to_string(m_pathCost)); }
 	virtual std::string GetTilesExplored() override { return (std::to_string(m_tilesExplored)); }
 };

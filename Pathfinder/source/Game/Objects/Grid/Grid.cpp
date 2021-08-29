@@ -7,18 +7,19 @@
 Grid::Grid()
 {
 	m_pTileSelector = new Tile();
-	m_pTileSelector->SetTileSelectorBody(sf::Color(50, 182, 148));
+	m_pTileSelector->SetTileSelectorBody(sf::Color(250, 109, 5));
 }
 
 Grid::~Grid()
 {
-	ClearGrid();
+	m_pStartTile = nullptr;
+	m_pEndTile = nullptr;
 
 	for (Tile* pTile : m_pTiles)
 	{
 		delete pTile;
 	}
-
+	
 	delete m_pTileSelector;
 }
 
