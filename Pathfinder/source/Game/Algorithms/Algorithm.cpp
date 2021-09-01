@@ -9,6 +9,7 @@
 #include "AlgorithmEnum.h"
 #include "DijkstrasAlgorithm.h"
 #include "DepthFirstSearch.h"
+#include "BreadthFirstSearch.h"
 
 Algorithm::Algorithm(Grid* pGrid, Scene* pScene)
 {
@@ -17,6 +18,7 @@ Algorithm::Algorithm(Grid* pGrid, Scene* pScene)
 
 	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm(pGrid);
 	m_pDepthFirstSearch = new DepthFirstSearch(pGrid);
+	m_pBreathFirstSearch = new BreadthFirstSearch(pGrid);
 }
 
 Algorithm::~Algorithm()
@@ -27,6 +29,7 @@ Algorithm::~Algorithm()
 
 	delete m_pDijkstrasAlgorithm;
 	delete m_pDepthFirstSearch;
+	delete m_pBreathFirstSearch;
 }
 
 bool Algorithm::Execute(AlgorithmType algorithmType)
@@ -56,6 +59,10 @@ bool Algorithm::Execute(AlgorithmType algorithmType)
 	case AlgorithmType::DepthFirstSearch:
 
 		m_pCurrentAlgorithm = m_pDepthFirstSearch;
+		break;
+
+	case AlgorithmType::BreadthFirstSearch:
+		m_pCurrentAlgorithm = m_pBreathFirstSearch;
 		break;
 
 	default:

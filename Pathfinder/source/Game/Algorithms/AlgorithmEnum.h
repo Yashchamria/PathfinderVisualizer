@@ -34,6 +34,7 @@ enum class AlgorithmType : char
 {
 	Dijkstra,
 	DepthFirstSearch,
+	BreadthFirstSearch,
 };
 
 enum class AlgorithmVisualSpeed

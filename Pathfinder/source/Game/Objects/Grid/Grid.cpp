@@ -163,6 +163,37 @@ void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWi
 	m_pTileSelector->RepositionTile(pWindow, TopWidgetSize);
 }
 
+Tile* Grid::GetNeighbourTile(sf::Vector2u CurrentTileCoord, NeighbourTileDirection tileDirection)
+{
+	sf::Vector2u neighbourTileCoord(0, 0);
+	
+	switch (tileDirection)
+	{
+	case NeighbourTileDirection::Up:
+		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x, CurrentTileCoord.y - 1);
+		break;
+
+	case NeighbourTileDirection::Down:
+		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x, CurrentTileCoord.y + 1);
+		break;
+
+	case NeighbourTileDirection::Right:
+		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x + 1, CurrentTileCoord.y);
+		break;
+
+	case NeighbourTileDirection::Left:
+		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x - 1, CurrentTileCoord.y);
+		break;
+	}
+
+	if (IsTileCoordValid(neighbourTileCoord))
+	{
+		return GetTile(neighbourTileCoord);
+	}
+
+	return nullptr;
+}
+
 bool Grid::IsTileCoordValid(sf::Vector2u tileCoord)
 {
 	if(tileCoord.x < 0 || (tileCoord.x > m_gridSize.x -1))

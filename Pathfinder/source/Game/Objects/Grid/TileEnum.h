@@ -16,3 +16,11 @@ enum class TileAnimationState : char
 	Processed,
 	Found,
 };
+
+enum class NeighbourTileDirection : char
+{
+	Up,
+	Down,
+	Right,
+	Left,
+};

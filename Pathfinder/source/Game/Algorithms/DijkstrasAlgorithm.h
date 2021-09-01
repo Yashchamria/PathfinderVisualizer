@@ -16,7 +16,7 @@ public:
 	virtual bool Execute(AlgorithmType algorithmType) override;
 	virtual bool PlayVisualization(float speed, float deltaTime) override;
 	virtual void Stop() override;
-	virtual AlgorithmState GetAlgorithmState() override;
+	virtual AlgorithmState GetAlgorithmState() override { return m_AlgorithmState; }
 	virtual bool IsPathFound() override { return m_pathfound; }
 	
 private:
@@ -26,9 +26,9 @@ private:
 	Grid* m_pGrid = nullptr;
 
 	std::vector<Tile*> m_pOpenTiles;
-	std::map<Tile*, unsigned int > m_totalCostfromStartTile;
-	std::map<Tile*, Tile* > m_ClosestPreviousTile;
-	std::map<Tile*, bool > m_IsTileVisited;
+	std::unordered_map<Tile*, unsigned int > m_totalCostfromStartTile;
+	std::unordered_map<Tile*, Tile* > m_ClosestPreviousTile;
+	std::unordered_map<Tile*, bool > m_IsTileVisited;
 
 	//This list will store all the animations in sequence. Will be used to visualize the algorithm at a much slower pace.
 	std::vector<std::pair<Tile*, TileAnimationState>> m_PendingTileAnimation;
@@ -36,10 +36,9 @@ private:
 private:
 	void ProcessNeighbourTiles(Tile* pTile);
 	void ProcessTileParameters(Tile* pTile, Tile* pPreviousTile);
+	void AddToTileAnimationArray(Tile* pTile, TileAnimationState tileAnimation);
 	void GetFinalPathAnimationSequence();
 	Tile* GetPriorityTile(); 
-
-	void Cleanup();
 
 private:
 	bool m_stopExecution = false;

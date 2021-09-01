@@ -9,6 +9,8 @@ class Scene;
 struct AlgorithmData;
 class DijkstrasAlgorithm;
 class DepthFirstSearch;
+class BreadthFirstSearch;
+
 
 class Algorithm : public IAlgorithm
 {
@@ -36,7 +38,8 @@ private:
 	IAlgorithm* m_pCurrentAlgorithm = nullptr;
 	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
 	DepthFirstSearch* m_pDepthFirstSearch = nullptr;
-
+	BreadthFirstSearch* m_pBreathFirstSearch = nullptr;
+	
 private:
 	std::string m_previousTime;
 };

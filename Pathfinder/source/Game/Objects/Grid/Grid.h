@@ -2,6 +2,7 @@
 #include "GameCore/Objects/GameObject.h"
 
 enum class TileType : char;
+enum class NeighbourTileDirection : char;
 class Tile;
 
 class Grid : public GameObject
@@ -38,6 +39,7 @@ public:
 	unsigned int GetTotalTiles() { return m_gridSize.x * m_gridSize.y; }
 
 	Tile* GetTile(sf::Vector2u tileCoord) { return m_pTiles[GetTilesArrayIndex(tileCoord, m_gridSize)]; }
+	Tile* GetNeighbourTile(sf::Vector2u CurrentTileCoord, NeighbourTileDirection tileDirection);
 	Tile* GetStartTile() { return m_pStartTile; }
 	Tile* GetEndTile() { return m_pEndTile; }
 
