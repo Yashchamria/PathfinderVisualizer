@@ -120,13 +120,16 @@ void Command::ChangeVisualizationSpeed(VisualSpeed visualSpeed)
 	{
 		if      (newSpeed == AlgorithmVisualSpeed::Slow   ) { newSpeed = AlgorithmVisualSpeed::Average; }
 		else if (newSpeed == AlgorithmVisualSpeed::Average) { newSpeed = AlgorithmVisualSpeed::Fast;    }
-		else if (newSpeed == AlgorithmVisualSpeed::Fast   ) { newSpeed = AlgorithmVisualSpeed::Instant; }
+		else if (newSpeed == AlgorithmVisualSpeed::Fast   ) { newSpeed = AlgorithmVisualSpeed::SuperFast; }
+		else if (newSpeed == AlgorithmVisualSpeed::SuperFast) { newSpeed = AlgorithmVisualSpeed::Instant; }
+
 	}
 	else if (visualSpeed == VisualSpeed::Decrease)
 	{
 		if		(newSpeed == AlgorithmVisualSpeed::Average) { newSpeed = AlgorithmVisualSpeed::Slow;    }
 		else if (newSpeed == AlgorithmVisualSpeed::Fast   ) { newSpeed = AlgorithmVisualSpeed::Average; }
-		else if (newSpeed == AlgorithmVisualSpeed::Instant) { newSpeed = AlgorithmVisualSpeed::Fast;    }
+		else if (newSpeed == AlgorithmVisualSpeed::SuperFast) { newSpeed = AlgorithmVisualSpeed::Fast;    }
+		else if (newSpeed == AlgorithmVisualSpeed::Instant) { newSpeed = AlgorithmVisualSpeed::SuperFast; }
 	}
 
 	m_pScene->SetAlgorithmVisualSpeed(newSpeed);

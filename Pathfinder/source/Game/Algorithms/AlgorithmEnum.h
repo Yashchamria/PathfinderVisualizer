@@ -39,10 +39,11 @@ enum class AlgorithmType : char
 
 enum class AlgorithmVisualSpeed
 {
-	Slow = 8,
-	Average = 24,
-	Fast = 72,
-	Instant = 216,
+	Slow = 16,
+	Average = 48,
+	Fast = 144,
+	SuperFast = 296,
+	Instant = 400,
 };
 
 inline std::string VisualSpeedToString(AlgorithmVisualSpeed speed)
@@ -52,9 +53,8 @@ inline std::string VisualSpeedToString(AlgorithmVisualSpeed speed)
 	case AlgorithmVisualSpeed::Slow :		return "Slow";
 	case AlgorithmVisualSpeed::Average:	    return "Average";
 	case AlgorithmVisualSpeed::Fast:	    return "Fast";
+	case AlgorithmVisualSpeed::SuperFast:	return "Super Fast";
 	case AlgorithmVisualSpeed::Instant:		return "Instant";
-
-	default:      return "Invalid Speed";
 	}
 }
 

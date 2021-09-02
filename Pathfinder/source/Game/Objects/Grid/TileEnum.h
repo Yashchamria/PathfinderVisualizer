@@ -14,6 +14,7 @@ enum class TileAnimationState : char
 	Idle,
 	Processing,
 	Processed,
+	ReProcessing,
 	Found,
 };
 

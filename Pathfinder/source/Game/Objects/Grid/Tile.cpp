@@ -114,6 +114,10 @@ void Tile::UpdateTileAnimationProperty()
 		SetTileColor(sf::Color(189, 54, 191));
 		break;
 
+	case TileAnimationState::ReProcessing:
+		SetTileColor(sf::Color(5, 199, 242));
+		break;
+
 	case TileAnimationState::Found:
 		SetTileColor(sf::Color(242, 200, 5));
 		break;

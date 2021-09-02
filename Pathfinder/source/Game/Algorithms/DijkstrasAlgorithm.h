@@ -31,7 +31,7 @@ private:
 	std::unordered_map<Tile*, bool > m_IsTileVisited;
 
 	//This list will store all the animations in sequence. Will be used to visualize the algorithm at a much slower pace.
-	std::vector<std::pair<Tile*, TileAnimationState>> m_PendingTileAnimation;
+	std::queue<std::pair<Tile*, TileAnimationState>> m_PendingTileAnimation;
 
 private:
 	void ProcessNeighbourTiles(Tile* pTile);
@@ -43,7 +43,6 @@ private:
 private:
 	bool m_stopExecution = false;
 	bool m_pathfound = false;
-	unsigned int m_pendingAnimationIndex = 0;
 	float m_switchSpeed = 3.0f;
 
 	std::string m_algorithmDuration;

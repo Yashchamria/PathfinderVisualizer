@@ -105,5 +105,7 @@ void TopHUDWidget::UpdateLabel(unsigned int LabelNum, std::string AppendString)
 	LabelNum--;
 
 	if (LabelNum < m_NumLabels)
+	{
 		m_pLabels[LabelNum]->setString(m_Labels[LabelNum] + AppendString);
+	}
 }

@@ -67,7 +67,8 @@ bool BreadthFirstSearch::Execute(AlgorithmType algorithmType)
 	//To calculate the time algorithm took
 	auto algorithmEnd = std::chrono::steady_clock::now();
 	auto algorithmDuration = algorithmEnd - algorithmStart;
-	m_algorithmDuration = (std::to_string)(std::chrono::duration <double, std::milli>(algorithmDuration).count()) + " ms";
+	m_algorithmDuration = (std::to_string)(std::chrono::duration <double, std::milli>(algorithmDuration).count());
+	m_algorithmDuration = m_algorithmDuration.substr(0, 6) + " ms";
 
 	m_AlgorithmState = AlgorithmState::Visualizing;
 
@@ -78,30 +79,30 @@ bool BreadthFirstSearch::Execute(AlgorithmType algorithmType)
 
 bool BreadthFirstSearch::PlayVisualization(float speed, float deltaTime)
 {
+	if (speed > 300.0f) //Instant
+	{
+		while (!m_PendingTileAnimation.empty())
+		{
+			m_PendingTileAnimation.front().first->SetTileAnimationProperty(m_PendingTileAnimation.front().second);
+			m_PendingTileAnimation.front().first->UpdateTileAnimationProperty();
+			m_PendingTileAnimation.pop();
+		}
+	}
+
 	if (m_PendingTileAnimation.empty())
 	{
 		m_AlgorithmState = AlgorithmState::Visualized;
 		return true;
 	}
 
+	m_PendingTileAnimation.front().first->SetTileAnimationProperty(m_PendingTileAnimation.front().second);
+	m_PendingTileAnimation.front().first->UpdateTileAnimationProperty();
+
 	m_switchSpeed += (deltaTime * speed);
 
 	if (m_switchSpeed >= 1.0f)
 	{
-		m_PendingTileAnimation[m_pendingAnimationIndex].first->SetTileAnimationProperty(m_PendingTileAnimation[m_pendingAnimationIndex].second);
-		m_PendingTileAnimation[m_pendingAnimationIndex].first->UpdateTileAnimationProperty();
-
-		if (m_pendingAnimationIndex < (m_PendingTileAnimation.size() - 1))
-		{
-			m_pendingAnimationIndex++;
-		}
-		else
-		{
-			m_AlgorithmState = AlgorithmState::Visualized;
-			Stop();
-			return true;
-		}
-
+		m_PendingTileAnimation.pop();
 		m_switchSpeed = 0.0f;
 	}
 
@@ -117,7 +118,7 @@ void BreadthFirstSearch::ProcessNeighbourTiles(Tile* pTile)
 	//if pTile is not start or end tile then update animation.
 	if (pTile->GetTileCoord() != m_pGrid->GetStartTile()->GetTileCoord() && pTile->GetTileCoord() != m_pGrid->GetEndTile()->GetTileCoord())
 	{
-		m_PendingTileAnimation.push_back(std::make_pair(pTile, TileAnimationState::Processed)); //For Visualization
+		m_PendingTileAnimation.push(std::make_pair(pTile, TileAnimationState::Processed)); //For Visualization
 	}
 
 	//If exist in open list then remove the tile.
@@ -141,8 +142,8 @@ void BreadthFirstSearch::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 
 	if (!m_IsTileVisited[pTile] && pTile->GetTileState() != TileType::WallTile)
 	{
-		//if the tile doesn't exist then insert other there already has to be a shorter route to reach it.
-		if (m_ClosestPreviousTile.find(pTile) == m_ClosestPreviousTile.end())
+		//if the tile doesn't exist then only insert otherwise there already has to be a shorter route to reach it.
+		if (m_ClosestPreviousTile.find(pTile) == m_ClosestPreviousTile.end()) //not found
 		{
 			m_ClosestPreviousTile.insert_or_assign(pTile, pPreviousTile);
 		}
@@ -152,7 +153,7 @@ void BreadthFirstSearch::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 		{
 			if (pTile->GetTileCoord() != m_pGrid->GetStartTile()->GetTileCoord() && pTile->GetTileCoord() != m_pGrid->GetEndTile()->GetTileCoord())
 			{
-				m_PendingTileAnimation.push_back(std::make_pair(pTile, TileAnimationState::Processing)); //For Visualization
+				m_PendingTileAnimation.push(std::make_pair(pTile, TileAnimationState::Processing)); //For Visualization
 			}
 
 			m_pOpenTiles.push_back(pTile);
@@ -179,34 +180,33 @@ Tile* BreadthFirstSearch::GetPriorityTile()
 	return nullptr;
 }
 
-//Function to draw the final path found
 void BreadthFirstSearch::GetFinalPathAnimationSequence()
 {
-	std::vector<Tile*> FinalPath;
+	std::stack<Tile*> FinalPath;
 
 	Tile* pEndTile = m_pGrid->GetEndTile();
 	Tile* pStartTile = m_pGrid->GetStartTile();
 
-	Tile* pTile = nullptr;
 	bool pathfinsihed = false;
-
-	FinalPath.push_back(pEndTile);
+	Tile* pTile = m_ClosestPreviousTile[pEndTile];
 
 	while (!pathfinsihed)
 	{
-		pTile = m_ClosestPreviousTile[FinalPath[FinalPath.size() - 1]];
-		pathfinsihed = pTile->GetTileCoord().x == pStartTile->GetTileCoord().x && pTile->GetTileCoord().y == pStartTile->GetTileCoord().y;
+		FinalPath.push(pTile);
 
-		FinalPath.push_back(pTile);
+		pTile = m_ClosestPreviousTile[FinalPath.top()];
+
+		pathfinsihed = pTile->GetTileCoord() == pStartTile->GetTileCoord();
 	}
 
-	for (int i = FinalPath.size() - 2; i >= 1; i--)
+	while (!FinalPath.empty())
 	{
-		m_PendingTileAnimation.push_back(std::make_pair(FinalPath[i], TileAnimationState::Found)); //For Visualization
-		m_pathCost += FinalPath[i]->GetTileWeight(); //Adding cost for all the intermediate tiles from Start to End
+		m_PendingTileAnimation.push(std::make_pair(FinalPath.top(), TileAnimationState::Found));
+		m_pathCost += FinalPath.top()->GetTileWeight();
+		FinalPath.pop();
 	}
 
-	m_pathCost += pEndTile->GetTileWeight(); //Adding cost to go to the end tile.
+	m_pathCost += pEndTile->GetTileWeight();
 }
 
 void BreadthFirstSearch::Stop()
@@ -215,14 +215,13 @@ void BreadthFirstSearch::Stop()
 	m_pathfound = false;
 
 	m_stopExecution = false;
-	m_pendingAnimationIndex = 0;
 	m_switchSpeed = 3.0f;
 
 	m_pOpenTiles.clear();
 	m_pOpenTiles.shrink_to_fit();
 
-	m_PendingTileAnimation.clear();
-	m_PendingTileAnimation.shrink_to_fit();
+	std::queue<std::pair<Tile*, TileAnimationState>> empty;
+	std::swap(m_PendingTileAnimation, empty);
 
 	m_ClosestPreviousTile.clear();
 	m_IsTileVisited.clear();

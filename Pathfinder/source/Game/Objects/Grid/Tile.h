@@ -37,4 +37,5 @@ public:
 	sf::Vector2u GetTileCoord() { return m_tileCoord; }
 	unsigned int GetTileWeight() { return m_Weight; }
 	TileType GetTileState() { return m_tileType; }
+	TileAnimationState GetTileAnimationState() { return m_tileAnimationState; }
 };
