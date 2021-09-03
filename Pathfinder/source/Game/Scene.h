@@ -51,6 +51,8 @@ public:
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
 
+	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
+
 	void SetZoomedGridSize(unsigned int ColumnSize) { m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::GRID_ASPECT_RATIO)); }
 	sf::Vector2u GetGridSize() { return m_GridSize; }
 	sf::Vector2u GetZoomedGridSize() { return m_ZoomedGridSize; }

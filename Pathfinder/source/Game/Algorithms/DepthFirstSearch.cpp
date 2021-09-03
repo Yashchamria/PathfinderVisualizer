@@ -145,7 +145,7 @@ Tile* DepthFirstSearch::ProcessNextTile()
 
 	AddToTileAnimationArray(pTile, TileAnimationState::Processed);
 
-	if (pTile == m_pGrid->GetEndTile()) { m_pathfound = true; }
+	if (pTile == m_pGrid->GetEndTile()) { m_pathfound = true; return nullptr;}
 	
 
 	Tile* nextNeighbourTile = GetNeighbourTile(pTile, NeighbourTileDirection::Down);

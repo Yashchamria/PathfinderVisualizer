@@ -37,6 +37,8 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		else if (pEvent->key.code == sf::Keyboard::W) { m_pCommand->UpdateTileProperty(TileType::WallTile ); }
 		else if (pEvent->key.code == sf::Keyboard::D) { m_pCommand->UpdateTileProperty(TileType::Default  ); }
 		
+		if (pEvent->key.code == sf::Keyboard::R) { m_pCommand->GenerateRandomGrid(25, 2, 4); }
+
 		if      (pEvent->key.code == sf::Keyboard::Down ) { m_pCommand->UpdateTileSelectorPosition(TileSelectorMove::Down , pWindow); }
 		else if (pEvent->key.code == sf::Keyboard::Up   ) { m_pCommand->UpdateTileSelectorPosition(TileSelectorMove::Up   , pWindow); }
 		else if (pEvent->key.code == sf::Keyboard::Right) { m_pCommand->UpdateTileSelectorPosition(TileSelectorMove::Right, pWindow); }

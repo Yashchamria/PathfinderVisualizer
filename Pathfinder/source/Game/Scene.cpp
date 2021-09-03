@@ -6,6 +6,7 @@
 
 #include "Game/Objects/UI/TopHUDWidget.h"
 #include "Objects/Grid/Grid.h"
+#include "Objects/Grid/TileEnum.h"
 
 #include "Algorithms/Algorithm.h"
 #include "Algorithms/AlgorithmEnum.h"
@@ -120,6 +121,13 @@ void Scene::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pW
 {
 	if((mouseTileCoord.x <= m_ZoomedGridSize.x - 1) && (mouseTileCoord.y <= m_ZoomedGridSize.y - 1))
 	m_pGrid->UpdateTileSelector(mouseTileCoord, pWindow, m_pTopHUDWidget->GetWidgetBoxSize());
+}
+
+void Scene::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
+{
+	m_pGrid->GenerateRandomWalls(wallPercent);
+	m_pGrid->GenerateRandomTile(TileType::StartTile, StartQuadrant);
+	m_pGrid->GenerateRandomTile(TileType::EndTile,   EndQuadrant);
 }
 
 void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)

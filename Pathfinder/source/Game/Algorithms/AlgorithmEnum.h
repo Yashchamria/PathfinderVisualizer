@@ -56,6 +56,8 @@ inline std::string VisualSpeedToString(AlgorithmVisualSpeed speed)
 	case AlgorithmVisualSpeed::SuperFast:	return "Super Fast";
 	case AlgorithmVisualSpeed::Instant:		return "Instant";
 	}
+
+	return "Invalid Speed";
 }
 
 enum class AlgorithmState : char

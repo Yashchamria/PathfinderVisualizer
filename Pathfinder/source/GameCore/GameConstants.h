@@ -18,7 +18,7 @@ namespace GameConst
 
 	const static float GRID_ASPECT_RATIO = (float)WINDOW_WIDTH / ((float)WINDOW_HEIGHT - TOP_WIDGET_HEIGHT);
 
-	const static unsigned int GRID_COLUMNS = 16;
+	const static unsigned int GRID_COLUMNS = 32;
 	const static unsigned int GRID_ROWS = (unsigned int)(GRID_COLUMNS / GRID_ASPECT_RATIO);
 
 };

@@ -35,6 +35,7 @@ public:
 	void ClearAlgorithmSearch();
 	void ClearGrid();
 	void ChangeVisualizationSpeed(VisualSpeed visualSpeed);
+	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
 
 private:
 	class Scene* m_pScene;

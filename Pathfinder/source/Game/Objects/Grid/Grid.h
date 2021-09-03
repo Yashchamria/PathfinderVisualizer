@@ -46,5 +46,7 @@ public:
 	bool IsTileCoordValid(sf::Vector2u tileCoord);
 	TileType GetTileState(sf::Vector2u tileCoord);
 
-
+public:
+	void GenerateRandomWalls(unsigned int wallPercent);
+	void GenerateRandomTile(TileType tileType, unsigned int quadrant);
 };

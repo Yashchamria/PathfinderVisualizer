@@ -15,6 +15,8 @@ Game::Game()
 	m_pEvent = new sf::Event();
 	m_pScene = new Scene(m_pGameWindow);
 	m_pInputManager = new InputManager(m_pScene);
+
+	srand((unsigned)time(0));
 }
 
 Game::~Game()

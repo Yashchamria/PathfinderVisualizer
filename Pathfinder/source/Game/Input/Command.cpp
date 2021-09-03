@@ -136,6 +136,13 @@ void Command::ChangeVisualizationSpeed(VisualSpeed visualSpeed)
 	m_pScene->UpdateTopWidgetLabels(3, VisualSpeedToString(newSpeed));
 }
 
+void Command::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
+{
+	HandleOngoingAlgorithm(false);
+
+	m_pScene->GenerateRandomGrid(wallPercent, StartQuadrant, EndQuadrant);
+}
+
 
 //Helper Functions
 sf::Vector2u Command::GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow)

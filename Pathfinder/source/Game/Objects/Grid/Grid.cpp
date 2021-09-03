@@ -213,3 +213,57 @@ TileType Grid::GetTileState(sf::Vector2u tileCoord)
 	
 	return TileType::InValid;
 }
+
+void Grid::GenerateRandomWalls(unsigned int wallPercent)
+{
+	ClearGrid();
+
+	unsigned int totaltiles = m_pTiles.size();
+
+	unsigned int totalWalls = (totaltiles * wallPercent) / 100;
+
+	for (unsigned int i = 0; i < totalWalls; i++)
+	{
+		unsigned index = rand() % totaltiles;
+
+		if (m_pTiles[index]->GetTileState() != TileType::WallTile)
+		{
+			m_pTiles[index]->SetTileProperty(TileType::WallTile);
+			m_pTiles[index]->UpdateTileProperty();
+		}
+		else
+		{
+			i--;
+		}
+	}
+}
+
+void Grid::GenerateRandomTile(TileType tileType, unsigned int quadrant)
+{
+	sf::Vector2u QuadrantSize((unsigned int)(m_gridSize.x / 2.0f), (unsigned int)(m_gridSize.y / 2.0f));
+
+	sf::Vector2u RandomTileCoord(0, 0);
+
+	if (quadrant <= 1)
+	{
+		RandomTileCoord.x = (rand() % QuadrantSize.x) + QuadrantSize.x;
+		RandomTileCoord.y = rand() % QuadrantSize.y;
+	}
+	else if (quadrant == 2)
+	{
+		RandomTileCoord.x = rand() % QuadrantSize.x;
+		RandomTileCoord.y = rand() % QuadrantSize.y;
+	}
+	else if (quadrant == 3)
+	{
+		RandomTileCoord.x = rand() % QuadrantSize.x;
+		RandomTileCoord.y = (rand() % QuadrantSize.y) + QuadrantSize.y;
+	}
+	else
+	{
+		RandomTileCoord.x = (rand() % QuadrantSize.x) + QuadrantSize.x;
+		RandomTileCoord.y = (rand() % QuadrantSize.y) + QuadrantSize.y;
+	}
+
+	UpdateTileProperty(RandomTileCoord, m_gridSize, tileType);
+}
