@@ -32,9 +32,10 @@ public:
 
 enum class AlgorithmType : char
 {
-	Dijkstra,
-	DepthFirstSearch,
 	BreadthFirstSearch,
+	DepthFirstSearch,
+	Dijkstra,
+	AStar,
 };
 
 enum class AlgorithmVisualSpeed

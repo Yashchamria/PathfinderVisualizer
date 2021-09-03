@@ -11,6 +11,7 @@ public:
 	Grid();
 	~Grid();
 
+	virtual void Update(float deltaTime) override;
 	virtual void Draw(sf::RenderWindow* pWindow) override;
 
 private:

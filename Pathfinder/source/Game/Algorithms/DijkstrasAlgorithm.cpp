@@ -33,7 +33,7 @@ void DijkstrasAlgorithm::Init()
 		{
 			Tile* pTile = m_pGrid->GetTile(sf::Vector2u(x, y));
 	
-			if (pTile->GetTileState() == TileType::WallTile)
+			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
 	
 			m_totalCostfromStartTile.insert(std::pair <Tile*, unsigned int>(pTile, UINT_MAX));
@@ -133,7 +133,7 @@ void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
 void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
-	if (!m_IsTileVisited[pTile] && pTile->GetTileState() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->GetTileType() != TileType::WallTile)
 	{
 		//Calculate the shortest cost for the tile from the previous tiles
 		//Also stores the previous tile and the shortest distance

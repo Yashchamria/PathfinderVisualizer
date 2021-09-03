@@ -11,6 +11,7 @@ public:
 	~Tile();
 
 	virtual void Draw(sf::RenderWindow* pWindow) override;
+	virtual void Update(float deltaTime) override;
 
 private:
 	sf::RectangleShape m_TileBody;
@@ -19,9 +20,15 @@ private:
 	TileAnimationState m_tileAnimationState;
 	unsigned int m_Weight = 10;
 
+	float m_tileFillScale = 0.92f;
+
+	void Animate(sf::Color tileColor);
+	sf::RectangleShape m_TileAnimationBody;
+	bool m_IsAnimationChanged = false;
+
 public:
 	void RepositionTile(sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
-	void UpdateTileProperty();
+	void UpdateTileType();
 	void UpdateTileAnimationProperty();
 
 
@@ -29,13 +36,16 @@ public:
 	void SetTileCoord(sf::Vector2u tileCoord, sf::RenderWindow* pWindow);
 	void SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor);
 	void SetTileColor(sf::Color fillColor = sf::Color::White, sf::Color OutlineColor = sf::Color::Black);
-	void SetTileSelectorBody(sf::Color OutlineColor);
-	void SetTileProperty(TileType tileType);
+	void SetTileType(TileType tileType);
 	void SetTileAnimationProperty(TileAnimationState tileAnimationState);
+
+private:
+	void SetAnimTileScale(float tileScale);
+	float GetAnimTileScale();
 
 public:
 	sf::Vector2u GetTileCoord() { return m_tileCoord; }
 	unsigned int GetTileWeight() { return m_Weight; }
-	TileType GetTileState() { return m_tileType; }
+	TileType GetTileType() { return m_tileType; }
 	TileAnimationState GetTileAnimationState() { return m_tileAnimationState; }
 };

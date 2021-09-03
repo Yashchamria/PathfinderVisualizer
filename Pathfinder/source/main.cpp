@@ -14,9 +14,6 @@ int main()
     return 0;
 }
 
-
 //A* Implementation
 //Visual Interface to add weight to the tiles
-//Maze Generation
-//Animation
 //Make .exe

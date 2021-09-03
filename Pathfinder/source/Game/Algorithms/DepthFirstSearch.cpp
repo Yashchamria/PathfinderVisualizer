@@ -33,7 +33,7 @@ void DepthFirstSearch::Init()
 		{
 			Tile* pTile = m_pGrid->GetTile(sf::Vector2u(x, y));
 
-			if (pTile->GetTileState() == TileType::WallTile)
+			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
 
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
@@ -42,7 +42,6 @@ void DepthFirstSearch::Init()
 
 	//Dealing with the Start Tile
 	AddToOpenlist(m_pGrid->GetStartTile());
-	m_tilesExplored++;
 }
 
 bool DepthFirstSearch::Execute(AlgorithmType algorithmType)
@@ -123,7 +122,7 @@ Tile* DepthFirstSearch::GetNeighbourTile(Tile* pCurrentTile, NeighbourTileDirect
 
 	if (neighbourTile)
 	{
-		if (neighbourTile->GetTileState() != TileType::WallTile && m_IsTileVisited[neighbourTile] == false)
+		if (neighbourTile->GetTileType() != TileType::WallTile && m_IsTileVisited[neighbourTile] == false)
 		{
 			return neighbourTile;
 		}
@@ -137,6 +136,7 @@ Tile* DepthFirstSearch::ProcessNextTile()
 	Tile* pTile = m_pOpenTiles.top();
 
 	m_IsTileVisited[pTile] = true;
+	m_tilesExplored++;
 
 	if (pTile->GetTileAnimationState() == TileAnimationState::Processed)
 	{

@@ -50,10 +50,10 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		if		(pEvent->key.code == sf::Keyboard::Comma ) { m_pCommand->ChangeVisualizationSpeed(VisualSpeed::Decrease); }
 		else if (pEvent->key.code == sf::Keyboard::Period) { m_pCommand->ChangeVisualizationSpeed(VisualSpeed::Increase); }
 
-		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1) { m_pCommand->ExecuteAlgorithm(AlgorithmType::Dijkstra); }
-		if (pEvent->key.code == sf::Keyboard::Num3 || pEvent->key.code == sf::Keyboard::Numpad3) { m_pCommand->ExecuteAlgorithm(AlgorithmType::BreadthFirstSearch); }
-		if (pEvent->key.code == sf::Keyboard::Num4 || pEvent->key.code == sf::Keyboard::Numpad4) { m_pCommand->ExecuteAlgorithm(AlgorithmType::DepthFirstSearch); }
-
+		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1) { m_pCommand->ExecuteAlgorithm(AlgorithmType::BreadthFirstSearch); }
+		if (pEvent->key.code == sf::Keyboard::Num2 || pEvent->key.code == sf::Keyboard::Numpad2) { m_pCommand->ExecuteAlgorithm(AlgorithmType::DepthFirstSearch); }
+		if (pEvent->key.code == sf::Keyboard::Num3 || pEvent->key.code == sf::Keyboard::Numpad3) { m_pCommand->ExecuteAlgorithm(AlgorithmType::Dijkstra); }
+		if (pEvent->key.code == sf::Keyboard::Num4 || pEvent->key.code == sf::Keyboard::Numpad4) { m_pCommand->ExecuteAlgorithm(AlgorithmType::AStar); }
 
 		break;
 

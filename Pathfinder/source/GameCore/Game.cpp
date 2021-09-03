@@ -102,11 +102,11 @@ void Game::PrintGameInfo()
 	
 	std::cout << "Press 'Delete' - To clear the entire grid.\n\n";
 	
-	std::cout << "Press '1' - To run Dijkstra's Algorithm.\n";
-	std::cout << "Press '2' - .\n";
-	std::cout << "Press '3' - .\n";
-	std::cout << "Press '4' - .\n";
-	std::cout << "Press '5' - .\n\n";
+	std::cout << "Press '1' - To run Breadth First Search.\n";
+	std::cout << "Press '2' - To run Depth First Search.\n";
+	std::cout << "Press '3' - To run Dijkstra's Algorithm.\n";
+	std::cout << "Press '4' - To run Astar(*) Algorithm.\n";
+	std::cout << "Press 'R' - To Generate Random Start, End and Wall Tiles.\n\n";
 	
 	std::cout << "Press '<' - To decrease the Visualization Speed.\n";
 	std::cout << "Press '>' - To increase the Visualization Speed.\n\n";

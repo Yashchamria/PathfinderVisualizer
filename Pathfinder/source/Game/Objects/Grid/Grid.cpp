@@ -7,7 +7,7 @@
 Grid::Grid()
 {
 	m_pTileSelector = new Tile();
-	m_pTileSelector->SetTileSelectorBody(sf::Color(250, 109, 5));
+	m_pTileSelector->SetTileColor(sf::Color::Transparent, sf::Color(250, 109, 5));
 }
 
 Grid::~Grid()
@@ -21,6 +21,14 @@ Grid::~Grid()
 	}
 	
 	delete m_pTileSelector;
+}
+
+void Grid::Update(float deltaTime)
+{
+	for (Tile* pTile : m_pTiles)
+	{
+		pTile->Update(deltaTime);
+	}
 }
 
 void Grid::Draw(sf::RenderWindow* pWindow)
@@ -73,8 +81,8 @@ void Grid::ClearGrid()
 {
 	for (Tile* pTile : m_pTiles)
 	{
-		pTile->SetTileProperty(TileType::Default);
-		pTile->UpdateTileProperty();
+		pTile->SetTileType(TileType::Default);
+		pTile->UpdateTileType();
 	}
 
 	m_pStartTile = nullptr;
@@ -85,7 +93,11 @@ void Grid::ClearAlgorithmSearch()
 {
 	for (Tile* pTile : m_pTiles)
 	{
-		pTile->UpdateTileProperty();
+		if (pTile->GetTileType() == TileType::Default)
+		{
+			pTile->SetTileAnimationProperty(TileAnimationState::Idle);
+			pTile->UpdateTileAnimationProperty();
+		}
 	}
 }
 
@@ -107,8 +119,8 @@ void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize
 		if (m_pStartTile)
 		{
 			//Clearing the previous start tile.
-			m_pStartTile->SetTileProperty(TileType::Default);
-			m_pStartTile->UpdateTileProperty();
+			m_pStartTile->SetTileType(TileType::Default);
+			m_pStartTile->UpdateTileType();
 			m_pStartTile = nullptr;
 		}
 		m_pStartTile = m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)];
@@ -127,8 +139,8 @@ void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize
 		if (m_pEndTile)
 		{
 			//Clearing the previous end tile.
-			m_pEndTile->SetTileProperty(TileType::Default);
-			m_pEndTile->UpdateTileProperty();
+			m_pEndTile->SetTileType(TileType::Default);
+			m_pEndTile->UpdateTileType();
 			m_pEndTile = nullptr; 
 		}
 
@@ -153,8 +165,8 @@ void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize
 		}
 	} 
 
-	m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)]->SetTileProperty(tileType);
-	m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)]->UpdateTileProperty();
+	m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)]->SetTileType(tileType);
+	m_pTiles[GetTilesArrayIndex(mouseTileCoord, gridSize)]->UpdateTileType();
 }
 
 void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
@@ -208,7 +220,7 @@ TileType Grid::GetTileState(sf::Vector2u tileCoord)
 {
 	if (IsTileCoordValid(tileCoord))
 	{
-		return m_pTiles[GetTilesArrayIndex(tileCoord, m_gridSize)]->GetTileState();
+		return m_pTiles[GetTilesArrayIndex(tileCoord, m_gridSize)]->GetTileType();
 	}
 	
 	return TileType::InValid;
@@ -226,10 +238,10 @@ void Grid::GenerateRandomWalls(unsigned int wallPercent)
 	{
 		unsigned index = rand() % totaltiles;
 
-		if (m_pTiles[index]->GetTileState() != TileType::WallTile)
+		if (m_pTiles[index]->GetTileType() != TileType::WallTile)
 		{
-			m_pTiles[index]->SetTileProperty(TileType::WallTile);
-			m_pTiles[index]->UpdateTileProperty();
+			m_pTiles[index]->SetTileType(TileType::WallTile);
+			m_pTiles[index]->UpdateTileType();
 		}
 		else
 		{

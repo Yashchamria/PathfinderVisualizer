@@ -33,7 +33,7 @@ void BreadthFirstSearch::Init()
 		{
 			Tile* pTile = m_pGrid->GetTile(sf::Vector2u(x, y));
 
-			if (pTile->GetTileState() == TileType::WallTile)
+			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
 
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
@@ -140,7 +140,7 @@ void BreadthFirstSearch::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
 
-	if (!m_IsTileVisited[pTile] && pTile->GetTileState() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->GetTileType() != TileType::WallTile)
 	{
 		//if the tile doesn't exist then only insert otherwise there already has to be a shorter route to reach it.
 		if (m_ClosestPreviousTile.find(pTile) == m_ClosestPreviousTile.end()) //not found
