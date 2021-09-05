@@ -9,6 +9,7 @@
 #include <vector>
 #include <stack>
 #include <queue>
+#include <tuple>
 
 #include "GameCore\GameConstants.h"
 

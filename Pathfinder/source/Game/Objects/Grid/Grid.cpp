@@ -252,13 +252,22 @@ void Grid::GenerateRandomWalls(unsigned int wallPercent)
 
 void Grid::GenerateRandomTile(TileType tileType, unsigned int quadrant)
 {
+	bool cornerBais = true;
+	
 	sf::Vector2u QuadrantSize((unsigned int)(m_gridSize.x / 2.0f), (unsigned int)(m_gridSize.y / 2.0f));
+
+	sf::Vector2f BaisFactor(5.0f, 3.0f);
+
+	if (cornerBais) 
+	{
+		QuadrantSize = sf::Vector2u((unsigned int)(m_gridSize.x / BaisFactor.x), (unsigned int)(m_gridSize.y / BaisFactor.y));
+	}
 
 	sf::Vector2u RandomTileCoord(0, 0);
 
 	if (quadrant <= 1)
 	{
-		RandomTileCoord.x = (rand() % QuadrantSize.x) + QuadrantSize.x;
+		RandomTileCoord.x = (rand() % QuadrantSize.x) + (QuadrantSize.x * (BaisFactor.x - 1));
 		RandomTileCoord.y = rand() % QuadrantSize.y;
 	}
 	else if (quadrant == 2)
@@ -269,12 +278,12 @@ void Grid::GenerateRandomTile(TileType tileType, unsigned int quadrant)
 	else if (quadrant == 3)
 	{
 		RandomTileCoord.x = rand() % QuadrantSize.x;
-		RandomTileCoord.y = (rand() % QuadrantSize.y) + QuadrantSize.y;
+		RandomTileCoord.y = (rand() % QuadrantSize.y) + (QuadrantSize.y * (BaisFactor.y - 1));
 	}
 	else
 	{
-		RandomTileCoord.x = (rand() % QuadrantSize.x) + QuadrantSize.x;
-		RandomTileCoord.y = (rand() % QuadrantSize.y) + QuadrantSize.y;
+		RandomTileCoord.x = (rand() % QuadrantSize.x) + (QuadrantSize.x * (BaisFactor.x - 1));
+		RandomTileCoord.y = (rand() % QuadrantSize.y) + (QuadrantSize.y * (BaisFactor.y - 1));
 	}
 
 	UpdateTileProperty(RandomTileCoord, m_gridSize, tileType);

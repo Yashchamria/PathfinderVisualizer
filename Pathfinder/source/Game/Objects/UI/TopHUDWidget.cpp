@@ -57,11 +57,12 @@ void TopHUDWidget::RePositionWidgetBox(sf::RenderWindow* pWindow)
 void TopHUDWidget::InitLabels(sf::RenderWindow* pWindow)
 {
 	//Setting up the Text
-	std::string absolutePath = "H:/Programming/PathfinderProject/Pathfinder/Data/font/Pixellari.ttf";
+	std::string debugPath = "../../Pathfinder/Data/font/Pixellari.ttf";
+	std::string releasePath = "font/Pixellari.ttf";
 
-	if (!m_pFont.loadFromFile(absolutePath))
+	if (!m_pFont.loadFromFile(debugPath))
 	{
-		std::cout << "Font not found!";
+		std::cout << "Font not found!\n";
 	}
 
 	m_pLabels.reserve(m_NumLabels);

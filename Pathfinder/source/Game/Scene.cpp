@@ -81,7 +81,7 @@ void Scene::Update(float deltaTime)
 
 		if (GetAlgorithmState() == AlgorithmState::Visualized)
 		{
-			UpdateWidgetLog("Path Visualized!!");
+			UpdateWidgetLog("Finished Visualization!!");
 		}
 	}
 

@@ -16,4 +16,3 @@ int main()
 
 //A* Implementation
 //Visual Interface to add weight to the tiles
-//Make .exe

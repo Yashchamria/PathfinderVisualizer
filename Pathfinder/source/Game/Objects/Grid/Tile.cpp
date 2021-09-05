@@ -30,7 +30,7 @@ void Tile::Update(float deltaTime)
 {
 	if (GetAnimTileScale() < m_tileFillScale)
 	{
-		SetAnimTileScale(GetAnimTileScale() + 0.05f);
+		SetAnimTileScale(GetAnimTileScale() + 0.08f);
 	}
 	else
 	{
@@ -149,10 +149,6 @@ void Tile::UpdateTileAnimationProperty()
 
 	case TileAnimationState::Processed:
 		Animate(sf::Color(189, 54, 191));
-		break;
-
-	case TileAnimationState::ReProcessing:
-		Animate(sf::Color(5, 199, 242));
 		break;
 
 	case TileAnimationState::Found:

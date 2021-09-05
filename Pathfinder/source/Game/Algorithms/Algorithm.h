@@ -7,9 +7,10 @@ class Grid;
 class Scene;
 
 struct AlgorithmData;
-class DijkstrasAlgorithm;
-class DepthFirstSearch;
 class BreadthFirstSearch;
+class DepthFirstSearch;
+class DijkstrasAlgorithm;
+class Astar;
 
 
 class Algorithm : public IAlgorithm
@@ -36,9 +37,10 @@ private:
 	Scene* m_pScene = nullptr;
 
 	IAlgorithm* m_pCurrentAlgorithm = nullptr;
-	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
-	DepthFirstSearch* m_pDepthFirstSearch = nullptr;
 	BreadthFirstSearch* m_pBreathFirstSearch = nullptr;
+	DepthFirstSearch* m_pDepthFirstSearch = nullptr;
+	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
+	Astar* m_pAstar = nullptr;
 	
 private:
 	std::string m_previousTime;

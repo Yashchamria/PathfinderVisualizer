@@ -120,7 +120,6 @@ void BreadthFirstSearch::ProcessNeighbourTiles(Tile* pTile)
 	{
 		m_PendingTileAnimation.push(std::make_pair(pTile, TileAnimationState::Processed)); //For Visualization
 	}
-
 	//If exist in open list then remove the tile.
 	if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) != m_pOpenTiles.end())
 	{

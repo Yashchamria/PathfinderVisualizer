@@ -138,11 +138,6 @@ Tile* DepthFirstSearch::ProcessNextTile()
 	m_IsTileVisited[pTile] = true;
 	m_tilesExplored++;
 
-	if (pTile->GetTileAnimationState() == TileAnimationState::Processed)
-	{
-		AddToTileAnimationArray(pTile, TileAnimationState::ReProcessing);
-	}
-
 	AddToTileAnimationArray(pTile, TileAnimationState::Processed);
 
 	if (pTile == m_pGrid->GetEndTile()) { m_pathfound = true; return nullptr;}

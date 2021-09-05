@@ -7,18 +7,20 @@
 #include "Game/Objects/Grid/Tile.h"
 
 #include "AlgorithmEnum.h"
-#include "DijkstrasAlgorithm.h"
-#include "DepthFirstSearch.h"
 #include "BreadthFirstSearch.h"
+#include "DepthFirstSearch.h"
+#include "DijkstrasAlgorithm.h"
+#include "Astar.h"
 
 Algorithm::Algorithm(Grid* pGrid, Scene* pScene)
 {
 	m_pGrid = pGrid;
 	m_pScene = pScene;
 
-	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm(pGrid);
-	m_pDepthFirstSearch = new DepthFirstSearch(pGrid);
 	m_pBreathFirstSearch = new BreadthFirstSearch(pGrid);
+	m_pDepthFirstSearch = new DepthFirstSearch(pGrid);
+	m_pDijkstrasAlgorithm = new DijkstrasAlgorithm(pGrid);
+	m_pAstar = new Astar(pGrid);
 }
 
 Algorithm::~Algorithm()
@@ -27,9 +29,10 @@ Algorithm::~Algorithm()
 	m_pGrid = nullptr;
 	m_pScene = nullptr;
 
-	delete m_pDijkstrasAlgorithm;
-	delete m_pDepthFirstSearch;
 	delete m_pBreathFirstSearch;
+	delete m_pDepthFirstSearch;
+	delete m_pDijkstrasAlgorithm;
+	delete m_pAstar;
 }
 
 bool Algorithm::Execute(AlgorithmType algorithmType)
@@ -52,12 +55,10 @@ bool Algorithm::Execute(AlgorithmType algorithmType)
 	switch (algorithmType)
 	{
 	case AlgorithmType::Dijkstra:
-		
 		m_pCurrentAlgorithm = m_pDijkstrasAlgorithm;
 		break;
 
 	case AlgorithmType::DepthFirstSearch:
-
 		m_pCurrentAlgorithm = m_pDepthFirstSearch;
 		break;
 
@@ -65,7 +66,8 @@ bool Algorithm::Execute(AlgorithmType algorithmType)
 		m_pCurrentAlgorithm = m_pBreathFirstSearch;
 		break;
 
-	default:
+	case AlgorithmType::AStar:
+		m_pCurrentAlgorithm = m_pAstar;
 		break;
 	}
 

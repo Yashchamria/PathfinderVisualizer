@@ -36,8 +36,8 @@ void DijkstrasAlgorithm::Init()
 			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
 	
-			m_totalCostfromStartTile.insert(std::pair <Tile*, unsigned int>(pTile, UINT_MAX));
-			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
+			m_totalCostfromStartTile.insert(std::make_pair(pTile, UINT_MAX));
+			m_IsTileVisited.insert(std::make_pair(pTile, false));
 		}
 	}
 
@@ -62,6 +62,9 @@ bool DijkstrasAlgorithm::Execute(AlgorithmType algorithmType)
 		if (m_stopExecution) { return false; }
 
 		Tile* pTile = GetPriorityTile();
+
+		if (pTile == m_pGrid->GetEndTile()) { m_pathfound = true; break; } // Path found Condition
+
 		ProcessNeighbourTiles(pTile);
 	}
 
@@ -177,8 +180,6 @@ Tile* DijkstrasAlgorithm::GetPriorityTile()
 			if (m_totalCostfromStartTile[pTile] <= MinDistanceTile.second)
 			{
 				MinDistanceTile = std::make_pair(pTile, m_totalCostfromStartTile[pTile]);
-
-				if (pTile == m_pGrid->GetEndTile()) { m_pathfound = true; break; } // Path found Condition
 			}
 		}
 	}
