@@ -12,7 +12,7 @@
 #include "DijkstrasAlgorithm.h"
 #include "Astar.h"
 
-Algorithm::Algorithm(Grid* pGrid, Scene* pScene)
+Algorithms::Algorithms(Grid* pGrid, Scene* pScene)
 {
 	m_pGrid = pGrid;
 	m_pScene = pScene;
@@ -23,7 +23,7 @@ Algorithm::Algorithm(Grid* pGrid, Scene* pScene)
 	m_pAstar = new Astar(pGrid);
 }
 
-Algorithm::~Algorithm()
+Algorithms::~Algorithms()
 {
 	m_pCurrentAlgorithm = nullptr;
 	m_pGrid = nullptr;
@@ -35,7 +35,7 @@ Algorithm::~Algorithm()
 	delete m_pAstar;
 }
 
-bool Algorithm::Execute(AlgorithmType algorithmType)
+bool Algorithms::Execute(AlgorithmType algorithmType)
 {
 	//Check for start and end tile
 	if (m_pGrid->GetStartTile() == nullptr)
@@ -74,7 +74,7 @@ bool Algorithm::Execute(AlgorithmType algorithmType)
 	return m_pCurrentAlgorithm->Execute(algorithmType);
 }
 
-bool Algorithm::PlayVisualization(float speed, float deltaTime)
+bool Algorithms::PlayVisualization(float speed, float deltaTime)
 {
 	if (IsPathFound())
 	{
@@ -93,7 +93,7 @@ bool Algorithm::PlayVisualization(float speed, float deltaTime)
 	return true;
 }
 
-void Algorithm::Stop()
+void Algorithms::Stop()
 {
 	if (m_pCurrentAlgorithm)
 	{
@@ -101,7 +101,7 @@ void Algorithm::Stop()
 	}
 }
 
-AlgorithmState Algorithm::GetAlgorithmState()
+AlgorithmState Algorithms::GetAlgorithmState()
 {
 	if (m_pCurrentAlgorithm)
 	{
@@ -111,7 +111,7 @@ AlgorithmState Algorithm::GetAlgorithmState()
 	return AlgorithmState::Executed;
 }
 
-bool Algorithm::IsPathFound()
+bool Algorithms::IsPathFound()
 {
 	if (m_pCurrentAlgorithm)
 	{
@@ -121,7 +121,7 @@ bool Algorithm::IsPathFound()
 	return false;
 }
 
-std::string Algorithm::GetAlgorithmName()
+std::string Algorithms::GetAlgorithmName()
 {
 	if (m_pCurrentAlgorithm)
 	{
@@ -131,7 +131,7 @@ std::string Algorithm::GetAlgorithmName()
 	return "Not Selected!";
 }
 
-std::string Algorithm::GetTimeTaken()
+std::string Algorithms::GetTimeTaken()
 {
 	if (m_pCurrentAlgorithm)
 	{
@@ -141,7 +141,7 @@ std::string Algorithm::GetTimeTaken()
 	return "Not Selected!";
 }
 
-std::string Algorithm::GetTotalCost()
+std::string Algorithms::GetTotalCost()
 {
 	if (m_pCurrentAlgorithm)
 	{
@@ -151,7 +151,7 @@ std::string Algorithm::GetTotalCost()
 	return "Not Selected!";
 }
 
-std::string Algorithm::GetTilesExplored()
+std::string Algorithms::GetTilesExplored()
 {
 	if (m_pCurrentAlgorithm)
 	{

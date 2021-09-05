@@ -25,7 +25,7 @@ Scene::Scene(sf::RenderWindow* pWindow)
 	m_pCurrentAlgorithmData = new AlgorithmData();
 	m_pPreviousAlgorithmData = new AlgorithmData();
 
-	m_pAlgorithm = new Algorithm(m_pGrid, this);
+	m_pAlgorithm = new Algorithms(m_pGrid, this);
 	m_pCurrentAlgorithmData->SetName(m_pAlgorithm->GetAlgorithmName());
 
 	m_pGameObjects.push_back(m_pTopHUDWidget);

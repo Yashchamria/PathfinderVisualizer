@@ -10,7 +10,7 @@ struct AlgorithmData;
 class GameObject;
 class TopHUDWidget;
 class Grid;
-class Algorithm;
+class Algorithms;
 
 class Scene
 {
@@ -34,7 +34,7 @@ private:
 	sf::Vector2u m_GridSize;
 	sf::Vector2u m_ZoomedGridSize;
 	
-	Algorithm* m_pAlgorithm = nullptr;
+	Algorithms* m_pAlgorithm = nullptr;
 	AlgorithmVisualSpeed m_AlgorithmSpeed;
 
 private:

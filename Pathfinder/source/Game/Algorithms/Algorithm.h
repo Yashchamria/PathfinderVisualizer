@@ -1,4 +1,4 @@
-//Algorithm will work as an adapter for different pathfinding algorithms.
+//This class will work as an adapter for different pathfinding algorithms.
 
 #pragma once
 #include "IAlgorithm.h"
@@ -13,18 +13,19 @@ class DijkstrasAlgorithm;
 class Astar;
 
 
-class Algorithm : public IAlgorithm
+class Algorithms : public IAlgorithm
 {
 public:
-	Algorithm(Grid* pGrid, Scene* pScene);
-	~Algorithm();
+	Algorithms(Grid* pGrid, Scene* pScene);
+	~Algorithms();
 
 public:
 	virtual bool Execute(AlgorithmType algorithmType) override;
 	virtual bool PlayVisualization(float speed, float deltaTime) override;
 	virtual void Stop() override;
-	virtual AlgorithmState GetAlgorithmState() override;
+
 	virtual bool IsPathFound() override;
+	virtual AlgorithmState GetAlgorithmState() override;
 
 public:
 	virtual std::string GetAlgorithmName() override;
@@ -42,6 +43,4 @@ private:
 	DijkstrasAlgorithm* m_pDijkstrasAlgorithm = nullptr;
 	Astar* m_pAstar = nullptr;
 	
-private:
-	std::string m_previousTime;
 };
