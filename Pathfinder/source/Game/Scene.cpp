@@ -20,7 +20,7 @@ Scene::Scene(sf::RenderWindow* pWindow)
 	m_pGrid = new Grid();
 	m_GridSize = sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS);
 	m_pGameObjects.push_back(m_pGrid);
-	SetZoomedGridSize(16);
+	SetZoomedGridSize(GameConst::GRID_COLUMNS);
 
 	m_pCurrentAlgorithmData = new AlgorithmData();
 	m_pPreviousAlgorithmData = new AlgorithmData();
