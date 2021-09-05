@@ -49,5 +49,5 @@ public:
 
 public:
 	void GenerateRandomWalls(unsigned int wallPercent);
-	void GenerateRandomTile(TileType tileType, unsigned int quadrant);
+	void GenerateRandomTile(TileType tileType, unsigned int quadrant, bool cornerBais);
 };

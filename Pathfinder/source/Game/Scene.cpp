@@ -126,8 +126,8 @@ void Scene::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pW
 void Scene::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
 {
 	m_pGrid->GenerateRandomWalls(wallPercent);
-	m_pGrid->GenerateRandomTile(TileType::StartTile, StartQuadrant);
-	m_pGrid->GenerateRandomTile(TileType::EndTile,   EndQuadrant);
+	m_pGrid->GenerateRandomTile(TileType::StartTile, StartQuadrant, true);
+	m_pGrid->GenerateRandomTile(TileType::EndTile,   EndQuadrant, true);
 }
 
 void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)

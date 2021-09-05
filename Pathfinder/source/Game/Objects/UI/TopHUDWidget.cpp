@@ -62,7 +62,10 @@ void TopHUDWidget::InitLabels(sf::RenderWindow* pWindow)
 
 	if (!m_pFont.loadFromFile(debugPath))
 	{
-		std::cout << "Font not found!\n";
+		if (!m_pFont.loadFromFile(releasePath))
+		{
+			std::cout << "Font not found!\n";
+		}
 	}
 
 	m_pLabels.reserve(m_NumLabels);

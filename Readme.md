@@ -1,2 +1,2 @@
 A simple pathfinder visualizer built on SFML framework and tries to contain all the popular, efficient and inefficient pathfinding algorithms.
-It uses Strategy design pattern to decide which algorithm to use at runtime. Premake is used to organize the project.
+Premake is used to organize the project.
