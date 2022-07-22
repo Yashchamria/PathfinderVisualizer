@@ -1,10 +1,10 @@
 --Workspace Setup
 workspace "Pathfinder"
 	configurations	{ "Debug", "Release" }
-	platforms		{ "x32", "x64" }
+	platforms	{ "x64" }
 	startproject	"Pathfinder"
-	cppdialect      "C++17"
-	location		"build"
+	cppdialect      "C++20"
+	location	"build"
 
 filter "system:windows"
 	systemversion "latest"
