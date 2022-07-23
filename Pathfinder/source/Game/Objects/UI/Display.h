@@ -1,11 +1,11 @@
 #pragma once
 #include "GameCore/Objects/GameObject.h"
 
-class TopHUDWidget : public GameObject
+class Display final : public GameObject
 {
 public:	
-	TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow);
-	~TopHUDWidget();
+	Display(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow);
+	~Display();
 
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 

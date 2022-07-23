@@ -8,8 +8,8 @@ struct AlgorithmData;
 
 
 class GameObject;
-class TopHUDWidget;
 class Grid;
+class Display;
 class Algorithms;
 
 class Scene final
@@ -27,7 +27,7 @@ private:
 	std::vector<std::shared_ptr<GameObject>> m_pGameObjects;
 
 	std::shared_ptr<Grid> m_pGrid;
-	std::shared_ptr<TopHUDWidget> m_pDisplay;
+	std::shared_ptr<Display> m_pDisplay;
 	std::shared_ptr<Algorithms> m_pAlgorithm;
 
 private:
@@ -38,7 +38,7 @@ public:
 
 public:
 	[[nodiscard]] const std::shared_ptr<Grid>& GetGrid() const { return m_pGrid; }
-	[[nodiscard]] const std::shared_ptr<TopHUDWidget>& GetDisplay() const { return m_pDisplay; }
+	[[nodiscard]] const std::shared_ptr<Display>& GetDisplay() const { return m_pDisplay; }
 	[[nodiscard]] const std::shared_ptr<Algorithms>& GetAlgorithms() const { return m_pAlgorithm; }
 
 public:

@@ -3,7 +3,7 @@
 
 #include "GameCore/Objects/GameObject.h"
 
-#include "Game/Objects/UI/TopHUDWidget.h"
+#include "Game/Objects/UI/Display.h"
 #include "Objects/Grid/Grid.h"
 
 #include "Algorithms/Algorithm.h"
@@ -11,7 +11,7 @@
 
 Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
-	m_pDisplay = std::make_shared<TopHUDWidget>(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color(242, 166, 73), pWindow);
+	m_pDisplay = std::make_shared<Display>(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color(242, 166, 73), pWindow);
 	m_pGameObjects.push_back(m_pDisplay);
 
 	m_pGrid = std::make_shared<Grid>(sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS), pWindow->getSize(), m_pDisplay->GetWidgetBoxSize());

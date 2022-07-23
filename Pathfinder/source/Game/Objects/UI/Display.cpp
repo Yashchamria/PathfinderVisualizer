@@ -1,8 +1,7 @@
 #include "FrameworkPCH.h"
+#include "Display.h"
 
-#include "TopHUDWidget.h"
-
-TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow)
+Display::Display(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
 	//Setting up the widget box
 	m_pWidgetBox = new sf::RectangleShape(WidgetBoxSize);
@@ -15,7 +14,7 @@ TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor,
 	InitLabels(pWindow.get());
 }
 
-TopHUDWidget::~TopHUDWidget()
+Display::~Display()
 {
 	delete m_pWidgetBox;
 	delete m_pGridSizeLabel;
@@ -29,7 +28,7 @@ TopHUDWidget::~TopHUDWidget()
 	m_pLabels.shrink_to_fit();
 }
 
-void TopHUDWidget::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
+void Display::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 {
 	renderWindow->draw(*m_pWidgetBox);
 
@@ -41,7 +40,7 @@ void TopHUDWidget::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 	renderWindow->draw(*m_pGridSizeLabel);
 }
 
-void TopHUDWidget::RePositionWidgetBox(sf::RenderWindow* pWindow)
+void Display::RePositionWidgetBox(sf::RenderWindow* pWindow)
 {
 	sf::Vector2f widgetPosition(0.0f, 0.0f);
 	sf::Vector2u windowSize = pWindow->getSize();
@@ -52,7 +51,7 @@ void TopHUDWidget::RePositionWidgetBox(sf::RenderWindow* pWindow)
 	m_pWidgetBox->setPosition(widgetPosition);
 }
 
-void TopHUDWidget::InitLabels(sf::RenderWindow* pWindow)
+void Display::InitLabels(sf::RenderWindow* pWindow)
 {
 	//Setting up the Text
 	std::string debugPath = "../../Pathfinder/Data/font/Pixellari.ttf";
@@ -102,7 +101,7 @@ void TopHUDWidget::InitLabels(sf::RenderWindow* pWindow)
 	m_pGridSizeLabel->setPosition(LabelPosition);
 }
 
-void TopHUDWidget::UpdateLabel(unsigned int LabelNum, std::string AppendString)
+void Display::UpdateLabel(unsigned int LabelNum, std::string AppendString)
 {
 	LabelNum--;
 

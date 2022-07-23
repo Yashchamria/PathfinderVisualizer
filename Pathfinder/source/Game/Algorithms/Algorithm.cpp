@@ -4,7 +4,7 @@
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Scene.h"
 #include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/UI/TopHUDWidget.h"
+#include "Game/Objects/UI/Display.h"
 #include "AlgorithmEnum.h"
 #include "BreadthFirstSearch.h"
 #include "DepthFirstSearch.h"

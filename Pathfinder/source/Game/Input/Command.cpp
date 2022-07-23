@@ -6,7 +6,7 @@
 
 #include "Game/Algorithms/Algorithm.h"
 #include "Game/Algorithms/AlgorithmEnum.h"
-#include "Game/Objects/UI/TopHUDWidget.h"
+#include "Game/Objects/UI/Display.h"
 
 Command::Command(Scene* pScene)
 {
