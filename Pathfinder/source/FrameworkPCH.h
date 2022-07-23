@@ -2,7 +2,7 @@
 
 //Core-Basic
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <chrono>
 #include <map>
 #include <unordered_map>
@@ -10,6 +10,9 @@
 #include <stack>
 #include <queue>
 #include <tuple>
+#include <memory>
+#include <cstdint>
+
 
 #include "GameCore\GameConstants.h"
 

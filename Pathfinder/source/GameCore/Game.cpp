@@ -4,82 +4,79 @@
 #include "Game/Scene.h"
 #include "Game/Input/InputManager.h"
 
-Game::Game()
+Game::Game(const std::string& windowName, const sf::Vector2u windowSize)
 {
-	//Creating the Game Window
-	sf::Vector2f screenSize = sf::Vector2f(GameConst::WINDOW_WIDTH, GameConst::WINDOW_HEIGHT);
-	sf::VideoMode videoMode((unsigned int)screenSize.x, (unsigned int)screenSize.y);
-	m_pGameWindow = new sf::RenderWindow(videoMode, GameConst::GAME_WINDOW_NAME, sf::Style::Titlebar);
-	m_pGameView = new sf::View(sf::Vector2f(0.0f, 0.0f), screenSize);
+	m_pRenderWindow = std::make_shared<sf::RenderWindow>
+	(sf::VideoMode(windowSize.x, windowSize.y), windowName, sf::Style::Titlebar);
+	m_pView = std::make_shared<sf::View>(sf::Vector2f(0.0f, 0.0f), (sf::Vector2f)windowSize);
 
-	m_pEvent = new sf::Event();
-	m_pScene = new Scene(m_pGameWindow);
-	m_pInputManager = new InputManager(m_pScene);
+	m_pScene = std::make_shared<Scene>(m_pRenderWindow.get());
+	m_pInputManager = std::make_shared<InputManager>(m_pScene.get());
 
-	srand((unsigned)time(0));
+	srand(static_cast<unsigned>(time(nullptr)));
 }
 
-Game::~Game()
+void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) const
 {
-	delete m_pInputManager;
-	delete m_pScene;
-	delete m_pEvent;
-	delete m_pGameView;
-	delete m_pGameWindow;
-}
+	float currentWidth, newHeight;
 
-void Game::Init()
-{
-	PrintGameInfo();
-	m_pScene->Initialize();
-}
-
-void Game::ProcessGameWindowEvents()
-{
-	float currentWidth, newHeight; 
-
-	while (m_pGameWindow->pollEvent(*m_pEvent))
+	while (m_pRenderWindow->pollEvent(*event))
 	{
-		switch (m_pEvent->type)
+		switch (event->type)
 		{
 		case sf::Event::Closed:
-			m_pGameWindow->close();
+			m_pRenderWindow->close();
 			break;
 
 		case sf::Event::KeyPressed:
-			if (m_pEvent->key.code == sf::Keyboard::Escape)
-				m_pGameWindow->close();
+			if (event->key.code == sf::Keyboard::Escape)
+				m_pRenderWindow->close();
 			break;
 
 		case sf::Event::Resized:
-			currentWidth = (float)m_pGameWindow->getSize().x;
+			currentWidth = (float)m_pRenderWindow->getSize().x;
 			newHeight = currentWidth / GameConst::WINDOW_ASPECT_RATIO;
 		
-			m_pGameWindow->setSize(sf::Vector2u((unsigned int)currentWidth, (unsigned int)newHeight));
-			//m_pGameView->setSize(newHeight * GameConst::WINDOW_ASPECT_RATIO, newHeight);
+			m_pRenderWindow->setSize(sf::Vector2u((unsigned int)currentWidth, (unsigned int)newHeight));
 			break;
 
 		default:
 			break;
 		}
-		m_pInputManager->ProcessInputEvent(m_pEvent, m_pGameWindow);
+		m_pInputManager->ProcessInputEvent(event.get(), m_pRenderWindow.get());
 	}
 }
 
-void Game::Update(float deltaTime)
+void Game::Run() const
 {
-	m_pScene->Update(deltaTime);
+	PrintGameInfo();
+	m_pScene->Initialize();
+
+	sf::Clock clock {};
+	float timeSinceLastUpdate = 0.0f;
+	const auto event = std::make_shared<sf::Event>();
+
+	while (m_pRenderWindow->isOpen())
+	{
+		//To get fixed time steps
+		timeSinceLastUpdate += clock.restart().asSeconds();
+
+		while (timeSinceLastUpdate > GameConst::TIME_PER_FRAME)
+		{
+			timeSinceLastUpdate -= GameConst::TIME_PER_FRAME;
+			ProcessGameWindowEvents(event);
+			m_pScene->Update(GameConst::TIME_PER_FRAME);
+		}
+		Draw();
+	}
 }
 
-void Game::Draw()
+void Game::Draw() const
 {
-	m_pGameWindow->clear(sf::Color::Black);
-
-	m_pGameWindow->setView(*m_pGameView);
-
-	m_pScene->Draw(m_pGameWindow);
-
-	m_pGameWindow->display();
+	m_pRenderWindow->clear(sf::Color::Black);
+	m_pRenderWindow->setView(*m_pView);
+	m_pScene->Draw(m_pRenderWindow);
+	m_pRenderWindow->display();
 }
 
 void Game::PrintGameInfo()
@@ -114,29 +111,4 @@ void Game::PrintGameInfo()
 	std::cout << "Press 'Backspace' - To clear the algorithm search from the grid.\n\n";
 
 	std::cout << "That's all. Have a great day!!";
-}
-
-void Game::Run()
-{
-	Init();
-
-	float timeSinceLastUpdate = 0.0f;
-	sf::Clock clock;
-
-	while (m_pGameWindow->isOpen())
-	{
-		//To get fixed time steps
-		timeSinceLastUpdate += clock.restart().asSeconds();
-
-		while (timeSinceLastUpdate > GameConst::TIME_PER_FRAME)
-		{
-			timeSinceLastUpdate -= GameConst::TIME_PER_FRAME;
-
-			ProcessGameWindowEvents();
-
-			Update(GameConst::TIME_PER_FRAME);
-		}
-
-		Draw();
-	}
 }

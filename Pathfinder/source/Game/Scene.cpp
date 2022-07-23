@@ -2,7 +2,6 @@
 #include "Scene.h"
 
 #include "GameCore/Objects/GameObject.h"
-#include "Input/InputManager.h"
 
 #include "Game/Objects/UI/TopHUDWidget.h"
 #include "Objects/Grid/Grid.h"
@@ -58,7 +57,7 @@ Scene::~Scene()
 void Scene::Initialize()
 {
 	//Renders the entire grid from the get-go, might effect the initial load time
-	InitializeGrid(m_GridSize, m_pWindow, m_ZoomedGridSize.x, m_pTopHUDWidget->GetWidgetBoxSize());
+	InitializeGrid(m_GridSize, m_pWindow->getSize(), m_ZoomedGridSize.x, m_pTopHUDWidget->GetWidgetBoxSize());
 
 	for (GameObject* pGameObject : m_pGameObjects) 
 	{
@@ -87,23 +86,23 @@ void Scene::Update(float deltaTime)
 
 }
 
-void Scene::Draw(sf::RenderWindow* pWindow)
+void Scene::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) const
 {
 	for (GameObject* pGameObject : m_pGameObjects)
 	{
-		pGameObject->Draw(pWindow);
+		pGameObject->Draw(renderWindow);
 	}
 }
 
-void Scene::InitializeGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, unsigned int NumColumnZoom, sf::Vector2f TopWidgetSize)
+void Scene::InitializeGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, unsigned int NumColumnZoom, sf::Vector2f TopWidgetSize)
 {
-	m_pGrid->GenerateGrid(gridSize, pWindow, TopWidgetSize);
-	m_pGrid->ResizeGrid(NumColumnZoom, pWindow, TopWidgetSize);
+	m_pGrid->GenerateGrid(gridSize, windowSize, TopWidgetSize);
+	m_pGrid->ResizeGrid(NumColumnZoom, windowSize, TopWidgetSize);
 }
 
-void Scene::ResizeGrid(unsigned int NumColumn, sf::Vector2f TopWidgetSize)
+void Scene::ResizeGrid(unsigned int NumColumn, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize)
 {
-	m_pGrid->ResizeGrid(NumColumn, m_pWindow, TopWidgetSize);
+	m_pGrid->ResizeGrid(NumColumn, windowSize, TopWidgetSize);
 }
 
 

@@ -33,7 +33,7 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 				m_pScene->SetZoomedGridSize(m_pScene->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomOutSteps = 0;
-				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, m_pScene->GetTopWidgetSize());
+				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetTopWidgetSize());
 			}
 		}
 
@@ -47,7 +47,7 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 				m_pScene->SetZoomedGridSize(m_pScene->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomInSteps = 0;
-				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, m_pScene->GetTopWidgetSize());
+				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetTopWidgetSize());
 			}
 		}
 	}

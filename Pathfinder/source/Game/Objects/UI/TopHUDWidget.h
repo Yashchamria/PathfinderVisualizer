@@ -7,7 +7,7 @@ public:
 	TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, sf::RenderWindow * pWindow);
 	~TopHUDWidget();
 
-	virtual void Draw(sf::RenderWindow* pWindow) override;
+	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 
 private:
 	sf::RectangleShape* m_pWidgetBox = nullptr;

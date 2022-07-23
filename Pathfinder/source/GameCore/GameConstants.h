@@ -2,8 +2,6 @@
 
 namespace GameConst
 {
-	const static char* GAME_WINDOW_NAME = "Pathfinder Visualizer";
-
 	const static unsigned int WINDOW_WIDTH  = 1200;
 	const static unsigned int WINDOW_HEIGHT = (unsigned int)(WINDOW_WIDTH / 2.0f);
 

@@ -14,16 +14,10 @@ Tile::Tile(sf::Vector2u TileCoord, sf::Vector2f TileSize)
 	SetAnimTileScale(m_tileFillScale);
 }
 
-Tile::~Tile()
+void Tile::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 {
-}
-
-
-void Tile::Draw(sf::RenderWindow* pWindow)
-{
-	GameObject::Draw(pWindow);
-	pWindow->draw(m_TileBody);
-	pWindow->draw(m_TileAnimationBody);
+	renderWindow->draw(m_TileBody);
+	renderWindow->draw(m_TileAnimationBody);
 }
 
 void Tile::Update(float deltaTime)
@@ -48,7 +42,7 @@ void Tile::SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor)
 	m_TileAnimationBody.setOrigin((tileSize * m_tileFillScale) / 2.0f);
 }
 
-void Tile::SetTileCoord(sf::Vector2u tileCoord, sf::RenderWindow* pWindow)
+void Tile::SetTileCoord(sf::Vector2u tileCoord)
 {
 	m_tileCoord = tileCoord;
 }
@@ -85,12 +79,11 @@ float Tile::GetAnimTileScale()
 	return m_TileAnimationBody.getScale().x;
 }
 
-void Tile::RepositionTile(sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
+void Tile::RepositionTile(sf::Vector2u windowSize, sf::Vector2f TopWidgetSize)
 {
 	//Setting the tile position according to the tile coord and Screen size.
 	sf::Vector2f tilePos;
 	sf::Vector2f tileSize = m_TileBody.getSize();
-	sf::Vector2u windowSize = pWindow->getSize();
 
 	//TilePos = TileCoord * TileSize + OffsetTileCentre - OffsetToWindowsTopMostCorner
 	tilePos.x = (m_tileCoord.x * tileSize.x) + (tileSize.x / 2.0f) - ((float)windowSize.x / 2.0f);

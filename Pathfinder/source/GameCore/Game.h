@@ -1,28 +1,25 @@
 #pragma once
 
-class Game
+class Scene;
+class InputManager;
+
+class Game final
 {
 public:	
-	Game();
-	~Game();
-
-	//Game Core Functions
-	void Init();
-	void Run();
+	Game(const std::string& windowName, const sf::Vector2u screenSize);
+	void Run() const;
 
 private:
-	void ProcessGameWindowEvents();
-	void Update(float deltaTime);
-	void Draw();
+	void ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) const;
+	void Draw() const;
 
 private:
-	sf::RenderWindow* m_pGameWindow = nullptr;
-	sf::View* m_pGameView;
-	sf::Event* m_pEvent;
-
-	class Scene* m_pScene;
-	class InputManager* m_pInputManager;
+	static void PrintGameInfo();
 
 private:
-	void PrintGameInfo();
+	std::shared_ptr<sf::RenderWindow> m_pRenderWindow;
+	std::shared_ptr<sf::View> m_pView;
+	std::shared_ptr<Scene> m_pScene;
+	std::shared_ptr<InputManager> m_pInputManager;
+
 };

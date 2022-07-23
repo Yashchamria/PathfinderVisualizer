@@ -31,19 +31,17 @@ void Grid::Update(float deltaTime)
 	}
 }
 
-void Grid::Draw(sf::RenderWindow* pWindow)
+void Grid::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 {
-	GameObject::Draw(pWindow);
-
 	for (Tile* pTile : m_pTiles)
 	{
-		pTile->Draw(pWindow);
+		pTile->Draw(renderWindow);
 	}
 
-	m_pTileSelector->Draw(pWindow);
+	m_pTileSelector->Draw(renderWindow);
 }
 
-void Grid::GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
+void Grid::GenerateGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize)
 {
 	m_gridSize = gridSize;
 
@@ -55,26 +53,26 @@ void Grid::GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, sf::Ve
 		for (unsigned int y = 0; y < gridSize.y; y++)
 		{
 			Tile* pTile = new Tile();
-			pTile->SetTileCoord(sf::Vector2u(x, y), pWindow);
-			pTile->RepositionTile(pWindow, TopWidgetSize);
+			pTile->SetTileCoord(sf::Vector2u(x, y));
+			pTile->RepositionTile(windowSize, TopWidgetSize);
 
 			m_pTiles.push_back(pTile);
 		}
 	}
 }
 
-void Grid::ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
+void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const
 {
-	float tileSize = pWindow->getSize().x / (float)numberOfColumns;
+	const float tileSize = windowSize.x / (float)numberOfColumns;
 
 	for (Tile* pTile : m_pTiles)
 	{
 		pTile->SetTileSize(sf::Vector2f(tileSize, tileSize), 20.0f);
-		pTile->RepositionTile(pWindow, TopWidgetSize);
+		pTile->RepositionTile(windowSize, TopWidgetSize);
 	}
 
 	m_pTileSelector->SetTileSize(sf::Vector2f(tileSize, tileSize), 8.0f);
-	m_pTileSelector->RepositionTile(pWindow, TopWidgetSize);
+	m_pTileSelector->RepositionTile(windowSize, TopWidgetSize);
 }
 
 void Grid::ClearGrid()
@@ -171,8 +169,8 @@ void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize
 
 void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize)
 {
-	m_pTileSelector->SetTileCoord(mouseTileCoord, pWindow);
-	m_pTileSelector->RepositionTile(pWindow, TopWidgetSize);
+	m_pTileSelector->SetTileCoord(mouseTileCoord);
+	m_pTileSelector->RepositionTile(pWindow->getSize(), TopWidgetSize);
 }
 
 Tile* Grid::GetNeighbourTile(sf::Vector2u CurrentTileCoord, NeighbourTileDirection tileDirection)

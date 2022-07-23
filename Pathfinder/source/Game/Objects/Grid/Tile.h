@@ -8,9 +8,8 @@ class Tile : public GameObject
 {
 public:	
 	Tile(sf::Vector2u TileCoord = sf::Vector2u(0, 0), sf::Vector2f TileSize = sf::Vector2f(50.0f, 50.0f));
-	~Tile();
 
-	virtual void Draw(sf::RenderWindow* pWindow) override;
+	virtual void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 	virtual void Update(float deltaTime) override;
 
 private:
@@ -27,13 +26,12 @@ private:
 	bool m_IsAnimationChanged = false;
 
 public:
-	void RepositionTile(sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
+	void RepositionTile(sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
 	void UpdateTileType();
 	void UpdateTileAnimationProperty();
 
-
 public:
-	void SetTileCoord(sf::Vector2u tileCoord, sf::RenderWindow* pWindow);
+	void SetTileCoord(sf::Vector2u tileCoord);
 	void SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor);
 	void SetTileColor(sf::Color fillColor = sf::Color::White, sf::Color OutlineColor = sf::Color::Black);
 	void SetTileType(TileType tileType);

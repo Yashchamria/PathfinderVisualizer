@@ -12,7 +12,7 @@ public:
 	~Grid();
 
 	virtual void Update(float deltaTime) override;
-	virtual void Draw(sf::RenderWindow* pWindow) override;
+	virtual void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 
 private:
 	sf::Vector2u m_gridSize;
@@ -23,8 +23,8 @@ private:
 	class Tile* m_pEndTile = nullptr;
 
 public:
-	void GenerateGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
-	void ResizeGrid(unsigned int numberOfColumns, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
+	void GenerateGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
+	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const;
 
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize, TileType tileType);
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);

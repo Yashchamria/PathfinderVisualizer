@@ -3,16 +3,11 @@
 
 int main()
 {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    Game pathfinderVisualizer;
-	
-    pathfinderVisualizer.Run();
+	const Game pathfinderVisualizer("Pathfinder Visualizer", { 1200, 600 });
+	pathfinderVisualizer.Run();
 
-    system("pause");
-
-    return 0;
+	std::cin.get();
+	return 0;
 }
-
-//A* Implementation
-//Visual Interface to add weight to the tiles

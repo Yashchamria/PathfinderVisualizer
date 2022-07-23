@@ -9,4 +9,4 @@ void GameObject::Initialize() {}
 
 void GameObject::Update(float deltaTime) {}
 
-void GameObject::Draw(sf::RenderWindow* pWindow) {}
+void GameObject::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) {}

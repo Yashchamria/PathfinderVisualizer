@@ -21,7 +21,7 @@ public:
 	//Game Core Functions
 	void Initialize();
 	void Update(float deltaTime);
-	void Draw(sf::RenderWindow* pWindow);
+	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) const;
 
 private:
 	sf::RenderWindow* m_pWindow;
@@ -41,11 +41,11 @@ private:
 	bool m_AlgorithmExecuted = false;
 
 private:
-	void InitializeGrid(sf::Vector2u gridSize, sf::RenderWindow* pWindow, unsigned int NumColumnZoom, sf::Vector2f TopWidgetSize);
+	void InitializeGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, unsigned int NumColumnZoom, sf::Vector2f TopWidgetSize);
 
 public:
 	//Grid helper functions
-	void ResizeGrid(unsigned int NumColumn, sf::Vector2f TopWidgetSize);
+	void ResizeGrid(unsigned int NumColumn, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
 	void ClearGrid();
 	void ClearAlgorithmSearch();
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);

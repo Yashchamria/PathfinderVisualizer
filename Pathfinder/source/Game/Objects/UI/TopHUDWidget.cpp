@@ -29,18 +29,16 @@ TopHUDWidget::~TopHUDWidget()
 	m_pLabels.shrink_to_fit();
 }
 
-void TopHUDWidget::Draw(sf::RenderWindow* pWindow)
+void TopHUDWidget::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 {
-	GameObject::Draw(pWindow);
-
-	pWindow->draw(*m_pWidgetBox);
+	renderWindow->draw(*m_pWidgetBox);
 
 	for (sf::Text* pText : m_pLabels)
 	{
-		pWindow->draw(*pText);
+		renderWindow->draw(*pText);
 	}
 
-	pWindow->draw(*m_pGridSizeLabel);
+	renderWindow->draw(*m_pGridSizeLabel);
 }
 
 void TopHUDWidget::RePositionWidgetBox(sf::RenderWindow* pWindow)
