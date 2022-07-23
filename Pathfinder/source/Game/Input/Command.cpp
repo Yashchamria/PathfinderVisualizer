@@ -6,6 +6,7 @@
 
 #include "Game/Algorithms/Algorithm.h"
 #include "Game/Algorithms/AlgorithmEnum.h"
+#include "Game/Objects/UI/TopHUDWidget.h"
 
 Command::Command(Scene* pScene)
 {
@@ -19,8 +20,8 @@ Command::~Command()
 
 void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 {
-	if (m_pScene->GetZoomedGridSize().x + ZoomValue >= 8 && 
-		m_pScene->GetZoomedGridSize().x + ZoomValue <= m_pScene->GetGridSize().x)
+	if (m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue >= 8 && 
+		m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue <= m_pScene->GetGrid()->GetGridSize().x)
 	{
 
 		//For Zooming Out
@@ -30,10 +31,10 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 
 			if (m_ZoomOutSteps >= 10)
 			{
-				m_pScene->SetZoomedGridSize(m_pScene->GetZoomedGridSize().x + ZoomValue);
+				m_pScene->GetGrid()->SetZoomedGridSize(m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomOutSteps = 0;
-				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetTopWidgetSize());
+				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetDisplay()->GetWidgetBoxSize());
 			}
 		}
 
@@ -44,16 +45,16 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 
 			if (m_ZoomInSteps >= 10)
 			{
-				m_pScene->SetZoomedGridSize(m_pScene->GetZoomedGridSize().x + ZoomValue);
+				m_pScene->GetGrid()->SetZoomedGridSize(m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomInSteps = 0;
-				m_pScene->ResizeGrid(m_pScene->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetTopWidgetSize());
+				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetDisplay()->GetWidgetBoxSize());
 			}
 		}
 	}
 }
 
-void Command::UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWindow* pWindow)
+void Command::UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWindow* pWindow, const sf::Vector2f displaySize)
 {
 	switch (moveType)
 	{
@@ -66,7 +67,7 @@ void Command::UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWi
 		break;
 
 	case TileSelectorMove::Down:
-		if (m_MouseTileCoord.y < (m_pScene->GetZoomedGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
+		if (m_MouseTileCoord.y < (m_pScene->GetGrid()->GetZoomedGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
 		break;	
 	
 	case TileSelectorMove::Left:
@@ -74,16 +75,16 @@ void Command::UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWi
 		break;
 	
 	case TileSelectorMove::Right:
-		if (m_MouseTileCoord.x < (m_pScene->GetZoomedGridSize().x - 1)) { m_MouseTileCoord.x += 1; }
+		if (m_MouseTileCoord.x < (m_pScene->GetGrid()->GetZoomedGridSize().x - 1)) { m_MouseTileCoord.x += 1; }
 		break;
 	}
 
-	m_pScene->UpdateTileSelector(m_MouseTileCoord, pWindow);
+	m_pScene->GetGrid()->UpdateTileSelector(m_MouseTileCoord, pWindow->getSize(), displaySize);
 }
 
 void Command::UpdateTileProperty(TileType tileType)
 {
-	m_pScene->UpdateTileProperty(m_MouseTileCoord, tileType);
+	m_pScene->GetGrid()->UpdateTileProperty(m_MouseTileCoord, tileType);
 	HandleOngoingAlgorithm(true);
 }
 
@@ -101,7 +102,7 @@ void Command::ClearAlgorithmSearch()
 	m_AlgorithmStopped = true;
 
 	HandleOngoingAlgorithm(false);
-	m_pScene->ClearAlgorithmSearch();
+	m_pScene->GetGrid()->ClearAlgorithmSearch();
 }
 
 void Command::ClearGrid()
@@ -109,12 +110,12 @@ void Command::ClearGrid()
 	m_AlgorithmStopped = true;
 
 	HandleOngoingAlgorithm(false);
-	m_pScene->ClearGrid();
+	m_pScene->GetGrid()->ClearGrid();
 }
 
 void Command::ChangeVisualizationSpeed(VisualSpeed visualSpeed)
 {
-	AlgorithmVisualSpeed newSpeed = m_pScene->GetAlgorithmVisualSpeed();
+	AlgorithmVisualSpeed newSpeed = m_pScene->AlgorithmSpeed;
 
 	if (visualSpeed == VisualSpeed::Increase)
 	{
@@ -132,15 +133,15 @@ void Command::ChangeVisualizationSpeed(VisualSpeed visualSpeed)
 		else if (newSpeed == AlgorithmVisualSpeed::Instant) { newSpeed = AlgorithmVisualSpeed::SuperFast; }
 	}
 
-	m_pScene->SetAlgorithmVisualSpeed(newSpeed);
-	m_pScene->UpdateTopWidgetLabels(3, VisualSpeedToString(newSpeed));
+	m_pScene->AlgorithmSpeed = newSpeed;
+	m_pScene->GetDisplay()->UpdateLabel(3, VisualSpeedToString(newSpeed));
 }
 
 void Command::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
 {
 	HandleOngoingAlgorithm(false);
 
-	m_pScene->GenerateRandomGrid(wallPercent, StartQuadrant, EndQuadrant);
+	m_pScene->GetGrid()->GenerateRandomGrid(wallPercent, StartQuadrant, EndQuadrant);
 }
 
 
@@ -148,11 +149,11 @@ void Command::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQua
 sf::Vector2u Command::GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow)
 {
 	sf::Vector2f currentTileSizeOnScreen;
-	currentTileSizeOnScreen.x = (float)pWindow->getSize().x / (float)m_pScene->GetZoomedGridSize().x;
-	currentTileSizeOnScreen.y = ((float)pWindow->getSize().y - m_pScene->GetTopWidgetSize().y) / (float)m_pScene->GetZoomedGridSize().y;
+	currentTileSizeOnScreen.x = (float)pWindow->getSize().x / (float)m_pScene->GetGrid()->GetZoomedGridSize().x;
+	currentTileSizeOnScreen.y = ((float)pWindow->getSize().y - m_pScene->GetDisplay()->GetWidgetBoxSize().y) / (float)m_pScene->GetGrid()->GetZoomedGridSize().y;
 
 	float tileCoordX = (float)mousePosition.x / currentTileSizeOnScreen.x;
-	float tileCoordY = (((float)mousePosition.y - m_pScene->GetTopWidgetSize().y) / currentTileSizeOnScreen.y);
+	float tileCoordY = (((float)mousePosition.y - m_pScene->GetDisplay()->GetWidgetBoxSize().y) / currentTileSizeOnScreen.y);
 
 
 	sf::Vector2u mouseTileCoord = sf::Vector2u((unsigned int)floor(tileCoordX), (unsigned int)floor(tileCoordY));
@@ -164,13 +165,13 @@ void Command::HandleOngoingAlgorithm(bool bReRunAlgorithm)
 {
 	m_pScene->StopAlgorithm();
 
-	m_pScene->ClearAlgorithmSearch();
+	m_pScene->GetGrid()->ClearAlgorithmSearch();
 
 	if (bReRunAlgorithm && !m_AlgorithmStopped)
 	{
-		if (m_pScene->GetAlgorithmState() != AlgorithmState::Executed)
+		if (m_pScene->GetAlgorithms()->GetAlgorithmState() != AlgorithmState::Executed)
 		{
-				m_pScene->ExecuteAlgorithm(m_CurrentAlgorithm);
+			m_pScene->ExecuteAlgorithm(m_CurrentAlgorithm);
 		}
 	}
 }

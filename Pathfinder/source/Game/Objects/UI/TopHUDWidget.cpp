@@ -2,7 +2,7 @@
 
 #include "TopHUDWidget.h"
 
-TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, sf::RenderWindow* pWindow)
+TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
 	//Setting up the widget box
 	m_pWidgetBox = new sf::RectangleShape(WidgetBoxSize);
@@ -10,9 +10,9 @@ TopHUDWidget::TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor,
 	m_pWidgetBox->setOutlineColor(sf::Color(25, 25, 25));
 	m_pWidgetBox->setOutlineThickness(-WidgetBoxSize.y / 30.0f);
 
-	RePositionWidgetBox(pWindow);
+	RePositionWidgetBox(pWindow.get());
 
-	InitLabels(pWindow);
+	InitLabels(pWindow.get());
 }
 
 TopHUDWidget::~TopHUDWidget()

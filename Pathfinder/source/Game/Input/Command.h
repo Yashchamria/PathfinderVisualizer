@@ -29,7 +29,7 @@ public:
 
 public:
 	void ResizeGrid(int ColumnIncrement, unsigned int ScrollSteps = 6);
-	void UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWindow* pWindow);
+	void UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWindow* pWindow, const sf::Vector2f displaySize);
 	void UpdateTileProperty(TileType tileType);
 	void ExecuteAlgorithm(AlgorithmType algorithmType);
 	void ClearAlgorithmSearch();

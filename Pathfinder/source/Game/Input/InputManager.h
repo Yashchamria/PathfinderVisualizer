@@ -9,7 +9,7 @@ public:
 	~InputManager();
 
 public:
-	void ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindow);
+	void ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindow, const sf::Vector2f displaySize);
 
 private:
 	Command* m_pCommand;

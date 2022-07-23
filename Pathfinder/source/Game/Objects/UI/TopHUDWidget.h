@@ -4,7 +4,7 @@
 class TopHUDWidget : public GameObject
 {
 public:	
-	TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, sf::RenderWindow * pWindow);
+	TopHUDWidget(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow);
 	~TopHUDWidget();
 
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;

@@ -10,7 +10,7 @@ Game::Game(const std::string& windowName, const sf::Vector2u windowSize)
 	(sf::VideoMode(windowSize.x, windowSize.y), windowName, sf::Style::Titlebar);
 	m_pView = std::make_shared<sf::View>(sf::Vector2f(0.0f, 0.0f), (sf::Vector2f)windowSize);
 
-	m_pScene = std::make_shared<Scene>(m_pRenderWindow.get());
+	m_pScene = std::make_shared<Scene>(m_pRenderWindow);
 	m_pInputManager = std::make_shared<InputManager>(m_pScene.get());
 
 	srand(static_cast<unsigned>(time(nullptr)));
@@ -18,8 +18,6 @@ Game::Game(const std::string& windowName, const sf::Vector2u windowSize)
 
 void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) const
 {
-	float currentWidth, newHeight;
-
 	while (m_pRenderWindow->pollEvent(*event))
 	{
 		switch (event->type)
@@ -34,20 +32,17 @@ void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) cons
 			break;
 
 		case sf::Event::Resized:
-			currentWidth = (float)m_pRenderWindow->getSize().x;
-			newHeight = currentWidth / GameConst::WINDOW_ASPECT_RATIO;
-		
-			m_pRenderWindow->setSize(sf::Vector2u((unsigned int)currentWidth, (unsigned int)newHeight));
+			m_pRenderWindow->setSize(sf::Vector2u(m_pRenderWindow->getSize().x, (unsigned int)((float)m_pRenderWindow->getSize().x / GameConst::WINDOW_ASPECT_RATIO)));
 			break;
 
 		default:
 			break;
 		}
-		m_pInputManager->ProcessInputEvent(event.get(), m_pRenderWindow.get());
+		m_pInputManager->ProcessInputEvent(event.get(), m_pRenderWindow.get(), sf::Vector2f(GameConst::TOP_WIDGET_WIDTH, GameConst::TOP_WIDGET_HEIGHT));
 	}
 }
 
-void Game::Run() const
+void Game::Run(const float deltaTime) const
 {
 	PrintGameInfo();
 	m_pScene->Initialize();
@@ -61,11 +56,11 @@ void Game::Run() const
 		//To get fixed time steps
 		timeSinceLastUpdate += clock.restart().asSeconds();
 
-		while (timeSinceLastUpdate > GameConst::TIME_PER_FRAME)
+		while (timeSinceLastUpdate > deltaTime)
 		{
-			timeSinceLastUpdate -= GameConst::TIME_PER_FRAME;
+			timeSinceLastUpdate -= deltaTime;
 			ProcessGameWindowEvents(event);
-			m_pScene->Update(GameConst::TIME_PER_FRAME);
+			m_pScene->Update(deltaTime);
 		}
 		Draw();
 	}

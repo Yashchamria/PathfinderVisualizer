@@ -5,32 +5,37 @@ enum class TileType : char;
 enum class NeighbourTileDirection : char;
 class Tile;
 
-class Grid : public GameObject
+class Grid final: public GameObject
 {
 public:	
-	Grid();
+	Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf::Vector2f displaySize);
 	~Grid();
 
-	virtual void Update(float deltaTime) override;
-	virtual void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
+	void Update(float deltaTime) override;
+	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 
 private:
-	sf::Vector2u m_gridSize;
+	const sf::Vector2u m_gridSize;
+	sf::Vector2u m_ZoomedGridSize;
+
 	std::vector<Tile*> m_pTiles;
 
-	class Tile* m_pTileSelector = nullptr;
-	class Tile* m_pStartTile = nullptr;
-	class Tile* m_pEndTile = nullptr;
+	Tile* m_pTileSelector = nullptr;
+	Tile* m_pStartTile = nullptr;
+	Tile* m_pEndTile = nullptr;
 
 public:
-	void GenerateGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
 	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const;
 
-	void UpdateTileProperty(sf::Vector2u mouseTileCoord, sf::Vector2u gridSize, TileType tileType);
-	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow, sf::Vector2f TopWidgetSize);
+	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
+	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
+	void SetSelectorPosition(sf::Vector2u mouseTileCoord, sf::Vector2u windowSize, sf::Vector2f displaySize);
 
 	void ClearGrid();
 	void ClearAlgorithmSearch();
+
+	void SetZoomedGridSize(unsigned int ColumnSize) { m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::GRID_ASPECT_RATIO)); }
+	sf::Vector2u GetZoomedGridSize() const { return m_ZoomedGridSize; }
 
 private:
 	unsigned int GetTilesArrayIndex(sf::Vector2u TileCoord, sf::Vector2u GridSize) { return TileCoord.y + (TileCoord.x * GridSize.y); }
@@ -50,4 +55,5 @@ public:
 public:
 	void GenerateRandomWalls(unsigned int wallPercent);
 	void GenerateRandomTile(TileType tileType, unsigned int quadrant, bool cornerBais);
+	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
 };

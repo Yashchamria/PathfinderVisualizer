@@ -5,61 +5,40 @@
 
 #include "Game/Objects/UI/TopHUDWidget.h"
 #include "Objects/Grid/Grid.h"
-#include "Objects/Grid/TileEnum.h"
 
 #include "Algorithms/Algorithm.h"
 #include "Algorithms/AlgorithmEnum.h"
 
-Scene::Scene(sf::RenderWindow* pWindow)
+Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
-	m_pWindow = pWindow;
+	m_pDisplay = std::make_shared<TopHUDWidget>(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color(242, 166, 73), pWindow);
+	m_pGameObjects.push_back(m_pDisplay);
 
-	m_pTopHUDWidget = new TopHUDWidget(sf::Vector2f(GameConst::TOP_WIDGET_WIDTH,GameConst::TOP_WIDGET_HEIGHT), sf::Color(242, 166, 73), pWindow);
-
-	m_pGrid = new Grid();
-	m_GridSize = sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS);
+	m_pGrid = std::make_shared<Grid>(sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS), pWindow->getSize(), m_pDisplay->GetWidgetBoxSize());
 	m_pGameObjects.push_back(m_pGrid);
-	SetZoomedGridSize(GameConst::GRID_COLUMNS);
+
+	m_pAlgorithm = std::make_shared<Algorithms>(m_pGrid.get(), this);
 
 	m_pCurrentAlgorithmData = new AlgorithmData();
 	m_pPreviousAlgorithmData = new AlgorithmData();
 
-	m_pAlgorithm = new Algorithms(m_pGrid, this);
 	m_pCurrentAlgorithmData->SetName(m_pAlgorithm->GetAlgorithmName());
 
-	m_pGameObjects.push_back(m_pTopHUDWidget);
-
-	m_AlgorithmSpeed = AlgorithmVisualSpeed::Average;
-	UpdateTopWidgetLabels(3, VisualSpeedToString(m_AlgorithmSpeed));
-
+	AlgorithmSpeed = AlgorithmVisualSpeed::Average;
+	m_pDisplay->UpdateLabel(3, VisualSpeedToString(AlgorithmSpeed));
 }
 
 Scene::~Scene()
 {
-
 	delete m_pCurrentAlgorithmData;
 	delete m_pPreviousAlgorithmData;
 
-	for (GameObject* pGameObject : m_pGameObjects)
-	{
-		delete pGameObject;
-	}
 	m_pGameObjects.clear();
-	m_pGameObjects.shrink_to_fit();
-
-	if (m_pAlgorithm) { delete m_pAlgorithm; }
-
-	m_pTopHUDWidget = nullptr;
-	m_pGrid = nullptr;
-	m_pWindow = nullptr;
 }
 
-void Scene::Initialize()
+void Scene::Initialize() const
 {
-	//Renders the entire grid from the get-go, might effect the initial load time
-	InitializeGrid(m_GridSize, m_pWindow->getSize(), m_ZoomedGridSize.x, m_pTopHUDWidget->GetWidgetBoxSize());
-
-	for (GameObject* pGameObject : m_pGameObjects) 
+	for (const auto& pGameObject : m_pGameObjects)
 	{
 		pGameObject->Initialize();
 	}
@@ -67,7 +46,7 @@ void Scene::Initialize()
 
 void Scene::Update(float deltaTime)
 {
-	for (GameObject* pGameObject : m_pGameObjects)
+	for (const auto& pGameObject : m_pGameObjects)
 	{
 		pGameObject->Update(deltaTime);
 	}
@@ -76,11 +55,11 @@ void Scene::Update(float deltaTime)
 
 	if (m_AlgorithmExecuted)
 	{
-		m_AlgorithmExecuted = !(m_pAlgorithm->PlayVisualization((float)m_AlgorithmSpeed, deltaTime));
+		m_AlgorithmExecuted = !(m_pAlgorithm->PlayVisualization((float)AlgorithmSpeed, deltaTime));
 
-		if (GetAlgorithmState() == AlgorithmState::Visualized)
+		if (m_pAlgorithm->GetAlgorithmState() == AlgorithmState::Visualized)
 		{
-			UpdateWidgetLog("Finished Visualization!!");
+			m_pDisplay->UpdateLabel(6, "Finished Visualization!!");
 		}
 	}
 
@@ -88,52 +67,11 @@ void Scene::Update(float deltaTime)
 
 void Scene::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) const
 {
-	for (GameObject* pGameObject : m_pGameObjects)
+	for (const auto& pGameObject : m_pGameObjects)
 	{
 		pGameObject->Draw(renderWindow);
 	}
 }
-
-void Scene::InitializeGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, unsigned int NumColumnZoom, sf::Vector2f TopWidgetSize)
-{
-	m_pGrid->GenerateGrid(gridSize, windowSize, TopWidgetSize);
-	m_pGrid->ResizeGrid(NumColumnZoom, windowSize, TopWidgetSize);
-}
-
-void Scene::ResizeGrid(unsigned int NumColumn, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize)
-{
-	m_pGrid->ResizeGrid(NumColumn, windowSize, TopWidgetSize);
-}
-
-
-void Scene::ClearGrid()
-{
-	m_pGrid->ClearGrid();
-}
-
-void Scene::ClearAlgorithmSearch()
-{
-	m_pGrid->ClearAlgorithmSearch();
-}
-
-void Scene::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow)
-{
-	if((mouseTileCoord.x <= m_ZoomedGridSize.x - 1) && (mouseTileCoord.y <= m_ZoomedGridSize.y - 1))
-	m_pGrid->UpdateTileSelector(mouseTileCoord, pWindow, m_pTopHUDWidget->GetWidgetBoxSize());
-}
-
-void Scene::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
-{
-	m_pGrid->GenerateRandomWalls(wallPercent);
-	m_pGrid->GenerateRandomTile(TileType::StartTile, StartQuadrant, true);
-	m_pGrid->GenerateRandomTile(TileType::EndTile,   EndQuadrant, true);
-}
-
-void Scene::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
-{
-	m_pGrid->UpdateTileProperty(mouseTileCoord, m_GridSize, tileType);
-}
-
 
 void Scene::ExecuteAlgorithm(AlgorithmType algorithmType)
 {
@@ -159,34 +97,14 @@ void Scene::StopAlgorithm()
 	m_pAlgorithm->Stop();
 }
 
-sf::Vector2f Scene::GetTopWidgetSize()
-{
-	return m_pTopHUDWidget->GetWidgetBoxSize();
-}
-
-AlgorithmState Scene::GetAlgorithmState()
-{
-	return m_pAlgorithm->GetAlgorithmState();
-}
-
-void Scene::UpdateTopWidgetLabels(unsigned int LabelNum, std::string AppendString)
-{
-	m_pTopHUDWidget->UpdateLabel(LabelNum, AppendString);
-}
-
-void Scene::UpdateWidgetLog(std::string AppendString)
-{
-	UpdateTopWidgetLabels(6, AppendString);
-}
-
 void Scene::AutoUpdateTopWidget()
 {
-	UpdateTopWidgetLabels(1, m_pCurrentAlgorithmData->GetName());
-	UpdateTopWidgetLabels(2, m_pCurrentAlgorithmData->GetTimeTaken());
-	UpdateTopWidgetLabels(4, m_pCurrentAlgorithmData->GetPathCost());
-	UpdateTopWidgetLabels(5, m_pCurrentAlgorithmData->GetTilesExplored());
+	m_pDisplay->UpdateLabel(1, m_pCurrentAlgorithmData->GetName());
+	m_pDisplay->UpdateLabel(2, m_pCurrentAlgorithmData->GetTimeTaken());
+	m_pDisplay->UpdateLabel(4, m_pCurrentAlgorithmData->GetPathCost());
+	m_pDisplay->UpdateLabel(5, m_pCurrentAlgorithmData->GetTilesExplored());
 
-	UpdateTopWidgetLabels(7, m_pPreviousAlgorithmData->GetName());
-	UpdateTopWidgetLabels(8, m_pPreviousAlgorithmData->GetTimeTaken());
-	UpdateTopWidgetLabels(9, m_pPreviousAlgorithmData->GetPathCost());
+	m_pDisplay->UpdateLabel(7, m_pPreviousAlgorithmData->GetName());
+	m_pDisplay->UpdateLabel(8, m_pPreviousAlgorithmData->GetTimeTaken());
+	m_pDisplay->UpdateLabel(9, m_pPreviousAlgorithmData->GetPathCost());
 }

@@ -12,66 +12,43 @@ class TopHUDWidget;
 class Grid;
 class Algorithms;
 
-class Scene
+class Scene final
 {
 public:	
-	Scene(sf::RenderWindow* pWindow);
+	Scene(const std::shared_ptr<sf::RenderWindow>& pWindow);
 	~Scene();
 
 	//Game Core Functions
-	void Initialize();
+	void Initialize() const;
 	void Update(float deltaTime);
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) const;
 
 private:
-	sf::RenderWindow* m_pWindow;
-	std::vector<GameObject*> m_pGameObjects;
+	std::vector<std::shared_ptr<GameObject>> m_pGameObjects;
 
-private:
-	TopHUDWidget* m_pTopHUDWidget;
-
-	Grid* m_pGrid = nullptr;
-	sf::Vector2u m_GridSize;
-	sf::Vector2u m_ZoomedGridSize;
-	
-	Algorithms* m_pAlgorithm = nullptr;
-	AlgorithmVisualSpeed m_AlgorithmSpeed;
+	std::shared_ptr<Grid> m_pGrid;
+	std::shared_ptr<TopHUDWidget> m_pDisplay;
+	std::shared_ptr<Algorithms> m_pAlgorithm;
 
 private:
 	bool m_AlgorithmExecuted = false;
 
-private:
-	void InitializeGrid(sf::Vector2u gridSize, sf::Vector2u windowSize, unsigned int NumColumnZoom, sf::Vector2f TopWidgetSize);
+public:
+	AlgorithmVisualSpeed AlgorithmSpeed;
 
 public:
-	//Grid helper functions
-	void ResizeGrid(unsigned int NumColumn, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
-	void ClearGrid();
-	void ClearAlgorithmSearch();
-	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::RenderWindow* pWindow);
-	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
+	[[nodiscard]] const std::shared_ptr<Grid>& GetGrid() const { return m_pGrid; }
+	[[nodiscard]] const std::shared_ptr<TopHUDWidget>& GetDisplay() const { return m_pDisplay; }
+	[[nodiscard]] const std::shared_ptr<Algorithms>& GetAlgorithms() const { return m_pAlgorithm; }
 
-	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
-
-	void SetZoomedGridSize(unsigned int ColumnSize) { m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::GRID_ASPECT_RATIO)); }
-	sf::Vector2u GetGridSize() { return m_GridSize; }
-	sf::Vector2u GetZoomedGridSize() { return m_ZoomedGridSize; }
-
+public:
 	//Algorithm Helper functions
 	void ExecuteAlgorithm(AlgorithmType algorithmType);
 	void StopAlgorithm();
-	void SetAlgorithmVisualSpeed(AlgorithmVisualSpeed speed) { m_AlgorithmSpeed = speed; }
-	AlgorithmVisualSpeed GetAlgorithmVisualSpeed() { return m_AlgorithmSpeed; }
-	AlgorithmState GetAlgorithmState();
-
 
 	AlgorithmData* m_pCurrentAlgorithmData = nullptr;
 	AlgorithmData* m_pPreviousAlgorithmData = nullptr;
 
 	//Top Widget helper function
 	void AutoUpdateTopWidget();
-	void UpdateTopWidgetLabels(unsigned int LabelNum, std::string AppendString);
-	void UpdateWidgetLog(std::string AppendString);
-
-	sf::Vector2f GetTopWidgetSize();
 };
