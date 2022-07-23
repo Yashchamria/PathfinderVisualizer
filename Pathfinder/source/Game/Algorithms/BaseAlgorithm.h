@@ -15,7 +15,7 @@ public:
 	~BaseAlgorithm();
 
 	virtual bool Execute(AlgorithmType algorithmType) override;
-	virtual bool PlayVisualization(float speed, float deltaTime) override;
+	virtual bool PlayVisualization(int speed, float deltaTime) override;
 	virtual void Stop() override;
 
 	virtual bool IsPathFound() override { return m_pathfound; }

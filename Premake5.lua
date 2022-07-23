@@ -6,14 +6,19 @@ workspace "Pathfinder"
 	cppdialect      "C++20"
 	location	"build"
 
-filter "system:windows"
-	systemversion "latest"
-
 filter "configurations:Debug"
-	symbols		"on"
-	
+	defines "PF_DEBUG"
+	runtime "Debug"
+	symbols "on"
+
 filter "configurations:Release"
-	optimize	"on"
+	defines "PF_RELEASE"
+	runtime "Release"
+	optimize "on"
+
+filter "system:windows"
+	defines "PLATFORM_WINDOWS"
+	systemversion "latest"
 
 --Pathfinder Project Setup
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -57,20 +62,3 @@ project "Pathfinder"
 			"sfml-graphics.lib",
 			"sfml-window.lib"
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

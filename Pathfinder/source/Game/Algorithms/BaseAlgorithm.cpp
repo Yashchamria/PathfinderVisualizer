@@ -59,9 +59,9 @@ void BaseAlgorithm::Init()
 	OnInit();
 }
 
-bool BaseAlgorithm::PlayVisualization(float speed, float deltaTime)
+bool BaseAlgorithm::PlayVisualization(int speed, float deltaTime)
 {
-	if (speed >= (float)AlgorithmVisualSpeed::Instant)
+	if (speed == (int)VisualSpeed::Instant)
 	{
 		while (!m_PendingTileAnimation.empty())
 		{

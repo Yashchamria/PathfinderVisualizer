@@ -39,17 +39,17 @@ bool Algorithms::Execute(AlgorithmType algorithmType)
 	//Check for start and end tile
 	if (m_pGrid->GetStartTile() == nullptr)
 	{
-		m_pScene->GetDisplay()->UpdateLabel(6, "Select Start Tile (Press 'S')");
+		m_pScene->GetDisplay()->Log("Select Start Tile (Press 'S')");
 		return false;
 	} 
 	if (m_pGrid->GetEndTile() == nullptr)
 	{
-		m_pScene->GetDisplay()->UpdateLabel(6, "Select End Tile (Press 'E')");
+		m_pScene->GetDisplay()->Log("Select End Tile (Press 'E')");
 		return false;
 	}
 	if (m_pGrid->GetStartTile()->GetTileCoord() == m_pGrid->GetEndTile()->GetTileCoord()) { return false; }
 
-	m_pScene->GetDisplay()->UpdateLabel(6, "Executing Algorithm");
+	m_pScene->GetDisplay()->Log("Executing Algorithm");
 
 	switch (algorithmType)
 	{
@@ -73,15 +73,15 @@ bool Algorithms::Execute(AlgorithmType algorithmType)
 	return m_pCurrentAlgorithm->Execute(algorithmType);
 }
 
-bool Algorithms::PlayVisualization(float speed, float deltaTime)
+bool Algorithms::PlayVisualization(int speed, float deltaTime)
 {
 	if (IsPathFound())
 	{
-		m_pScene->GetDisplay()->UpdateLabel(6, "Path Found! Visualizing Path!");
+		m_pScene->GetDisplay()->Log("Path Found! Visualizing Path!");
 	}
 	else
 	{
-		m_pScene->GetDisplay()->UpdateLabel(6, "Path Not Found! Visualizing Path!");
+		m_pScene->GetDisplay()->Log("Path Not Found! Visualizing Path!");
 	}
 
 	if (m_pCurrentAlgorithm)

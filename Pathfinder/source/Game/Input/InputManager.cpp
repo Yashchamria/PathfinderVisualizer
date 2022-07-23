@@ -47,8 +47,8 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		if		(pEvent->key.code == sf::Keyboard::Delete   ) { m_pCommand->ClearGrid();			}
 		else if (pEvent->key.code == sf::Keyboard::Backspace) { m_pCommand->ClearAlgorithmSearch(); }
 
-		if		(pEvent->key.code == sf::Keyboard::Comma ) { m_pCommand->ChangeVisualizationSpeed(VisualSpeed::Decrease); }
-		else if (pEvent->key.code == sf::Keyboard::Period) { m_pCommand->ChangeVisualizationSpeed(VisualSpeed::Increase); }
+		if		(pEvent->key.code == sf::Keyboard::Comma ) { m_pCommand->DecreaseVisualSpeed(); }
+		else if (pEvent->key.code == sf::Keyboard::Period) { m_pCommand->IncreaseVisualSpeed(); }
 
 		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1) { m_pCommand->ExecuteAlgorithm(AlgorithmType::BreadthFirstSearch); }
 		if (pEvent->key.code == sf::Keyboard::Num2 || pEvent->key.code == sf::Keyboard::Numpad2) { m_pCommand->ExecuteAlgorithm(AlgorithmType::DepthFirstSearch); }

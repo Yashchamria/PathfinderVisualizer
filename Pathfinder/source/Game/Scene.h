@@ -3,7 +3,7 @@
 enum class TileType : char;
 enum class AlgorithmType : char;
 enum class AlgorithmState : char;
-enum class AlgorithmVisualSpeed : int;
+enum class VisualSpeed : int;
 struct AlgorithmData;
 
 
@@ -34,7 +34,7 @@ private:
 	bool m_AlgorithmExecuted = false;
 
 public:
-	AlgorithmVisualSpeed AlgorithmSpeed;
+	VisualSpeed AlgorithmSpeed;
 
 public:
 	[[nodiscard]] const std::shared_ptr<Grid>& GetGrid() const { return m_pGrid; }
@@ -42,13 +42,6 @@ public:
 	[[nodiscard]] const std::shared_ptr<Algorithms>& GetAlgorithms() const { return m_pAlgorithm; }
 
 public:
-	//Algorithm Helper functions
 	void ExecuteAlgorithm(AlgorithmType algorithmType);
 	void StopAlgorithm();
-
-	AlgorithmData* m_pCurrentAlgorithmData = nullptr;
-	AlgorithmData* m_pPreviousAlgorithmData = nullptr;
-
-	//Top Widget helper function
-	void AutoUpdateTopWidget();
 };

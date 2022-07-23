@@ -11,7 +11,7 @@ class IAlgorithm
 {
 public:
 	virtual bool Execute(AlgorithmType algorithmType) = 0;
-	virtual bool PlayVisualization(float speed, float deltaTime) = 0;
+	virtual bool PlayVisualization(int speed, float deltaTime) = 0;
 	virtual void Stop() = 0;
 	virtual bool IsPathFound() = 0;
 

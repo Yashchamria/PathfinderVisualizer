@@ -1,38 +1,44 @@
 #pragma once
 #include "GameCore/Objects/GameObject.h"
 
+struct AlgorithmData;
+enum class VisualSpeed : int;
+
 class Display final : public GameObject
 {
-public:	
-	Display(sf::Vector2f WidgetBoxSize, sf::Color WidgetBoxColor, const std::shared_ptr<sf::RenderWindow>& pWindow);
-	~Display();
+public:
+	Display(const float height, const sf::Color color, const sf::Vector2u windowSize, const sf::Vector2u gridSize);
+	void Draw(const std::shared_ptr<sf::RenderWindow>& pWindow) override;
 
-	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
+public:
+	void Log(const std::string& message) const;
+	void SetSpeed(const VisualSpeed speed) const;
+	void SetCurrentData(const AlgorithmData& currentData) const;
+	void SetPreviousData(const AlgorithmData& previousData) const;
 
 private:
-	sf::RectangleShape* m_pWidgetBox = nullptr;
+	std::unique_ptr<sf::RectangleShape> m_pCanvas{};
 	sf::Font m_pFont;
 
-	const static unsigned int m_NumLabels = 9;
-	unsigned int m_fontSize = 20;
-	
-	sf::Text* m_pGridSizeLabel;
-	std::vector<sf::Text*> m_pLabels;
+	uint8_t m_fontSize = 20;
+	static constexpr uint8_t m_totalLabels = 10;
 
-	std::string m_Labels[m_NumLabels] = {"Algorithm - "         ,	 "Time Taken - "         ,		"Visualization Speed - ",
-										 "Path Cost- "          ,	 "Tiles Explored - "     ,		"Log - ",
-										 "Previous Algorithm - ",    "Previous Time Taken - ",		"Previous Cost - "      };
+	std::unique_ptr<sf::Text> m_pLabels[m_totalLabels]{};
 
-
-
-private:
-	void InitLabels(sf::RenderWindow* pWindow);
-	void RePositionWidgetBox(sf::RenderWindow* pWindow);
+	const std::string m_labelText[m_totalLabels] =
+	{
+		"Grid Size",
+		"Algorithm - ",
+		"Time Taken - ",
+		"Visualization Speed - ",
+		"Path Cost- "          ,
+		"Tiles Explored - "     ,
+		"Log - ",
+		"Previous Algorithm - ",
+		"Previous Time Taken - ",
+		"Previous Cost - "
+	};
 
 public:
-	void SetWidgetBoxSize(sf::Vector2f size) { m_pWidgetBox->setSize(size); }
-	sf::Vector2f GetWidgetBoxSize() { return m_pWidgetBox->getSize(); }
-
-public:
-	void UpdateLabel(unsigned int LabelNum, std::string AppendString);
+	sf::Vector2f GetSize() const { return m_pCanvas->getSize(); }
 };

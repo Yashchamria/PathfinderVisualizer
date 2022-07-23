@@ -34,7 +34,7 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 				m_pScene->GetGrid()->SetZoomedGridSize(m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomOutSteps = 0;
-				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetDisplay()->GetWidgetBoxSize());
+				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetDisplay()->GetSize());
 			}
 		}
 
@@ -48,7 +48,7 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 				m_pScene->GetGrid()->SetZoomedGridSize(m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomInSteps = 0;
-				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetDisplay()->GetWidgetBoxSize());
+				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2u(1200, 600), m_pScene->GetDisplay()->GetSize());
 			}
 		}
 	}
@@ -113,28 +113,30 @@ void Command::ClearGrid()
 	m_pScene->GetGrid()->ClearGrid();
 }
 
-void Command::ChangeVisualizationSpeed(VisualSpeed visualSpeed)
+void Command::IncreaseVisualSpeed()
 {
-	AlgorithmVisualSpeed newSpeed = m_pScene->AlgorithmSpeed;
+	VisualSpeed newSpeed = m_pScene->AlgorithmSpeed;
 
-	if (visualSpeed == VisualSpeed::Increase)
-	{
-		if      (newSpeed == AlgorithmVisualSpeed::Slow   ) { newSpeed = AlgorithmVisualSpeed::Average; }
-		else if (newSpeed == AlgorithmVisualSpeed::Average) { newSpeed = AlgorithmVisualSpeed::Fast;    }
-		else if (newSpeed == AlgorithmVisualSpeed::Fast   ) { newSpeed = AlgorithmVisualSpeed::SuperFast; }
-		else if (newSpeed == AlgorithmVisualSpeed::SuperFast) { newSpeed = AlgorithmVisualSpeed::Instant; }
-
-	}
-	else if (visualSpeed == VisualSpeed::Decrease)
-	{
-		if		(newSpeed == AlgorithmVisualSpeed::Average) { newSpeed = AlgorithmVisualSpeed::Slow;    }
-		else if (newSpeed == AlgorithmVisualSpeed::Fast   ) { newSpeed = AlgorithmVisualSpeed::Average; }
-		else if (newSpeed == AlgorithmVisualSpeed::SuperFast) { newSpeed = AlgorithmVisualSpeed::Fast;    }
-		else if (newSpeed == AlgorithmVisualSpeed::Instant) { newSpeed = AlgorithmVisualSpeed::SuperFast; }
-	}
+	if      (newSpeed == VisualSpeed::Slow   ) { newSpeed = VisualSpeed::Average; }
+	else if (newSpeed == VisualSpeed::Average) { newSpeed = VisualSpeed::Fast;    }
+	else if (newSpeed == VisualSpeed::Fast   ) { newSpeed = VisualSpeed::SuperFast; }
+	else if (newSpeed == VisualSpeed::SuperFast) { newSpeed = VisualSpeed::Instant; }
 
 	m_pScene->AlgorithmSpeed = newSpeed;
-	m_pScene->GetDisplay()->UpdateLabel(3, VisualSpeedToString(newSpeed));
+	m_pScene->GetDisplay()->SetSpeed(newSpeed);
+}
+
+void Command::DecreaseVisualSpeed()
+{
+	VisualSpeed newSpeed = m_pScene->AlgorithmSpeed;
+
+	if (newSpeed == VisualSpeed::Average) { newSpeed = VisualSpeed::Slow; }
+	else if (newSpeed == VisualSpeed::Fast) { newSpeed = VisualSpeed::Average; }
+	else if (newSpeed == VisualSpeed::SuperFast) { newSpeed = VisualSpeed::Fast; }
+	else if (newSpeed == VisualSpeed::Instant) { newSpeed = VisualSpeed::SuperFast; }
+
+	m_pScene->AlgorithmSpeed = newSpeed;
+	m_pScene->GetDisplay()->SetSpeed(newSpeed);
 }
 
 void Command::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
@@ -150,10 +152,10 @@ sf::Vector2u Command::GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWi
 {
 	sf::Vector2f currentTileSizeOnScreen;
 	currentTileSizeOnScreen.x = (float)pWindow->getSize().x / (float)m_pScene->GetGrid()->GetZoomedGridSize().x;
-	currentTileSizeOnScreen.y = ((float)pWindow->getSize().y - m_pScene->GetDisplay()->GetWidgetBoxSize().y) / (float)m_pScene->GetGrid()->GetZoomedGridSize().y;
+	currentTileSizeOnScreen.y = ((float)pWindow->getSize().y - m_pScene->GetDisplay()->GetSize().y) / (float)m_pScene->GetGrid()->GetZoomedGridSize().y;
 
 	float tileCoordX = (float)mousePosition.x / currentTileSizeOnScreen.x;
-	float tileCoordY = (((float)mousePosition.y - m_pScene->GetDisplay()->GetWidgetBoxSize().y) / currentTileSizeOnScreen.y);
+	float tileCoordY = (((float)mousePosition.y - m_pScene->GetDisplay()->GetSize().y) / currentTileSizeOnScreen.y);
 
 
 	sf::Vector2u mouseTileCoord = sf::Vector2u((unsigned int)floor(tileCoordX), (unsigned int)floor(tileCoordY));

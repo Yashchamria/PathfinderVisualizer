@@ -15,12 +15,6 @@ enum class TileSelectorMove : char
 	Mouse
 };
 
-enum class VisualSpeed : char
-{
-	Increase,
-	Decrease,
-};
-
 class Command
 {
 public:	
@@ -34,7 +28,8 @@ public:
 	void ExecuteAlgorithm(AlgorithmType algorithmType);
 	void ClearAlgorithmSearch();
 	void ClearGrid();
-	void ChangeVisualizationSpeed(VisualSpeed visualSpeed);
+	void IncreaseVisualSpeed();
+	void DecreaseVisualSpeed();
 	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
 
 private:
