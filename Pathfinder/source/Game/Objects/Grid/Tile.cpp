@@ -2,16 +2,14 @@
 #include "Tile.h"
 #include "TileEnum.h"
 
-Tile::Tile(sf::Vector2u TileCoord, sf::Vector2f TileSize)
+Tile::Tile(sf::Vector2u coord, sf::Vector2f size, int weight, TileType type) :
+	m_coord(coord), m_weight(weight), m_type(type), m_animState(TileAnimState::Idle)
 {
-	m_type = TileType::Default;
-	m_tileAnimationState = TileAnimState::Idle;
-
-	SetTileSize(TileSize, 20.0f);
+	SetTileSize(size, 20.0f);
 	SetTileColor(sf::Color(225, 225,225), sf::Color(25, 25, 25));
 
-	m_body.setScale(m_tileFillScale, m_tileFillScale);
-	SetAnimTileScale(m_tileFillScale);
+	m_body.setScale(m_fillScale, m_fillScale);
+	m_animBody.setScale(m_fillScale, m_fillScale);
 }
 
 void Tile::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
@@ -22,9 +20,9 @@ void Tile::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 
 void Tile::Update(float deltaTime)
 {
-	if (GetAnimTileScale() < m_tileFillScale)
+	if (m_animBody.getScale().x < m_fillScale)
 	{
-		SetAnimTileScale(GetAnimTileScale() + 0.08f);
+		m_animBody.setScale(m_animBody.getScale().x + 0.08f, m_animBody.getScale().x + 0.08f);
 	}
 	else
 	{
@@ -38,8 +36,8 @@ void Tile::SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor)
 	m_body.setOrigin(tileSize.x / 2.0f, tileSize.y / 2.0f);
 	m_body.setOutlineThickness(tileSize.x / OutlineThicknessFactor);
 
-	m_animBody.setSize(tileSize * m_tileFillScale); // To set the size equal to inner fill of main body.
-	m_animBody.setOrigin((tileSize * m_tileFillScale) / 2.0f);
+	m_animBody.setSize(tileSize * m_fillScale); // To set the size equal to inner fill of main body.
+	m_animBody.setOrigin((tileSize * m_fillScale) / 2.0f);
 }
 
 void Tile::SetTileCoord(sf::Vector2u coord)
@@ -57,40 +55,27 @@ void Tile::SetTileColor(sf::Color fillColor, sf::Color OutlineColor)
 
 void Tile::SetTileType(TileType tileType)
 {
-	if (m_type != tileType) { m_IsAnimationChanged = true; }
-
+	if (m_type != tileType) { m_bAnimate = true; }
 	m_type = tileType;
 }
 
-void Tile::SetTileAnimationProperty(TileAnimState tileAnimationState)
+void Tile::SetTileAnimationProperty(TileAnimState state)
 {
-	if (m_tileAnimationState != tileAnimationState) { m_IsAnimationChanged = true; }
-
-	m_tileAnimationState = tileAnimationState;
-}
-
-void Tile::SetAnimTileScale(float tileScale)
-{
-	m_animBody.setScale(tileScale, tileScale);
-}
-
-float Tile::GetAnimTileScale()
-{
-	return m_animBody.getScale().x;
+	if (m_animState != state) { m_bAnimate = true; }
+	m_animState = state;
 }
 
 void Tile::RepositionTile()
 {
 	//Setting the tile position according to the tile coord and Screen size.
-	sf::Vector2f tilePos;
-	sf::Vector2f tileSize = m_body.getSize();
+	const sf::Vector2f size = m_body.getSize();
 
 	//TilePos = TileCoord * TileSize + OffsetTileCentre - OffsetToWindowsTopMostCorner
-	tilePos.x = (m_coord.x * tileSize.x) + (tileSize.x / 2.0f) - Config::windowWidth / 2;
-	tilePos.y = (m_coord.y * tileSize.y) + (tileSize.y / 2.0f) - Config::windowHeight / 2 + Config::displayHeight;
+	const float posX = (m_coord.x * size.x) + (size.x / 2.0f) - Config::windowWidth / 2;
+	const float posY = (m_coord.y * size.y) + (size.y / 2.0f) - Config::windowHeight / 2 + Config::displayHeight;
 
-	m_body.setPosition(tilePos);
-	m_animBody.setPosition(tilePos);
+	m_body.setPosition({posX, posY});
+	m_animBody.setPosition({posX, posY});
 }
 
 void Tile::UpdateTileType()
@@ -112,25 +97,22 @@ void Tile::UpdateTileType()
 	case TileType::Default:
 		Animate(sf::Color(225, 225, 225));
 		break;
-
-	default:
-		break;
 	}
 }
 
 void Tile::Animate(sf::Color color)
 {
-	if (m_IsAnimationChanged)
+	if (m_bAnimate)
 	{
 		m_animBody.setFillColor(color);
-		SetAnimTileScale(0.0f);
-		m_IsAnimationChanged = false;
+		m_animBody.setScale(0.0f, 0.0f);
+		m_bAnimate = false;
 	}
 }
 
 void Tile::UpdateTileAnimationProperty()
 {
-	switch (m_tileAnimationState)
+	switch (m_animState)
 	{
 	case TileAnimState::Idle:
 		Animate(sf::Color(225, 225, 225));

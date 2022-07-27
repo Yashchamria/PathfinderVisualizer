@@ -8,7 +8,7 @@ enum class Direction : char;
 class Grid final: public GameObject
 {
 public:	
-	Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf::Vector2f displaySize);
+	Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize);
 	~Grid() override;
 
 	void Update(float deltaTime) override;
@@ -25,7 +25,7 @@ private:
 
 public:
 	int zoomLevel;
-	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const;
+	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf::Vector2f TopWidgetSize) const;
 
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
 	void UpdateTileSelector(sf::Vector2u mouseTileCoord);

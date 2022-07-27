@@ -23,7 +23,7 @@ void DijkstrasAlgorithm::OnInit()
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 	
-			if (pTile->GetTileType() == TileType::WallTile)
+			if (pTile->GetType() == TileType::WallTile)
 				continue;
 	
 			m_totalCostfromStartTile.insert(std::make_pair(pTile, UINT_MAX));
@@ -49,7 +49,7 @@ void DijkstrasAlgorithm::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetTileCoord() == GetGrid()->GetEndTile()->GetTileCoord())
+			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord())
 			{
 				SetPathFound(true);
 				break;
@@ -74,7 +74,7 @@ void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
 	}
 
 	//Look for neighboring tiles and update them.
-	sf::Vector2u CurrentTileCoord = pTile->GetTileCoord();
+	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
 
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
@@ -85,10 +85,10 @@ void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
 void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
-	if (!m_IsTileVisited[pTile] && pTile->GetTileType() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->GetType() != TileType::WallTile)
 	{
 		//Stores the previous tile and updates the total cost if valid.
-		unsigned int newCost = m_totalCostfromStartTile[pPreviousTile] + pTile->GetTileWeight();
+		unsigned int newCost = m_totalCostfromStartTile[pPreviousTile] + pTile->GetWeight();
 
 		if (newCost <= m_totalCostfromStartTile[pTile])
 		{

@@ -4,9 +4,11 @@
 #include "Tile.h"
 #include "TileEnum.h"
 
-Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf::Vector2f displaySize) : m_gridSize(gridSize)
+Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize) : m_gridSize(gridSize)
 {
-	m_pSelector = std::make_shared<Tile>();
+	const float tileSize = windowSize.x / (float)gridSize.x;
+
+	m_pSelector = std::make_shared<Tile>(sf::Vector2u(0, 0), sf::Vector2f(tileSize, tileSize), 10, TileType::Default);
 	m_pSelector->SetTileColor(sf::Color::Transparent, sf::Color(250, 109, 5));
 
 	m_pTiles.reserve(m_gridSize.x * m_gridSize.y);
@@ -15,8 +17,9 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf:
 	{
 		for (int y = 0; y < m_gridSize.y; y++)
 		{
-			const auto& pTile = std::make_shared<Tile>();
-			pTile->SetTileCoord(sf::Vector2u(x, y));
+			const auto& pTile =std::make_shared<Tile>(sf::Vector2u(x, y),
+				sf::Vector2f(tileSize, tileSize), 10, TileType::Default);
+
 			pTile->RepositionTile();
 			m_pTiles.push_back(pTile);
 		}
@@ -49,7 +52,7 @@ void Grid::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 	m_pSelector->Draw(renderWindow);
 }
 
-void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const
+void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf::Vector2f TopWidgetSize) const
 {
 	const float tileSize = windowSize.x / (float)numberOfColumns;
 
@@ -87,7 +90,7 @@ void Grid::ClearAlgorithmSearch() const
 {
 	for (const auto& pTile : m_pTiles)
 	{
-		if (pTile->GetTileType() == TileType::Default)
+		if (pTile->GetType() == TileType::Default)
 		{
 			pTile->SetTileAnimationProperty(TileAnimState::Idle);
 			pTile->UpdateTileAnimationProperty();
@@ -187,7 +190,7 @@ void Grid::GenerateRandomWalls(const int wallPercent) const
 	{
 		const int index = rand() % m_pTiles.size();
 
-		if (m_pTiles[index]->GetTileType() != TileType::WallTile)
+		if (m_pTiles[index]->GetType() != TileType::WallTile)
 		{
 			m_pTiles[index]->SetTileType(TileType::WallTile);
 			m_pTiles[index]->UpdateTileType();

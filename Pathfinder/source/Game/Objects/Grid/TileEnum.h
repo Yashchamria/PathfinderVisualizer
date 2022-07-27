@@ -5,8 +5,7 @@ enum class TileType : char
 	Default,
 	StartTile,
 	EndTile,
-	WallTile,
-	InValid,
+	WallTile
 };
 
 enum class TileAnimState : char
@@ -14,7 +13,7 @@ enum class TileAnimState : char
 	Idle,
 	Processing,
 	Processed,
-	Found,
+	Found
 };
 
 enum class Direction : char
@@ -22,5 +21,5 @@ enum class Direction : char
 	Up,
 	Down,
 	Right,
-	Left,
+	Left
 };

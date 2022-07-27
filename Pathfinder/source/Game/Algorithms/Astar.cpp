@@ -23,13 +23,13 @@ void Astar::OnInit()
 		{
 			const auto& pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
 	
-			if (pTile->GetTileType() == TileType::WallTile)
+			if (pTile->GetType() == TileType::WallTile)
 				continue;
 	
 			m_finalCost.insert(std::make_pair(pTile.get(), std::make_pair(UINT_MAX, UINT_MAX)));
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile.get(), false));
 
-			m_averageTileWeight += pTile->GetTileWeight();
+			m_averageTileWeight += pTile->GetWeight();
 		}
 	}
 
@@ -53,7 +53,7 @@ void Astar::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetTileCoord() == GetGrid()->GetEndTile()->GetTileCoord())
+			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord())
 			{
 				SetPathFound(true);
 				break;
@@ -79,7 +79,7 @@ void Astar::ProcessNeighbourTiles(Tile* pTile)
 	}
 
 	//Look for neighbouring tiles and update them
-	sf::Vector2u CurrentTileCoord = pTile->GetTileCoord();
+	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
 
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
@@ -91,9 +91,9 @@ void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
 
-	if (!m_IsTileVisited[pTile] && pTile->GetTileType() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->GetType() != TileType::WallTile)
 	{
-		unsigned int newGCost = m_finalCost[pPreviousTile].first + pTile->GetTileWeight();
+		unsigned int newGCost = m_finalCost[pPreviousTile].first + pTile->GetWeight();
 		unsigned int newHCost = GetTileHCost(pTile);
 
 		unsigned int newFCost = newGCost + newHCost;
@@ -142,8 +142,8 @@ Tile* Astar::GetPriorityTile()
 
 unsigned int Astar::GetTileHCost(Tile* pTile)
 {
-	sf::Vector2u finalTileCoord = GetGrid()->GetEndTile()->GetTileCoord();
-	sf::Vector2u CurrentTileCoord = pTile->GetTileCoord();
+	sf::Vector2u finalTileCoord = GetGrid()->GetEndTile()->GetCoord();
+	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
 
 	unsigned int xValue = (unsigned int)std::abs((int)CurrentTileCoord.x - (int)finalTileCoord.x);
 	unsigned int yValue = (unsigned int)std::abs((int)CurrentTileCoord.y - (int)finalTileCoord.y);

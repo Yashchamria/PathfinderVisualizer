@@ -23,7 +23,7 @@ void BreadthFirstSearch::OnInit()
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 
-			if (pTile->GetTileType() == TileType::WallTile)
+			if (pTile->GetType() == TileType::WallTile)
 				continue;
 
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
@@ -46,7 +46,7 @@ void BreadthFirstSearch::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetTileCoord() == GetGrid()->GetEndTile()->GetTileCoord()) 
+			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord()) 
 			{
 				SetPathFound(true); 
 				break; 
@@ -72,7 +72,7 @@ void BreadthFirstSearch::ProcessNeighbourTiles(Tile* pTile)
 	}
 
 	//Look for neighbouring tiles and update them
-	sf::Vector2u CurrentTileCoord = pTile->GetTileCoord();
+	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
 
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get(), pTile);
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get(), pTile);
@@ -84,7 +84,7 @@ void BreadthFirstSearch::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
 
-	if (!m_IsTileVisited[pTile] && pTile->GetTileType() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->GetType() != TileType::WallTile)
 	{
 		AddToClosestPreviousTile(pTile, pPreviousTile);
 

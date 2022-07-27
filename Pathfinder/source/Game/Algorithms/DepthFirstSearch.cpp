@@ -23,7 +23,7 @@ void DepthFirstSearch::OnInit()
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 
-			if (pTile->GetTileType() == TileType::WallTile)
+			if (pTile->GetType() == TileType::WallTile)
 				continue;
 
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
@@ -42,7 +42,7 @@ void DepthFirstSearch::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetTileCoord() == GetGrid()->GetEndTile()->GetTileCoord())
+			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord())
 			{
 				SetPathFound(true);
 				break;
@@ -64,13 +64,13 @@ void DepthFirstSearch::AddToOpenlist(Tile* pTile)
 
 Tile* DepthFirstSearch::GetNeighbourTile(Tile* pCurrentTile, Direction tileDirection)
 {
-	sf::Vector2u CurrentTileCoord = pCurrentTile->GetTileCoord();
+	sf::Vector2u CurrentTileCoord = pCurrentTile->GetCoord();
 
 	Tile* neighbourTile = GetGrid()->GetNeighborTile(CurrentTileCoord, tileDirection).get();
 
 	if (neighbourTile)
 	{
-		if (neighbourTile->GetTileType() != TileType::WallTile && m_IsTileVisited[neighbourTile] == false)
+		if (neighbourTile->GetType() != TileType::WallTile && m_IsTileVisited[neighbourTile] == false)
 		{
 			return neighbourTile;
 		}
