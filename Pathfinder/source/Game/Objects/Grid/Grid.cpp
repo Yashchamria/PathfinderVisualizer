@@ -6,19 +6,18 @@
 
 Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf::Vector2f displaySize) : m_gridSize(gridSize)
 {
-	m_pTileSelector = new Tile();
-	m_pTileSelector->SetTileColor(sf::Color::Transparent, sf::Color(250, 109, 5));
+	m_pSelector = std::make_shared<Tile>();
+	m_pSelector->SetTileColor(sf::Color::Transparent, sf::Color(250, 109, 5));
 
 	m_pTiles.reserve(m_gridSize.x * m_gridSize.y);
 
-	for (unsigned int x = 0; x < m_gridSize.x; x++)
+	for (int x = 0; x < m_gridSize.x; x++)
 	{
-		for (unsigned int y = 0; y < m_gridSize.y; y++)
+		for (int y = 0; y < m_gridSize.y; y++)
 		{
-			Tile* pTile = new Tile();
+			const auto& pTile = std::make_shared<Tile>();
 			pTile->SetTileCoord(sf::Vector2u(x, y));
-			pTile->RepositionTile(windowSize, displaySize);
-
+			pTile->RepositionTile();
 			m_pTiles.push_back(pTile);
 		}
 	}
@@ -29,20 +28,12 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf:
 
 Grid::~Grid()
 {
-	m_pStartTile = nullptr;
-	m_pEndTile = nullptr;
-
-	for (Tile* pTile : m_pTiles)
-	{
-		delete pTile;
-	}
-	
-	delete m_pTileSelector;
+	m_pTiles.clear();
 }
 
 void Grid::Update(float deltaTime)
 {
-	for (Tile* pTile : m_pTiles)
+	for (const auto& pTile : m_pTiles)
 	{
 		pTile->Update(deltaTime);
 	}
@@ -50,55 +41,55 @@ void Grid::Update(float deltaTime)
 
 void Grid::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 {
-	for (Tile* pTile : m_pTiles)
+	for (const auto& pTile : m_pTiles)
 	{
 		pTile->Draw(renderWindow);
 	}
 
-	m_pTileSelector->Draw(renderWindow);
+	m_pSelector->Draw(renderWindow);
 }
 
 void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const
 {
 	const float tileSize = windowSize.x / (float)numberOfColumns;
 
-	for (Tile* pTile : m_pTiles)
+	for (const auto& pTile : m_pTiles)
 	{
 		pTile->SetTileSize(sf::Vector2f(tileSize, tileSize), 20.0f);
-		pTile->RepositionTile(windowSize, TopWidgetSize);
+		pTile->RepositionTile();
 	}
 
-	m_pTileSelector->SetTileSize(sf::Vector2f(tileSize, tileSize), 8.0f);
-	m_pTileSelector->RepositionTile(windowSize, TopWidgetSize);
+	m_pSelector->SetTileSize(sf::Vector2f(tileSize, tileSize), 8.0f);
+	m_pSelector->RepositionTile();
 }
 
-void Grid::SetSelectorPosition(sf::Vector2u mouseTileCoord, sf::Vector2u windowSize, sf::Vector2f displaySize)
+void Grid::SetSelectorPosition(sf::Vector2u mouseTileCoord)
 {
 	if (mouseTileCoord.x < m_ZoomedGridSize.x && mouseTileCoord.y < m_ZoomedGridSize.y)
 	{
-		UpdateTileSelector(mouseTileCoord, windowSize, displaySize);
+		UpdateTileSelector(mouseTileCoord);
 	}
 }
 
 void Grid::ClearGrid()
 {
-	for (Tile* pTile : m_pTiles)
+	for (const auto& pTile : m_pTiles)
 	{
 		pTile->SetTileType(TileType::Default);
 		pTile->UpdateTileType();
 	}
 
-	m_pStartTile = nullptr;
-	m_pEndTile = nullptr;
+	m_startIndex = -1;
+	m_endIndex = -1;
 }
 
-void Grid::ClearAlgorithmSearch()
+void Grid::ClearAlgorithmSearch() const
 {
-	for (Tile* pTile : m_pTiles)
+	for (const auto& pTile : m_pTiles)
 	{
 		if (pTile->GetTileType() == TileType::Default)
 		{
-			pTile->SetTileAnimationProperty(TileAnimationState::Idle);
+			pTile->SetTileAnimationProperty(TileAnimState::Idle);
 			pTile->UpdateTileAnimationProperty();
 		}
 	}
@@ -107,192 +98,100 @@ void Grid::ClearAlgorithmSearch()
 
 void Grid::UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType)
 {
-	if (!IsTileCoordValid(mouseTileCoord)) { return; }
+	if (!IsCoordValid(mouseTileCoord)) { return; }
 
 	if (tileType == TileType::StartTile)
 	{
-		if (m_pEndTile)
+		if (m_endIndex != -1)
 		{
-			if (m_pEndTile->GetTileCoord() == mouseTileCoord)
+			if (m_endIndex == GetTileIndex(mouseTileCoord))
 			{
-				m_pEndTile = nullptr;
+				m_endIndex = -1;
 			}
 		}
 
-		if (m_pStartTile)
+		if (m_startIndex != -1)
 		{
 			//Clearing the previous start tile.
-			m_pStartTile->SetTileType(TileType::Default);
-			m_pStartTile->UpdateTileType();
-			m_pStartTile = nullptr;
+			GetStartTile()->SetTileType(TileType::Default);
+			GetStartTile()->UpdateTileType();
+			m_startIndex = -1;
 		}
-		m_pStartTile = m_pTiles[GetTilesArrayIndex(mouseTileCoord, m_gridSize)];
+		m_startIndex = GetTileIndex(mouseTileCoord);
 	}
 
 	if (tileType == TileType::EndTile)
 	{
-		if (m_pStartTile)
+		if (m_startIndex != -1)
 		{
-			if (m_pStartTile->GetTileCoord() == mouseTileCoord)
+			if (m_startIndex == GetTileIndex(mouseTileCoord))
 			{
-				m_pStartTile = nullptr;
+				m_startIndex = -1;
 			}
 		}
 
-		if (m_pEndTile)
+		if (m_endIndex != -1)
 		{
 			//Clearing the previous end tile.
-			m_pEndTile->SetTileType(TileType::Default);
-			m_pEndTile->UpdateTileType();
-			m_pEndTile = nullptr; 
+			GetEndTile()->SetTileType(TileType::Default);
+			GetEndTile()->UpdateTileType();
+			m_endIndex = -1;
 		}
 
-		m_pEndTile = m_pTiles[GetTilesArrayIndex(mouseTileCoord, m_gridSize)];
+		m_endIndex = GetTileIndex(mouseTileCoord);
 	}
 
 	if (tileType == TileType::Default || tileType == TileType::WallTile)
 	{
-		if (m_pStartTile)
+		if (m_startIndex != -1)
 		{
-			if (m_pStartTile->GetTileCoord() == mouseTileCoord)
+			if (m_startIndex == GetTileIndex(mouseTileCoord))
 			{
-				m_pStartTile = nullptr;
+				m_startIndex = -1;
 			}
 		}
-		if (m_pEndTile)
+		if (m_endIndex != -1)
 		{
-			if (m_pEndTile->GetTileCoord() == mouseTileCoord)
+			if (m_endIndex == GetTileIndex(mouseTileCoord))
 			{
-				m_pEndTile = nullptr;
+				m_endIndex = -1;
 			}
 		}
 	} 
 
-	m_pTiles[GetTilesArrayIndex(mouseTileCoord, m_gridSize)]->SetTileType(tileType);
-	m_pTiles[GetTilesArrayIndex(mouseTileCoord, m_gridSize)]->UpdateTileType();
+	m_pTiles[GetTileIndex(mouseTileCoord)]->SetTileType(tileType);
+	m_pTiles[GetTileIndex(mouseTileCoord)]->UpdateTileType();
 }
 
-void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize)
+void Grid::UpdateTileSelector(sf::Vector2u mouseTileCoord)
 {
-	m_pTileSelector->SetTileCoord(mouseTileCoord);
-	m_pTileSelector->RepositionTile(windowSize, TopWidgetSize);
+	m_pSelector->SetTileCoord(mouseTileCoord);
+	m_pSelector->RepositionTile();
 }
 
-Tile* Grid::GetNeighbourTile(sf::Vector2u CurrentTileCoord, NeighbourTileDirection tileDirection)
+std::shared_ptr<Tile> Grid::GetNeighborTile(sf::Vector2u coord, const Direction direction) const
 {
-	sf::Vector2u neighbourTileCoord(0, 0);
-	
-	switch (tileDirection)
+	switch (direction)
 	{
-	case NeighbourTileDirection::Up:
-		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x, CurrentTileCoord.y - 1);
-		break;
-
-	case NeighbourTileDirection::Down:
-		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x, CurrentTileCoord.y + 1);
-		break;
-
-	case NeighbourTileDirection::Right:
-		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x + 1, CurrentTileCoord.y);
-		break;
-
-	case NeighbourTileDirection::Left:
-		neighbourTileCoord = sf::Vector2u(CurrentTileCoord.x - 1, CurrentTileCoord.y);
-		break;
+		case Direction::Up: --coord.y; break;
+		case Direction::Down: ++coord.y; break;
+		case Direction::Right: ++coord.x; break;
+		case Direction::Left: --coord.x; break;
 	}
-
-	if (IsTileCoordValid(neighbourTileCoord))
-	{
-		return GetTile(neighbourTileCoord);
-	}
-
-	return nullptr;
+	return IsCoordValid(coord) ? GetTile(coord) : std::shared_ptr<Tile>(nullptr);
 }
 
-bool Grid::IsTileCoordValid(sf::Vector2u tileCoord)
+void Grid::GenerateRandomWalls(const int wallPercent) const
 {
-	if(tileCoord.x < 0 || (tileCoord.x > m_gridSize.x -1))
-		return false;
-	if (tileCoord.y < 0 || (tileCoord.y > m_gridSize.y - 1))
-		return false;
-
-	return true;
-}
-
-TileType Grid::GetTileState(sf::Vector2u tileCoord)
-{
-	if (IsTileCoordValid(tileCoord))
+	for (int i = 0; i < m_pTiles.size() * wallPercent / 100;)
 	{
-		return m_pTiles[GetTilesArrayIndex(tileCoord, m_gridSize)]->GetTileType();
-	}
-	
-	return TileType::InValid;
-}
-
-void Grid::GenerateRandomWalls(unsigned int wallPercent)
-{
-	ClearGrid();
-
-	unsigned int totaltiles = m_pTiles.size();
-
-	unsigned int totalWalls = (totaltiles * wallPercent) / 100;
-
-	for (unsigned int i = 0; i < totalWalls; i++)
-	{
-		unsigned index = rand() % totaltiles;
+		const int index = rand() % m_pTiles.size();
 
 		if (m_pTiles[index]->GetTileType() != TileType::WallTile)
 		{
 			m_pTiles[index]->SetTileType(TileType::WallTile);
 			m_pTiles[index]->UpdateTileType();
-		}
-		else
-		{
-			i--;
+			i++;
 		}
 	}
-}
-
-void Grid::GenerateRandomTile(TileType tileType, unsigned int quadrant, bool cornerBais)
-{
-	sf::Vector2u QuadrantSize((unsigned int)(m_gridSize.x / 2.0f), (unsigned int)(m_gridSize.y / 2.0f));
-
-	sf::Vector2f BaisFactor(5.0f, 3.0f);
-
-	if (cornerBais) 
-	{
-		QuadrantSize = sf::Vector2u((unsigned int)(m_gridSize.x / BaisFactor.x), (unsigned int)(m_gridSize.y / BaisFactor.y));
-	}
-
-	sf::Vector2u RandomTileCoord(0, 0);
-
-	if (quadrant <= 1)
-	{
-		RandomTileCoord.x = (unsigned int)((rand() % QuadrantSize.x) + (QuadrantSize.x * (BaisFactor.x - 1)));
-		RandomTileCoord.y = (unsigned int)(rand() % QuadrantSize.y);
-	}
-	else if (quadrant == 2)
-	{
-		RandomTileCoord.x = (unsigned int)(rand() % QuadrantSize.x);
-		RandomTileCoord.y = (unsigned int)(rand() % QuadrantSize.y);
-	}
-	else if (quadrant == 3)
-	{
-		RandomTileCoord.x = (unsigned int)(rand() % QuadrantSize.x);
-		RandomTileCoord.y = (unsigned int)((rand() % QuadrantSize.y) + (QuadrantSize.y * (BaisFactor.y - 1)));
-	}
-	else
-	{
-		RandomTileCoord.x = (unsigned int)((rand() % QuadrantSize.x) + (QuadrantSize.x * (BaisFactor.x - 1)));
-		RandomTileCoord.y = (unsigned int)((rand() % QuadrantSize.y) + (QuadrantSize.y * (BaisFactor.y - 1)));
-	}
-
-	UpdateTileProperty(RandomTileCoord, tileType);
-}
-
-void Grid::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
-{
-	GenerateRandomWalls(wallPercent);
-	GenerateRandomTile(TileType::StartTile, StartQuadrant, true);
-	GenerateRandomTile(TileType::EndTile, EndQuadrant, true);
 }

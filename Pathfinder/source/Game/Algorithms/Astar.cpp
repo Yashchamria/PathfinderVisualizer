@@ -21,13 +21,13 @@ void Astar::OnInit()
 	{
 		for (unsigned int y = 0; y < GetGrid()->GetGridSize().y; y++)
 		{
-			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
+			const auto& pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
 	
 			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
 	
-			m_finalCost.insert(std::make_pair(pTile, std::make_pair(UINT_MAX, UINT_MAX)));
-			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
+			m_finalCost.insert(std::make_pair(pTile.get(), std::make_pair(UINT_MAX, UINT_MAX)));
+			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile.get(), false));
 
 			m_averageTileWeight += pTile->GetTileWeight();
 		}
@@ -36,7 +36,7 @@ void Astar::OnInit()
 	m_averageTileWeight /= m_IsTileVisited.size();
 
 	//Dealing with the Start Tile
-	Tile* StartTile = GetGrid()->GetStartTile();
+	Tile* StartTile = GetGrid()->GetStartTile().get();
 
 	m_finalCost[StartTile] = std::make_pair(0, 0);
 	AddToClosestPreviousTile(StartTile, StartTile);
@@ -70,7 +70,7 @@ void Astar::ProcessNeighbourTiles(Tile* pTile)
 
 	m_IsTileVisited[pTile] = true;
 
-	AddToTileAnimationArray(pTile, TileAnimationState::Processed);
+	AddToTileAnimationArray(pTile, TileAnimState::Processed);
 	
 	//Pop from the open list if exist
 	if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) != m_pOpenTiles.end())
@@ -81,10 +81,10 @@ void Astar::ProcessNeighbourTiles(Tile* pTile)
 	//Look for neighbouring tiles and update them
 	sf::Vector2u CurrentTileCoord = pTile->GetTileCoord();
 
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Up)   , pTile);
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Down) , pTile);
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Right), pTile);
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Left) , pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Right).get(), pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Left).get() , pTile);
 }
 
 void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
@@ -109,7 +109,7 @@ void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 		//Pushes the tile to the open list.
 		if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) == m_pOpenTiles.end())
 		{
-			AddToTileAnimationArray(pTile, TileAnimationState::Processing);
+			AddToTileAnimationArray(pTile, TileAnimState::Processing);
 
 			m_pOpenTiles.push_back(pTile);
 			IncrementTileExplored();

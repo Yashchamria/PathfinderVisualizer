@@ -21,7 +21,7 @@ void DepthFirstSearch::OnInit()
 	{
 		for (unsigned int y = 0; y < GetGrid()->GetGridSize().y; y++)
 		{
-			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
+			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 
 			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
@@ -31,7 +31,7 @@ void DepthFirstSearch::OnInit()
 	}
 
 	//Dealing with the Start Tile
-	AddToOpenlist(GetGrid()->GetStartTile());
+	AddToOpenlist(GetGrid()->GetStartTile().get());
 }
 
 void DepthFirstSearch::OnExecute()
@@ -59,14 +59,14 @@ void DepthFirstSearch::AddToOpenlist(Tile* pTile)
 
 	m_pOpenTiles.push(pTile);
 
-	AddToTileAnimationArray(pTile, TileAnimationState::Processing);
+	AddToTileAnimationArray(pTile, TileAnimState::Processing);
 }
 
-Tile* DepthFirstSearch::GetNeighbourTile(Tile* pCurrentTile, NeighbourTileDirection tileDirection)
+Tile* DepthFirstSearch::GetNeighbourTile(Tile* pCurrentTile, Direction tileDirection)
 {
 	sf::Vector2u CurrentTileCoord = pCurrentTile->GetTileCoord();
 
-	Tile* neighbourTile = GetGrid()->GetNeighbourTile(CurrentTileCoord, tileDirection);
+	Tile* neighbourTile = GetGrid()->GetNeighborTile(CurrentTileCoord, tileDirection).get();
 
 	if (neighbourTile)
 	{
@@ -86,18 +86,18 @@ Tile* DepthFirstSearch::ProcessNextTile()
 	m_IsTileVisited[pTile] = true;
 	IncrementTileExplored();
 
-	AddToTileAnimationArray(pTile, TileAnimationState::Processed);
+	AddToTileAnimationArray(pTile, TileAnimState::Processed);
 
-	Tile* nextNeighbourTile = GetNeighbourTile(pTile, NeighbourTileDirection::Down);
+	Tile* nextNeighbourTile = GetNeighbourTile(pTile, Direction::Down);
 	if (nextNeighbourTile) { AddToClosestPreviousTile(nextNeighbourTile, pTile); return nextNeighbourTile; }
 
-	nextNeighbourTile = GetNeighbourTile(pTile, NeighbourTileDirection::Up);
+	nextNeighbourTile = GetNeighbourTile(pTile, Direction::Up);
 	if (nextNeighbourTile) { AddToClosestPreviousTile(nextNeighbourTile, pTile); return nextNeighbourTile; }
 
-	nextNeighbourTile = GetNeighbourTile(pTile, NeighbourTileDirection::Right);
+	nextNeighbourTile = GetNeighbourTile(pTile, Direction::Right);
 	if (nextNeighbourTile) { AddToClosestPreviousTile(nextNeighbourTile, pTile); return nextNeighbourTile; }
 
-	nextNeighbourTile = GetNeighbourTile(pTile, NeighbourTileDirection::Left);
+	nextNeighbourTile = GetNeighbourTile(pTile, Direction::Left);
 	if (nextNeighbourTile) { AddToClosestPreviousTile(nextNeighbourTile, pTile); return nextNeighbourTile; }
 
 	//if no unvisited neighbour left, pop the front tile from the list.

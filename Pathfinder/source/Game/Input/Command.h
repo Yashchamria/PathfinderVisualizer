@@ -2,18 +2,19 @@
 
 #pragma once
 
+enum class Direction : char;
 class Scene;
 enum class TileType : char;
 enum class AlgorithmType : char;
 
-enum class TileSelectorMove : char
-{
-	Up,
-	Down,
-	Left,
-	Right,
-	Mouse
-};
+//enum class TileSelectorMove : char
+//{
+//	Up,
+//	Down,
+//	Left,
+//	Right,
+//	Mouse
+//};
 
 class Command
 {
@@ -23,14 +24,16 @@ public:
 
 public:
 	void ResizeGrid(int ColumnIncrement, unsigned int ScrollSteps = 6);
-	void UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWindow* pWindow, const sf::Vector2f displaySize);
+	void SetSelectorPosition(sf::RenderWindow* pWindow, Direction direction);
+	void SetSelectorPosition(sf::RenderWindow* pWindow);
+
 	void UpdateTileProperty(TileType tileType);
 	void ExecuteAlgorithm(AlgorithmType algorithmType);
 	void ClearAlgorithmSearch();
 	void ClearGrid();
 	void IncreaseVisualSpeed();
 	void DecreaseVisualSpeed();
-	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
+	void GenerateRandomGrid(int wallPercent);
 
 private:
 	class Scene* m_pScene;

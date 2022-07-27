@@ -4,9 +4,9 @@
 
 class Grid;
 class Tile;
-enum class TileAnimationState : char;
+enum class TileAnimState : char;
 enum class AlgorithmState : char;
-enum class NeighbourTileDirection : char;
+enum class Direction : char;
 
 class BaseAlgorithm : public IAlgorithm
 {
@@ -49,7 +49,7 @@ private:
 
 private:
 	std::unordered_map<Tile*, Tile* > m_ClosestPreviousTile;
-	std::queue<std::pair<Tile*, TileAnimationState>> m_PendingTileAnimation;
+	std::queue<std::pair<Tile*, TileAnimState>> m_PendingTileAnimation;
 
 public:
 	Grid* GetGrid() { return m_pGrid; }
@@ -61,7 +61,7 @@ public:
 
 public:
 	void AddToClosestPreviousTile(Tile* pTile, Tile* pPreviousTile);
-	void AddToTileAnimationArray(Tile* pTile, TileAnimationState tileAnimation);
+	void AddToTileAnimationArray(Tile* pTile, TileAnimState tileAnimation);
 
 private:
 	void GetFinalPathAnimationSequence();

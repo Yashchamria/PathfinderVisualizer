@@ -11,10 +11,10 @@
 
 Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
-	m_pDisplay = std::make_shared<Display>(GameConst::TOP_WIDGET_HEIGHT, sf::Color(242, 166, 73), pWindow->getSize(), sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS));
+	m_pDisplay = std::make_shared<Display>(Config::displayHeight, sf::Color(242, 166, 73), pWindow->getSize(), sf::Vector2u(Config::gridColumns, Config::gridRows));
 
-	m_pGrid = std::make_shared<Grid>(sf::Vector2u(GameConst::GRID_COLUMNS, GameConst::GRID_ROWS), pWindow->getSize(),
-		sf::Vector2f(pWindow->getSize().x, GameConst::TOP_WIDGET_HEIGHT));
+	m_pGrid = std::make_shared<Grid>(sf::Vector2u(Config::gridColumns, Config::gridRows), pWindow->getSize(),
+		sf::Vector2f(pWindow->getSize().x, Config::displayHeight));
 
 	m_pGameObjects.push_back(m_pGrid);
 	m_pGameObjects.push_back(m_pDisplay);

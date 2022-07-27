@@ -23,7 +23,7 @@ private:
 	Tile* ProcessNextTile();
 
 	void AddToOpenlist(Tile* pTile);
-	Tile* GetNeighbourTile(Tile* pCurrentTile, NeighbourTileDirection tileDirection);
+	Tile* GetNeighbourTile(Tile* pCurrentTile, Direction tileDirection);
 
 public:
 	virtual std::string GetAlgorithmName() override { return "Depth First Search"; }

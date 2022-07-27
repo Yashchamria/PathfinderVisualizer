@@ -31,14 +31,10 @@ void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) cons
 				m_pRenderWindow->close();
 			break;
 
-		case sf::Event::Resized:
-			m_pRenderWindow->setSize(sf::Vector2u(m_pRenderWindow->getSize().x, (unsigned int)((float)m_pRenderWindow->getSize().x / GameConst::WINDOW_ASPECT_RATIO)));
-			break;
-
 		default:
 			break;
 		}
-		m_pInputManager->ProcessInputEvent(event.get(), m_pRenderWindow.get(), sf::Vector2f(GameConst::TOP_WIDGET_WIDTH, GameConst::TOP_WIDGET_HEIGHT));
+		m_pInputManager->ProcessInputEvent(event.get(), m_pRenderWindow.get());
 	}
 }
 

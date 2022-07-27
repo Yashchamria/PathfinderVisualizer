@@ -1,7 +1,7 @@
 #pragma once
 #include "GameCore/Objects/GameObject.h"
 
-enum class TileAnimationState : char;
+enum class TileAnimState : char;
 enum class TileType : char;
 
 class Tile : public GameObject
@@ -13,20 +13,20 @@ public:
 	virtual void Update(float deltaTime) override;
 
 private:
-	sf::RectangleShape m_TileBody;
-	sf::Vector2u m_tileCoord;
-	TileType m_tileType;
-	TileAnimationState m_tileAnimationState;
+	sf::RectangleShape m_body;
+	sf::Vector2u m_coord;
+	TileType m_type;
+	TileAnimState m_tileAnimationState;
 	unsigned int m_Weight = 10;
 
 	float m_tileFillScale = 0.92f;
 
 	void Animate(sf::Color tileColor);
-	sf::RectangleShape m_TileAnimationBody;
+	sf::RectangleShape m_animBody;
 	bool m_IsAnimationChanged = false;
 
 public:
-	void RepositionTile(sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
+	void RepositionTile();
 	void UpdateTileType();
 	void UpdateTileAnimationProperty();
 
@@ -35,15 +35,15 @@ public:
 	void SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor);
 	void SetTileColor(sf::Color fillColor = sf::Color::White, sf::Color OutlineColor = sf::Color::Black);
 	void SetTileType(TileType tileType);
-	void SetTileAnimationProperty(TileAnimationState tileAnimationState);
+	void SetTileAnimationProperty(TileAnimState tileAnimationState);
 
 private:
 	void SetAnimTileScale(float tileScale);
 	float GetAnimTileScale();
 
 public:
-	sf::Vector2u GetTileCoord() { return m_tileCoord; }
+	sf::Vector2u GetTileCoord() { return m_coord; }
 	unsigned int GetTileWeight() { return m_Weight; }
-	TileType GetTileType() { return m_tileType; }
-	TileAnimationState GetTileAnimationState() { return m_tileAnimationState; }
+	TileType GetTileType() { return m_type; }
+	TileAnimState GetTileAnimationState() { return m_tileAnimationState; }
 };

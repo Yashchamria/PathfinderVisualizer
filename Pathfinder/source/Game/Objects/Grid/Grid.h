@@ -1,15 +1,15 @@
 #pragma once
 #include "GameCore/Objects/GameObject.h"
 
-enum class TileType : char;
-enum class NeighbourTileDirection : char;
 class Tile;
+enum class TileType : char;
+enum class Direction : char;
 
 class Grid final: public GameObject
 {
 public:	
 	Grid(const sf::Vector2u gridSize, const sf::Vector2u windowSize, const sf::Vector2f displaySize);
-	~Grid();
+	~Grid() override;
 
 	void Update(float deltaTime) override;
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
@@ -18,42 +18,39 @@ private:
 	const sf::Vector2u m_gridSize;
 	sf::Vector2u m_ZoomedGridSize;
 
-	std::vector<Tile*> m_pTiles;
+	std::vector<std::shared_ptr<Tile>> m_pTiles;
 
-	Tile* m_pTileSelector = nullptr;
-	Tile* m_pStartTile = nullptr;
-	Tile* m_pEndTile = nullptr;
+	std::shared_ptr<Tile> m_pSelector = nullptr;
+	int m_startIndex {-1}, m_endIndex {-1};
 
 public:
+	int zoomLevel;
 	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize) const;
 
 	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
-	void UpdateTileSelector(sf::Vector2u mouseTileCoord, sf::Vector2u windowSize, sf::Vector2f TopWidgetSize);
-	void SetSelectorPosition(sf::Vector2u mouseTileCoord, sf::Vector2u windowSize, sf::Vector2f displaySize);
+	void UpdateTileSelector(sf::Vector2u mouseTileCoord);
+	void SetSelectorPosition(sf::Vector2u mouseTileCoord);
 
 	void ClearGrid();
-	void ClearAlgorithmSearch();
+	void ClearAlgorithmSearch() const;
 
-	void SetZoomedGridSize(unsigned int ColumnSize) { m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / GameConst::GRID_ASPECT_RATIO)); }
+	void SetZoomedGridSize(unsigned int ColumnSize) { m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / ((float)m_gridSize.x / (float)m_gridSize.y))); }
 	sf::Vector2u GetZoomedGridSize() const { return m_ZoomedGridSize; }
 
 private:
-	unsigned int GetTilesArrayIndex(sf::Vector2u TileCoord, sf::Vector2u GridSize) { return TileCoord.y + (TileCoord.x * GridSize.y); }
+	bool IsIndexValid(const int index) const { return index > -1 && index < m_pTiles.size(); }
+	int GetTileIndex(const sf::Vector2u coord) const { return coord.y + coord.x * m_gridSize.y; }
 
 public:
-	sf::Vector2u GetGridSize() { return m_gridSize; }
-	unsigned int GetTotalTiles() { return m_gridSize.x * m_gridSize.y; }
-
-	Tile* GetTile(sf::Vector2u tileCoord) { return m_pTiles[GetTilesArrayIndex(tileCoord, m_gridSize)]; }
-	Tile* GetNeighbourTile(sf::Vector2u CurrentTileCoord, NeighbourTileDirection tileDirection);
-	Tile* GetStartTile() { return m_pStartTile; }
-	Tile* GetEndTile() { return m_pEndTile; }
-
-	bool IsTileCoordValid(sf::Vector2u tileCoord);
-	TileType GetTileState(sf::Vector2u tileCoord);
+	[[nodiscard]] sf::Vector2u GetGridSize() { return m_gridSize; }
+	[[nodiscard]] bool IsCoordValid(const sf::Vector2u coord) const { return coord.x < m_gridSize.x&& coord.y < m_gridSize.y; }
 
 public:
-	void GenerateRandomWalls(unsigned int wallPercent);
-	void GenerateRandomTile(TileType tileType, unsigned int quadrant, bool cornerBais);
-	void GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant);
+	void GenerateRandomWalls(const int wallPercent) const;
+
+public:
+	[[nodiscard]] const std::shared_ptr<Tile>& GetTile(const sf::Vector2u coord) const { return m_pTiles[GetTileIndex(coord)]; }
+	[[nodiscard]] std::shared_ptr<Tile> GetNeighborTile(sf::Vector2u coord, const Direction direction) const;
+	[[nodiscard]] std::shared_ptr<Tile> GetStartTile() const { return IsIndexValid(m_startIndex) ? m_pTiles[m_startIndex] : std::shared_ptr<Tile>(nullptr); }
+	[[nodiscard]] std::shared_ptr<Tile> GetEndTile() const { return IsIndexValid(m_endIndex) ? m_pTiles[m_endIndex] : std::shared_ptr<Tile>(nullptr); }
 };

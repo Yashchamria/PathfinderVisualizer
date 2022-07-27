@@ -13,8 +13,7 @@
 #include <memory>
 #include <cstdint>
 
-
-#include "GameCore\GameConstants.h"
+#include "GameCore\Config.h"
 
 //SFML
 #include <SFML\System.hpp>

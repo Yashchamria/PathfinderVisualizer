@@ -21,7 +21,7 @@ void DijkstrasAlgorithm::OnInit()
 	{
 		for (unsigned int y = 0; y < GetGrid()->GetGridSize().y; y++)
 		{
-			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
+			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 	
 			if (pTile->GetTileType() == TileType::WallTile)
 				continue;
@@ -32,7 +32,7 @@ void DijkstrasAlgorithm::OnInit()
 	}
 
 	//Dealing with the Start Tile
-	Tile* StartTile = GetGrid()->GetStartTile();
+	Tile* StartTile = GetGrid()->GetStartTile().get();
 
 	m_totalCostfromStartTile[StartTile] = 0;
 	AddToClosestPreviousTile(StartTile, StartTile);
@@ -66,20 +66,20 @@ void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
 
 	m_IsTileVisited[pTile] = true;
 
-	AddToTileAnimationArray(pTile, TileAnimationState::Processed);
+	AddToTileAnimationArray(pTile, TileAnimState::Processed);
 	
 	if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) != m_pOpenTiles.end())
 	{
 		m_pOpenTiles.erase(std::remove(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile), m_pOpenTiles.end());
 	}
 
-	//Look for neighbouring tiles and update them.
+	//Look for neighboring tiles and update them.
 	sf::Vector2u CurrentTileCoord = pTile->GetTileCoord();
 
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Up)   , pTile);
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Down) , pTile);
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Right), pTile);
-	ProcessTileParameters(GetGrid()->GetNeighbourTile(CurrentTileCoord, NeighbourTileDirection::Left) , pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Right).get(), pTile);
+	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Left).get() , pTile);
 }
 
 void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
@@ -100,7 +100,7 @@ void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 		//Pushes the tile to the open list.
 		if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) == m_pOpenTiles.end())
 		{
-			AddToTileAnimationArray(pTile, TileAnimationState::Processing);
+			AddToTileAnimationArray(pTile, TileAnimState::Processing);
 
 			m_pOpenTiles.push_back(pTile);
 			IncrementTileExplored();

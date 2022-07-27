@@ -7,6 +7,7 @@
 #include "Game/Algorithms/Algorithm.h"
 #include "Game/Algorithms/AlgorithmEnum.h"
 #include "Game/Objects/UI/Display.h"
+#include "Game/Objects/Grid/TileEnum.h"
 
 Command::Command(Scene* pScene)
 {
@@ -54,32 +55,34 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 	}
 }
 
-void Command::UpdateTileSelectorPosition(TileSelectorMove moveType, sf::RenderWindow* pWindow, const sf::Vector2f displaySize)
+void Command::SetSelectorPosition(sf::RenderWindow* pWindow)
 {
-	switch (moveType)
+	m_MouseTileCoord = GetMouseTileCoord(sf::Mouse::getPosition(*pWindow), pWindow);
+	m_pScene->GetGrid()->UpdateTileSelector(m_MouseTileCoord);
+}
+
+void Command::SetSelectorPosition(sf::RenderWindow* pWindow, Direction direction)
+{
+	switch (direction)
 	{
-	case TileSelectorMove::Mouse:
-		m_MouseTileCoord = GetMouseTileCoord(sf::Mouse::getPosition(*pWindow), pWindow);
-		break;
+		case Direction::Up:
+			if (m_MouseTileCoord.y > 0) { m_MouseTileCoord.y -= 1; }
+			break;
 
-	case TileSelectorMove::Up:
-		if (m_MouseTileCoord.y > 0) { m_MouseTileCoord.y -= 1; }
-		break;
+		case Direction::Down:
+			if (m_MouseTileCoord.y < (m_pScene->GetGrid()->GetZoomedGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
+			break;
 
-	case TileSelectorMove::Down:
-		if (m_MouseTileCoord.y < (m_pScene->GetGrid()->GetZoomedGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
-		break;	
-	
-	case TileSelectorMove::Left:
-		if (m_MouseTileCoord.x > 0) { m_MouseTileCoord.x -= 1; }
-		break;
-	
-	case TileSelectorMove::Right:
-		if (m_MouseTileCoord.x < (m_pScene->GetGrid()->GetZoomedGridSize().x - 1)) { m_MouseTileCoord.x += 1; }
-		break;
+		case Direction::Left:
+			if (m_MouseTileCoord.x > 0) { m_MouseTileCoord.x -= 1; }
+			break;
+
+		case Direction::Right:
+			if (m_MouseTileCoord.x < (m_pScene->GetGrid()->GetZoomedGridSize().x - 1)) { m_MouseTileCoord.x += 1; }
+			break;
 	}
 
-	m_pScene->GetGrid()->UpdateTileSelector(m_MouseTileCoord, pWindow->getSize(), displaySize);
+	m_pScene->GetGrid()->UpdateTileSelector(m_MouseTileCoord);
 }
 
 void Command::UpdateTileProperty(TileType tileType)
@@ -139,11 +142,11 @@ void Command::DecreaseVisualSpeed()
 	m_pScene->GetDisplay()->SetSpeed(newSpeed);
 }
 
-void Command::GenerateRandomGrid(unsigned int wallPercent, unsigned int StartQuadrant, unsigned int EndQuadrant)
+void Command::GenerateRandomGrid(const int wallPercent)
 {
 	HandleOngoingAlgorithm(false);
-
-	m_pScene->GetGrid()->GenerateRandomGrid(wallPercent, StartQuadrant, EndQuadrant);
+	m_pScene->GetGrid()->ClearGrid();
+	m_pScene->GetGrid()->GenerateRandomWalls(wallPercent);
 }
 
 

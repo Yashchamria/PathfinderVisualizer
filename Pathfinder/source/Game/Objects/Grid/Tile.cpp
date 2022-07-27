@@ -4,20 +4,20 @@
 
 Tile::Tile(sf::Vector2u TileCoord, sf::Vector2f TileSize)
 {
-	m_tileType = TileType::Default;
-	m_tileAnimationState = TileAnimationState::Idle;
+	m_type = TileType::Default;
+	m_tileAnimationState = TileAnimState::Idle;
 
 	SetTileSize(TileSize, 20.0f);
 	SetTileColor(sf::Color(225, 225,225), sf::Color(25, 25, 25));
 
-	m_TileBody.setScale(m_tileFillScale, m_tileFillScale);
+	m_body.setScale(m_tileFillScale, m_tileFillScale);
 	SetAnimTileScale(m_tileFillScale);
 }
 
 void Tile::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 {
-	renderWindow->draw(m_TileBody);
-	renderWindow->draw(m_TileAnimationBody);
+	renderWindow->draw(m_body);
+	renderWindow->draw(m_animBody);
 }
 
 void Tile::Update(float deltaTime)
@@ -28,41 +28,41 @@ void Tile::Update(float deltaTime)
 	}
 	else
 	{
-		m_TileBody.setFillColor(m_TileAnimationBody.getFillColor());
+		m_body.setFillColor(m_animBody.getFillColor());
 	}
 }
 
 void Tile::SetTileSize(sf::Vector2f tileSize, float OutlineThicknessFactor)
 {
-	m_TileBody.setSize(tileSize);
-	m_TileBody.setOrigin(tileSize.x / 2.0f, tileSize.y / 2.0f);
-	m_TileBody.setOutlineThickness(tileSize.x / OutlineThicknessFactor);
+	m_body.setSize(tileSize);
+	m_body.setOrigin(tileSize.x / 2.0f, tileSize.y / 2.0f);
+	m_body.setOutlineThickness(tileSize.x / OutlineThicknessFactor);
 
-	m_TileAnimationBody.setSize(tileSize * m_tileFillScale); // To set the size equal to inner fill of main body.
-	m_TileAnimationBody.setOrigin((tileSize * m_tileFillScale) / 2.0f);
+	m_animBody.setSize(tileSize * m_tileFillScale); // To set the size equal to inner fill of main body.
+	m_animBody.setOrigin((tileSize * m_tileFillScale) / 2.0f);
 }
 
-void Tile::SetTileCoord(sf::Vector2u tileCoord)
+void Tile::SetTileCoord(sf::Vector2u coord)
 {
-	m_tileCoord = tileCoord;
+	m_coord = coord;
 }
 
 void Tile::SetTileColor(sf::Color fillColor, sf::Color OutlineColor)
 {
-	m_TileBody.setFillColor(fillColor);
-	m_TileBody.setOutlineColor(OutlineColor);
+	m_body.setFillColor(fillColor);
+	m_body.setOutlineColor(OutlineColor);
 
-	m_TileAnimationBody.setFillColor(fillColor);
+	m_animBody.setFillColor(fillColor);
 }
 
 void Tile::SetTileType(TileType tileType)
 {
-	if (m_tileType != tileType) { m_IsAnimationChanged = true; }
+	if (m_type != tileType) { m_IsAnimationChanged = true; }
 
-	m_tileType = tileType;
+	m_type = tileType;
 }
 
-void Tile::SetTileAnimationProperty(TileAnimationState tileAnimationState)
+void Tile::SetTileAnimationProperty(TileAnimState tileAnimationState)
 {
 	if (m_tileAnimationState != tileAnimationState) { m_IsAnimationChanged = true; }
 
@@ -71,31 +71,31 @@ void Tile::SetTileAnimationProperty(TileAnimationState tileAnimationState)
 
 void Tile::SetAnimTileScale(float tileScale)
 {
-	m_TileAnimationBody.setScale(tileScale, tileScale);
+	m_animBody.setScale(tileScale, tileScale);
 }
 
 float Tile::GetAnimTileScale()
 {
-	return m_TileAnimationBody.getScale().x;
+	return m_animBody.getScale().x;
 }
 
-void Tile::RepositionTile(sf::Vector2u windowSize, sf::Vector2f TopWidgetSize)
+void Tile::RepositionTile()
 {
 	//Setting the tile position according to the tile coord and Screen size.
 	sf::Vector2f tilePos;
-	sf::Vector2f tileSize = m_TileBody.getSize();
+	sf::Vector2f tileSize = m_body.getSize();
 
 	//TilePos = TileCoord * TileSize + OffsetTileCentre - OffsetToWindowsTopMostCorner
-	tilePos.x = (m_tileCoord.x * tileSize.x) + (tileSize.x / 2.0f) - ((float)windowSize.x / 2.0f);
-	tilePos.y = (m_tileCoord.y * tileSize.y) + (tileSize.y / 2.0f) - ((float)windowSize.y / 2.0f) + TopWidgetSize.y;
+	tilePos.x = (m_coord.x * tileSize.x) + (tileSize.x / 2.0f) - Config::windowWidth / 2;
+	tilePos.y = (m_coord.y * tileSize.y) + (tileSize.y / 2.0f) - Config::windowHeight / 2 + Config::displayHeight;
 
-	m_TileBody.setPosition(tilePos);
-	m_TileAnimationBody.setPosition(tilePos);
+	m_body.setPosition(tilePos);
+	m_animBody.setPosition(tilePos);
 }
 
 void Tile::UpdateTileType()
 {
-	switch (m_tileType)
+	switch (m_type)
 	{
 	case TileType::StartTile:
 		Animate(sf::Color(57, 191, 66));
@@ -122,7 +122,7 @@ void Tile::Animate(sf::Color color)
 {
 	if (m_IsAnimationChanged)
 	{
-		m_TileAnimationBody.setFillColor(color);
+		m_animBody.setFillColor(color);
 		SetAnimTileScale(0.0f);
 		m_IsAnimationChanged = false;
 	}
@@ -132,19 +132,19 @@ void Tile::UpdateTileAnimationProperty()
 {
 	switch (m_tileAnimationState)
 	{
-	case TileAnimationState::Idle:
+	case TileAnimState::Idle:
 		Animate(sf::Color(225, 225, 225));
 		break;
 
-	case TileAnimationState::Processing:
+	case TileAnimState::Processing:
 		Animate(sf::Color(5, 199, 242));
 		break;
 
-	case TileAnimationState::Processed:
+	case TileAnimState::Processed:
 		Animate(sf::Color(189, 54, 191));
 		break;
 
-	case TileAnimationState::Found:
+	case TileAnimState::Found:
 		Animate(sf::Color(242, 200, 5));
 		break;
 	}

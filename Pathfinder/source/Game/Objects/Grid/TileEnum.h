@@ -9,7 +9,7 @@ enum class TileType : char
 	InValid,
 };
 
-enum class TileAnimationState : char
+enum class TileAnimState : char
 {
 	Idle,
 	Processing,
@@ -17,7 +17,7 @@ enum class TileAnimationState : char
 	Found,
 };
 
-enum class NeighbourTileDirection : char
+enum class Direction : char
 {
 	Up,
 	Down,
