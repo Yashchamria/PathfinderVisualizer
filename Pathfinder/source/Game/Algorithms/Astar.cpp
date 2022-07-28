@@ -23,7 +23,7 @@ void Astar::OnInit()
 		{
 			const auto& pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
 	
-			if (pTile->GetType() == TileType::WallTile)
+			if (pTile->Type == TileType::WallTile)
 				continue;
 	
 			m_finalCost.insert(std::make_pair(pTile.get(), std::make_pair(UINT_MAX, UINT_MAX)));
@@ -91,7 +91,7 @@ void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
 
-	if (!m_IsTileVisited[pTile] && pTile->GetType() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
 	{
 		unsigned int newGCost = m_finalCost[pPreviousTile].first + pTile->GetWeight();
 		unsigned int newHCost = GetTileHCost(pTile);

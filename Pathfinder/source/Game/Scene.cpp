@@ -11,7 +11,7 @@
 
 Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
-	m_pDisplay = std::make_shared<Display>(Config::displayHeight, sf::Color(242, 166, 73), pWindow->getSize(), sf::Vector2u(Config::gridColumns, Config::gridRows));
+	m_pDisplay = std::make_shared<Display>(Config::displayHeight, DISPLAY_COLOR, pWindow->getSize(), sf::Vector2u(Config::gridColumns, Config::gridRows));
 
 	m_pGrid = std::make_shared<Grid>(sf::Vector2u(Config::gridColumns, Config::gridRows), (sf::Vector2f)pWindow->getSize(),
 		sf::Vector2f(pWindow->getSize().x, Config::displayHeight));

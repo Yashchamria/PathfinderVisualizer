@@ -6,8 +6,8 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 	m_pCanvas(std::make_unique<sf::RectangleShape>(sf::Vector2f(windowSize.x, height)))
 {
 	// Setting up the widget box.
-	m_pCanvas->setFillColor(color);
-	m_pCanvas->setOutlineColor(sf::Color(25, 25, 25));
+	m_pCanvas->setFillColor(DISPLAY_COLOR);
+	m_pCanvas->setOutlineColor(GRID_COLOR);
 	m_pCanvas->setOutlineThickness(-height / 30.0f);
 	m_pCanvas->setPosition(-(sf::Vector2f)windowSize / 2.0f);
 

@@ -15,6 +15,9 @@ public:
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 
 private:
+	std::unique_ptr<sf::RectangleShape> m_pCanvas{};
+
+private:
 	const sf::Vector2u m_gridSize;
 	sf::Vector2u m_ZoomedGridSize;
 
@@ -27,19 +30,18 @@ public:
 	int zoomLevel;
 	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf::Vector2f TopWidgetSize) const;
 
-	void UpdateTileProperty(sf::Vector2u mouseTileCoord, TileType tileType);
-	void UpdateTileSelector(sf::Vector2u mouseTileCoord);
-	void SetSelectorPosition(sf::Vector2u mouseTileCoord);
+	void SetTileType(const sf::Vector2u coord, const TileType type);
+	void SetSelectorPosition(const sf::Vector2f coord);
 
 	void ClearGrid();
-	void ClearAlgorithmSearch() const;
+	void ResetDefaultTiles() const;
 
 	void SetZoomedGridSize(unsigned int ColumnSize) { m_ZoomedGridSize = sf::Vector2u(ColumnSize, (unsigned int)((float)ColumnSize / ((float)m_gridSize.x / (float)m_gridSize.y))); }
-	sf::Vector2u GetZoomedGridSize() const { return m_ZoomedGridSize; }
+	[[nodiscard]] sf::Vector2u GetZoomedGridSize() const { return m_ZoomedGridSize; }
 
 private:
-	bool IsIndexValid(const int index) const { return index > -1 && index < m_pTiles.size(); }
-	int GetTileIndex(const sf::Vector2u coord) const { return coord.y + coord.x * m_gridSize.y; }
+	[[nodiscard]] bool IsIndexValid(const int index) const { return index > -1 && index < m_pTiles.size(); }
+	[[nodiscard]] int GetTileIndex(const sf::Vector2u coord) const { return coord.y + coord.x * m_gridSize.y; }
 
 public:
 	[[nodiscard]] sf::Vector2u GetGridSize() { return m_gridSize; }
@@ -53,4 +55,7 @@ public:
 	[[nodiscard]] std::shared_ptr<Tile> GetNeighborTile(sf::Vector2u coord, const Direction direction) const;
 	[[nodiscard]] std::shared_ptr<Tile> GetStartTile() const { return IsIndexValid(m_startIndex) ? m_pTiles[m_startIndex] : std::shared_ptr<Tile>(nullptr); }
 	[[nodiscard]] std::shared_ptr<Tile> GetEndTile() const { return IsIndexValid(m_endIndex) ? m_pTiles[m_endIndex] : std::shared_ptr<Tile>(nullptr); }
+
+public:
+	[[nodiscard]] sf::Vector2u GetWorldToCoord(const sf::Vector2f position);
 };

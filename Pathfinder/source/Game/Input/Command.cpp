@@ -24,7 +24,6 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 	if (m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue >= 8 && 
 		m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue <= m_pScene->GetGrid()->GetGridSize().x)
 	{
-
 		//For Zooming Out
 		if (ZoomValue > 0)
 		{
@@ -57,8 +56,7 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 
 void Command::SetSelectorPosition(sf::RenderWindow* pWindow)
 {
-	m_MouseTileCoord = GetMouseTileCoord(sf::Mouse::getPosition(*pWindow), pWindow);
-	m_pScene->GetGrid()->UpdateTileSelector(m_MouseTileCoord);
+	m_pScene->GetGrid()->SetSelectorPosition((sf::Vector2f)sf::Mouse::getPosition(*pWindow));
 }
 
 void Command::SetSelectorPosition(sf::RenderWindow* pWindow, Direction direction)
@@ -66,28 +64,28 @@ void Command::SetSelectorPosition(sf::RenderWindow* pWindow, Direction direction
 	switch (direction)
 	{
 		case Direction::Up:
-			if (m_MouseTileCoord.y > 0) { m_MouseTileCoord.y -= 1; }
+			if (m_mouseCoord.y > 0) { m_mouseCoord.y -= 1; }
 			break;
 
 		case Direction::Down:
-			if (m_MouseTileCoord.y < (m_pScene->GetGrid()->GetZoomedGridSize().y - 1)) { m_MouseTileCoord.y += 1; }
+			if (m_mouseCoord.y < (m_pScene->GetGrid()->GetZoomedGridSize().y - 1)) { m_mouseCoord.y += 1; }
 			break;
 
 		case Direction::Left:
-			if (m_MouseTileCoord.x > 0) { m_MouseTileCoord.x -= 1; }
+			if (m_mouseCoord.x > 0) { m_mouseCoord.x -= 1; }
 			break;
 
 		case Direction::Right:
-			if (m_MouseTileCoord.x < (m_pScene->GetGrid()->GetZoomedGridSize().x - 1)) { m_MouseTileCoord.x += 1; }
+			if (m_mouseCoord.x < (m_pScene->GetGrid()->GetZoomedGridSize().x - 1)) { m_mouseCoord.x += 1; }
 			break;
 	}
 
-	m_pScene->GetGrid()->UpdateTileSelector(m_MouseTileCoord);
+	//m_pScene->GetGrid()->SetSelectorPosition(m_mouseCoord);
 }
 
 void Command::UpdateTileProperty(TileType tileType)
 {
-	m_pScene->GetGrid()->UpdateTileProperty(m_MouseTileCoord, tileType);
+	m_pScene->GetGrid()->SetTileType(m_mouseCoord, tileType);
 	HandleOngoingAlgorithm(true);
 }
 
@@ -105,7 +103,7 @@ void Command::ClearAlgorithmSearch()
 	m_AlgorithmStopped = true;
 
 	HandleOngoingAlgorithm(false);
-	m_pScene->GetGrid()->ClearAlgorithmSearch();
+	m_pScene->GetGrid()->ResetDefaultTiles();
 }
 
 void Command::ClearGrid()
@@ -170,7 +168,7 @@ void Command::HandleOngoingAlgorithm(bool bReRunAlgorithm)
 {
 	m_pScene->StopAlgorithm();
 
-	m_pScene->GetGrid()->ClearAlgorithmSearch();
+	m_pScene->GetGrid()->ResetDefaultTiles();
 
 	if (bReRunAlgorithm && !m_AlgorithmStopped)
 	{

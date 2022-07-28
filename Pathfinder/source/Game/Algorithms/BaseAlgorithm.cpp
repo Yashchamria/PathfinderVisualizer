@@ -65,8 +65,27 @@ bool BaseAlgorithm::PlayVisualization(int speed, float deltaTime)
 	{
 		while (!m_PendingTileAnimation.empty())
 		{
-			m_PendingTileAnimation.front().first->SetTileAnimationProperty(m_PendingTileAnimation.front().second);
-			m_PendingTileAnimation.front().first->UpdateTileAnimationProperty();
+			//if(m_PendingTileAnimation.front().first->AnimState != m_PendingTileAnimation.front().second)
+			{
+				switch (m_PendingTileAnimation.front().second)
+				{
+				case TileAnimState::Processing:
+					m_PendingTileAnimation.front().first->Animate(PROCESSING_TILE_COLOR);
+					break;
+			
+				case TileAnimState::Processed:
+					m_PendingTileAnimation.front().first->Animate(PROCESSED_TILE_COLOR);
+					break;
+			
+				case TileAnimState::Found:
+					m_PendingTileAnimation.front().first->Animate(FOUND_TILE_COLOR);
+					break;
+				}
+
+				//m_PendingTileAnimation.front().first->AnimState = m_PendingTileAnimation.front().second;
+			}
+			//m_PendingTileAnimation.front().first->SetTileAnimationProperty(m_PendingTileAnimation.front().second);
+			//m_PendingTileAnimation.front().first->UpdateTileAnimationProperty();
 			m_PendingTileAnimation.pop();
 		}
 	}
@@ -77,8 +96,25 @@ bool BaseAlgorithm::PlayVisualization(int speed, float deltaTime)
 		return true;
 	}
 
-	m_PendingTileAnimation.front().first->SetTileAnimationProperty(m_PendingTileAnimation.front().second);
-	m_PendingTileAnimation.front().first->UpdateTileAnimationProperty();
+	//if (m_PendingTileAnimation.front().first->AnimState != m_PendingTileAnimation.front().second)
+	{
+		switch (m_PendingTileAnimation.front().second)
+		{
+		case TileAnimState::Processing:
+			m_PendingTileAnimation.front().first->Animate(PROCESSING_TILE_COLOR);
+			break;
+
+		case TileAnimState::Processed:
+			m_PendingTileAnimation.front().first->Animate(PROCESSED_TILE_COLOR);
+			break;
+
+		case TileAnimState::Found:
+			m_PendingTileAnimation.front().first->Animate(FOUND_TILE_COLOR);
+			break;
+		}
+
+		//m_PendingTileAnimation.front().first->AnimState = m_PendingTileAnimation.front().second;
+	}
 
 	m_switchSpeed += (deltaTime * speed);
 

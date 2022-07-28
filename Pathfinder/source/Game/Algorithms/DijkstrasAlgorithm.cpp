@@ -23,7 +23,7 @@ void DijkstrasAlgorithm::OnInit()
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 	
-			if (pTile->GetType() == TileType::WallTile)
+			if (pTile->Type == TileType::WallTile)
 				continue;
 	
 			m_totalCostfromStartTile.insert(std::make_pair(pTile, UINT_MAX));
@@ -85,7 +85,7 @@ void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
 void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
-	if (!m_IsTileVisited[pTile] && pTile->GetType() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
 	{
 		//Stores the previous tile and updates the total cost if valid.
 		unsigned int newCost = m_totalCostfromStartTile[pPreviousTile] + pTile->GetWeight();

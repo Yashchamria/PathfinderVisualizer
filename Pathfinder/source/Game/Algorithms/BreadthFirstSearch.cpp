@@ -23,7 +23,7 @@ void BreadthFirstSearch::OnInit()
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 
-			if (pTile->GetType() == TileType::WallTile)
+			if (pTile->Type == TileType::WallTile)
 				continue;
 
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
@@ -84,7 +84,7 @@ void BreadthFirstSearch::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
 
-	if (!m_IsTileVisited[pTile] && pTile->GetType() != TileType::WallTile)
+	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
 	{
 		AddToClosestPreviousTile(pTile, pPreviousTile);
 
