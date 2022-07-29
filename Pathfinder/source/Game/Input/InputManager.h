@@ -1,11 +1,12 @@
 #pragma once
 
 class Command;
+class Scene;
 
 class InputManager
 {
 public:	
-	InputManager(class Scene* pScene);
+	InputManager(Scene* pScene);
 	~InputManager();
 
 public:

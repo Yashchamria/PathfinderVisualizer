@@ -13,9 +13,6 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf:
 
 	const float tileSize = windowSize.x / (float)gridSize.x;
 
-	m_pSelector = std::make_shared<Tile>(sf::Vector2u(0, 0), tileSize, 10, TileType::Default);
-	m_pSelector->SetColor(sf::Color::Transparent, tileSize * Config::gridOutlineStrength, sf::Color(250, 109, 5));
-
 	m_pTiles.reserve(m_gridSize.x * m_gridSize.y);
 
 	for (int x = 0; x < m_gridSize.x; x++)
@@ -29,13 +26,9 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf:
 	}
 
 	SetZoomedGridSize(gridSize.x);
-	//ResizeGrid(gridSize.x, windowSize, displaySize);
 }
 
-Grid::~Grid()
-{
-	m_pTiles.clear();
-}
+Grid::~Grid() { m_pTiles.clear(); }
 
 void Grid::Update(float deltaTime)
 {
@@ -52,7 +45,6 @@ void Grid::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 	{
 		pTile->Draw(renderWindow);
 	}
-	m_pSelector->Draw(renderWindow);
 }
 
 void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf::Vector2f TopWidgetSize) const
@@ -62,18 +54,6 @@ void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf:
 	for (const auto& pTile : m_pTiles)
 	{
 		pTile->SetSizeAndPosition(tileSize * (1.0f - Config::gridOutlineStrength));
-	}
-
-	m_pSelector->SetSizeAndPosition(tileSize);
-}
-
-void Grid::SetSelectorPosition(const sf::Vector2f pos)
-{
-	const sf::Vector2u coord =  GetWorldToCoord(pos);
-
-	if (coord.x < m_ZoomedGridSize.x && coord.y < m_ZoomedGridSize.y)
-	{
-		m_pSelector->SetCoordAndPosition(coord);
 	}
 }
 
@@ -99,7 +79,6 @@ void Grid::ResetDefaultTiles() const
 		}
 	}
 }
-
 
 void Grid::SetTileType(const sf::Vector2u coord, const TileType type)
 {
@@ -161,14 +140,4 @@ void Grid::GenerateRandomWalls(const int wallPercent) const
 			i++;
 		}
 	}
-}
-
-sf::Vector2u Grid::GetWorldToCoord(const sf::Vector2f position)
-{
-	//float currentTileSizeOnScreenY = ((float)pWindow->getSize().y - m_pScene->GetDisplay()->GetSize().y) / (float)m_pScene->GetGrid()->GetZoomedGridSize().y;
-
-	const unsigned int coordX = floor(position.x / m_pTiles[0]->GetSize());
-	const unsigned int coordY = floor((position.y - Config::displayHeight) / m_pTiles[0]->GetSize());
-
-	return {coordX, coordY};
 }

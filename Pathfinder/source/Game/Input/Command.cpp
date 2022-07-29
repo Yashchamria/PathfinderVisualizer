@@ -6,6 +6,7 @@
 
 #include "Game/Algorithms/Algorithm.h"
 #include "Game/Algorithms/AlgorithmEnum.h"
+#include "Game/Objects/Grid/Selector.h"
 #include "Game/Objects/UI/Display.h"
 #include "Game/Objects/Grid/TileEnum.h"
 
@@ -21,8 +22,9 @@ Command::~Command()
 
 void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 {
-	if (m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue >= 8 && 
-		m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue <= m_pScene->GetGrid()->GetGridSize().x)
+	const auto& pGrid = m_pScene->GetGrid();
+
+	if (pGrid->GetZoomedGridSize().x + ZoomValue >= 8 && pGrid->GetZoomedGridSize().x + ZoomValue <= pGrid->GetGridSize().x)
 	{
 		//For Zooming Out
 		if (ZoomValue > 0)
@@ -31,10 +33,12 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 
 			if (m_ZoomOutSteps >= 10)
 			{
-				m_pScene->GetGrid()->SetZoomedGridSize(m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue);
+				pGrid->SetZoomedGridSize(pGrid->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomOutSteps = 0;
-				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2f(Config::windowWidth, Config::windowHeight), m_pScene->GetDisplay()->GetSize());
+				pGrid->ResizeGrid(pGrid->GetZoomedGridSize().x, sf::Vector2f(Config::windowWidth, Config::windowHeight), m_pScene->GetDisplay()->GetSize());
+
+				m_pScene->GetSelector()->SetSizeAndPosition(Config::windowWidth / pGrid->GetZoomedGridSize().x);
 			}
 		}
 
@@ -45,42 +49,24 @@ void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
 
 			if (m_ZoomInSteps >= 10)
 			{
-				m_pScene->GetGrid()->SetZoomedGridSize(m_pScene->GetGrid()->GetZoomedGridSize().x + ZoomValue);
+				pGrid->SetZoomedGridSize(pGrid->GetZoomedGridSize().x + ZoomValue);
 
 				m_ZoomInSteps = 0;
-				m_pScene->GetGrid()->ResizeGrid(m_pScene->GetGrid()->GetZoomedGridSize().x, sf::Vector2f(Config::windowWidth, Config::windowHeight), m_pScene->GetDisplay()->GetSize());
+				pGrid->ResizeGrid(pGrid->GetZoomedGridSize().x, sf::Vector2f(Config::windowWidth, Config::windowHeight), m_pScene->GetDisplay()->GetSize());
+				m_pScene->GetSelector()->SetSizeAndPosition(Config::windowWidth / pGrid->GetZoomedGridSize().x);
 			}
 		}
 	}
 }
 
-void Command::SetSelectorPosition(sf::RenderWindow* pWindow)
+void Command::SetSelectorPosition(const sf::Vector2f position)
 {
-	m_pScene->GetGrid()->SetSelectorPosition((sf::Vector2f)sf::Mouse::getPosition(*pWindow));
+	m_pScene->GetSelector()->SetCoordAndPosition(position);
 }
 
-void Command::SetSelectorPosition(sf::RenderWindow* pWindow, Direction direction)
+void Command::SetSelectorPosition(Direction direction)
 {
-	switch (direction)
-	{
-		case Direction::Up:
-			if (m_mouseCoord.y > 0) { m_mouseCoord.y -= 1; }
-			break;
-
-		case Direction::Down:
-			if (m_mouseCoord.y < (m_pScene->GetGrid()->GetZoomedGridSize().y - 1)) { m_mouseCoord.y += 1; }
-			break;
-
-		case Direction::Left:
-			if (m_mouseCoord.x > 0) { m_mouseCoord.x -= 1; }
-			break;
-
-		case Direction::Right:
-			if (m_mouseCoord.x < (m_pScene->GetGrid()->GetZoomedGridSize().x - 1)) { m_mouseCoord.x += 1; }
-			break;
-	}
-
-	//m_pScene->GetGrid()->SetSelectorPosition(m_mouseCoord);
+	m_pScene->GetSelector()->SetCoordAndPosition(direction);
 }
 
 void Command::UpdateTileProperty(TileType tileType)

@@ -10,7 +10,7 @@ public:
 	constexpr static float displayWidth = windowWidth;
 	constexpr static float displayHeight = windowHeight / 4.0f;
 
-	constexpr static uint64_t gridColumns = 32;
+	constexpr static uint64_t gridColumns = 64;
 	constexpr static uint64_t gridRows = gridColumns / (windowWidth / (windowHeight - displayHeight));
 
 	constexpr static float gridOutlineStrength = 0.1f;
@@ -25,4 +25,6 @@ public:
 
 	#define GRID_COLOR            sf::Color(10, 10, 10, 255)
 	#define DISPLAY_COLOR         sf::Color(242, 166, 73, 255)
+
+	#define SELECTOR_COLOR        sf::Color(250, 109, 5, 255)
 };

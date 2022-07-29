@@ -1,5 +1,4 @@
 #pragma once
-#include "Tile.h"
 #include "GameCore/Objects/GameObject.h"
 
 enum class TileAnimState : char;

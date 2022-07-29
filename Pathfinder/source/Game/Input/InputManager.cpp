@@ -39,10 +39,10 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		
 		if (pEvent->key.code == sf::Keyboard::R) { m_pCommand->GenerateRandomGrid(25); }
 
-		if      (pEvent->key.code == sf::Keyboard::Down ) { m_pCommand->SetSelectorPosition(pWindow, Direction::Down ); }
-		else if (pEvent->key.code == sf::Keyboard::Up   ) { m_pCommand->SetSelectorPosition(pWindow, Direction::Up   ); }
-		else if (pEvent->key.code == sf::Keyboard::Right) { m_pCommand->SetSelectorPosition(pWindow, Direction::Right); }
-		else if (pEvent->key.code == sf::Keyboard::Left ) { m_pCommand->SetSelectorPosition(pWindow, Direction::Left ); }
+		if      (pEvent->key.code == sf::Keyboard::Down ) { m_pCommand->SetSelectorPosition(Direction::Down ); }
+		else if (pEvent->key.code == sf::Keyboard::Up   ) { m_pCommand->SetSelectorPosition(Direction::Up   ); }
+		else if (pEvent->key.code == sf::Keyboard::Right) { m_pCommand->SetSelectorPosition(Direction::Right); }
+		else if (pEvent->key.code == sf::Keyboard::Left ) { m_pCommand->SetSelectorPosition(Direction::Left ); }
 
 		if		(pEvent->key.code == sf::Keyboard::Delete   ) { m_pCommand->ClearGrid();			}
 		else if (pEvent->key.code == sf::Keyboard::Backspace) { m_pCommand->ClearAlgorithmSearch(); }
@@ -58,8 +58,8 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 		break;
 
 	case sf::Event::MouseMoved:
-
-		m_pCommand->SetSelectorPosition(pWindow);
+		
+		m_pCommand->SetSelectorPosition((sf::Vector2f)sf::Mouse::getPosition(*pWindow));
 		break;
 				
 	case sf::Event::MouseButtonPressed:

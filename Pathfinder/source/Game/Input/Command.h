@@ -24,8 +24,8 @@ public:
 
 public:
 	void ResizeGrid(int ColumnIncrement, unsigned int ScrollSteps = 6);
-	void SetSelectorPosition(sf::RenderWindow* pWindow, Direction direction);
-	void SetSelectorPosition(sf::RenderWindow* pWindow);
+	void SetSelectorPosition(Direction direction);
+	void SetSelectorPosition(const sf::Vector2f position);
 
 	void UpdateTileProperty(TileType tileType);
 	void ExecuteAlgorithm(AlgorithmType algorithmType);

@@ -8,6 +8,7 @@
 
 #include "Algorithms/Algorithm.h"
 #include "Algorithms/AlgorithmEnum.h"
+#include "Objects/Grid/Selector.h"
 
 Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
@@ -16,8 +17,13 @@ Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 	m_pGrid = std::make_shared<Grid>(sf::Vector2u(Config::gridColumns, Config::gridRows), (sf::Vector2f)pWindow->getSize(),
 		sf::Vector2f(pWindow->getSize().x, Config::displayHeight));
 
+	const float selectorSize = pWindow->getSize().x / (float)Config::gridColumns;
+	m_pSelector = std::make_shared<Selector>(sf::Vector2u(0, 0), selectorSize, sf::Color::Transparent,
+		selectorSize * Config::gridOutlineStrength * 2.0f, SELECTOR_COLOR);
+
 	m_pGameObjects.push_back(m_pGrid);
 	m_pGameObjects.push_back(m_pDisplay);
+	m_pGameObjects.push_back(m_pSelector);
 
 	m_pAlgorithm = std::make_shared<Algorithms>(m_pGrid.get(), this);
 

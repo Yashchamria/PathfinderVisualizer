@@ -16,22 +16,15 @@ public:
 
 private:
 	std::unique_ptr<sf::RectangleShape> m_pCanvas{};
+	std::vector<std::shared_ptr<Tile>> m_pTiles;
+	int m_startIndex {-1}, m_endIndex {-1};
 
-private:
 	const sf::Vector2u m_gridSize;
 	sf::Vector2u m_ZoomedGridSize;
 
-	std::vector<std::shared_ptr<Tile>> m_pTiles;
-
-	std::shared_ptr<Tile> m_pSelector = nullptr;
-	int m_startIndex {-1}, m_endIndex {-1};
-
 public:
-	int zoomLevel;
 	void ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf::Vector2f TopWidgetSize) const;
-
 	void SetTileType(const sf::Vector2u coord, const TileType type);
-	void SetSelectorPosition(const sf::Vector2f coord);
 
 	void ClearGrid();
 	void ResetDefaultTiles() const;

@@ -39,12 +39,10 @@ void Tile::SetSizeAndPosition(float size)
 {
 	m_body.setSize({size, size});
 
-	size += (size * 0.1f);
-	//TilePos = TileCoord * TileSize + OffsetTileCentre - OffsetToWindowsTopMostCorner
-	const float posX = (m_coord.x * size) + (size * 0.20f) - Config::windowWidth / 2.0f;
-	const float posY = (m_coord.y * size) + (size * 0.05f) - (Config::windowHeight / 2.0f) + Config::displayHeight;
-
-	m_body.setPosition({ posX, posY });
+	size *= 1.0f / (1.0f - Config::gridOutlineStrength);
+	const float posX = (m_coord.x * size) - Config::windowWidth / 2.0f;
+	const float posY = (m_coord.y * size) - (Config::windowHeight / 2.0f) + Config::displayHeight;
+	m_body.setPosition({posX, posY});
 }
 
 void Tile::SetCoordAndPosition(const sf::Vector2u coord)
