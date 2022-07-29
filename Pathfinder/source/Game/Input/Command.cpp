@@ -8,7 +8,8 @@
 #include "Game/Algorithms/AlgorithmEnum.h"
 #include "Game/Objects/Grid/Selector.h"
 #include "Game/Objects/UI/Display.h"
-#include "Game/Objects/Grid/TileEnum.h"
+#include "Game/Objects/Grid/TileType.h"
+#include "Game/Objects/Grid/Direction.h"
 
 Command::Command(Scene* pScene)
 {

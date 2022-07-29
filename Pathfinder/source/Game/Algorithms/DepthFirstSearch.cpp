@@ -5,7 +5,8 @@
 #include "Game/Scene.h"
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/Grid/TileEnum.h"
+#include "Game/Objects/Grid/TileType.h"
+#include "Game/Objects/Grid/Direction.h"
 
 DepthFirstSearch::DepthFirstSearch(Grid* pGrid) : BaseAlgorithm(pGrid) {}
 

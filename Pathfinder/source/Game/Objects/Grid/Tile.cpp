@@ -1,6 +1,5 @@
 #include "FrameworkPCH.h"
 #include "Tile.h"
-#include "TileEnum.h"
 
 Tile::Tile(const sf::Vector2u coord, const float size, int weight, TileType type) :
 	Coord(coord), Weight(weight), Type(type)

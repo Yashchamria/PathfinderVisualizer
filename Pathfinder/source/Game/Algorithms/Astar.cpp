@@ -1,11 +1,10 @@
 #include "FrameworkPCH.h"
 #include "Astar.h"
-#include "AlgorithmEnum.h"
 
-#include "Game/Scene.h"
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/Grid/TileEnum.h"
+#include "Game/Objects/Grid/TileType.h"
+#include "Game/Objects/Grid/Direction.h"
 
 Astar::Astar(Grid* pGrid) : BaseAlgorithm(pGrid) {}
 

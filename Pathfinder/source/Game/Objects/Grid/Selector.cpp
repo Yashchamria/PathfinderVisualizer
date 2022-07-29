@@ -1,7 +1,6 @@
 #include "FrameworkPCH.h"
 #include "Selector.h"
-
-#include "Game/Objects/Grid/TileEnum.h"
+#include "Direction.h"
 
 Selector::Selector(const sf::Vector2u coord, const float size, const sf::Color fill, const float thickness, const sf::Color outline) :
 	m_coord(coord)
@@ -38,15 +37,7 @@ void Selector::SetCoordAndPosition(const sf::Vector2f worldPosition)
 
 void Selector::SetCoordAndPosition(const Direction direction)
 {
-	auto coord = m_coord;
-	switch (direction)
-	{
-		case Direction::Up:    coord.y -= 1; break;
-		case Direction::Down:  coord.y += 1; break;
-		case Direction::Left:  coord.x -= 1; break;
-		case Direction::Right: coord.x += 1; break;
-	}
-	SetCoordAndPosition(coord);
+	SetCoordAndPosition(GetNeighborCoord(m_coord, direction));
 }
 
 void Selector::SetCoordAndPosition(const sf::Vector2u coord)

@@ -3,7 +3,7 @@
 
 #include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/Grid/TileEnum.h"
+#include "Game/Objects/Grid/TileType.h"
 #include "AlgorithmEnum.h"
 
 BaseAlgorithm::BaseAlgorithm(Grid* pGrid)

@@ -3,7 +3,8 @@
 
 #include "Command.h"
 
-#include "Game/Objects/Grid/TileEnum.h"
+#include "Game/Objects/Grid/TileType.h"
+#include "Game/Objects/Grid/Direction.h"
 #include "Game/Algorithms/AlgorithmEnum.h"
 
 InputManager::InputManager(Scene* pScene)

@@ -2,7 +2,8 @@
 #include "Grid.h"
 
 #include "Tile.h"
-#include "TileEnum.h"
+#include "TileType.h"
+#include "Direction.h"
 
 Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize) : m_gridSize(gridSize)
 {
@@ -116,20 +117,14 @@ void Grid::SetTileType(const sf::Vector2u coord, const TileType type)
 
 std::shared_ptr<Tile> Grid::GetNeighborTile(sf::Vector2u coord, const Direction direction) const
 {
-	switch (direction)
-	{
-		case Direction::Up: --coord.y; break;
-		case Direction::Down: ++coord.y; break;
-		case Direction::Right: ++coord.x; break;
-		case Direction::Left: --coord.x; break;
-	}
+	coord = GetNeighborCoord(coord, direction);
 	return IsCoordValid(coord) ? GetTile(coord) : std::shared_ptr<Tile>(nullptr);
 }
 
 
 void Grid::GenerateRandomWalls(const int wallPercent) const
 {
-	for (int i = 0; i < m_pTiles.size() * wallPercent / 100;)
+	for (int i = 0; i < (int)m_pTiles.size() * wallPercent / 100;)
 	{
 		const int index = rand() % m_pTiles.size();
 
