@@ -141,22 +141,22 @@ void BaseAlgorithm::GetFinalPathAnimationSequence()
 	{
 		FinalPath.push(pTile);
 		pTile = m_ClosestPreviousTile[FinalPath.top()];
-		pathfinsihed = pTile->GetCoord() == pStartTile->GetCoord();
+		pathfinsihed = pTile->Coord == pStartTile->Coord;
 	}
 
 	while (!FinalPath.empty())
 	{
 		m_PendingTileAnimation.push(std::make_pair(FinalPath.top(), TileAnimState::Found));
-		m_pathCost += FinalPath.top()->GetWeight();
+		m_pathCost += FinalPath.top()->Weight;
 		FinalPath.pop();
 	}
 
-	m_pathCost += pEndTile->GetWeight(); //Adding cost to go to the end tile.
+	m_pathCost += pEndTile->Weight; //Adding cost to go to the end tile.
 }
 
 void BaseAlgorithm::AddToTileAnimationArray(Tile* pTile, TileAnimState tileAnimation)
 {
-	if (pTile->GetCoord() != m_pGrid->GetStartTile()->GetCoord() && pTile->GetCoord() != m_pGrid->GetEndTile()->GetCoord())
+	if (pTile->Coord != m_pGrid->GetStartTile()->Coord && pTile->Coord != m_pGrid->GetEndTile()->Coord)
 	{
 		m_PendingTileAnimation.push(std::make_pair(pTile, tileAnimation)); //For Visualization
 	}

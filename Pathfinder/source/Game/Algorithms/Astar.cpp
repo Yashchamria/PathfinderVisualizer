@@ -29,7 +29,7 @@ void Astar::OnInit()
 			m_finalCost.insert(std::make_pair(pTile.get(), std::make_pair(UINT_MAX, UINT_MAX)));
 			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile.get(), false));
 
-			m_averageTileWeight += pTile->GetWeight();
+			m_averageTileWeight += pTile->Weight;
 		}
 	}
 
@@ -53,7 +53,7 @@ void Astar::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord())
+			if (pTile->Coord == GetGrid()->GetEndTile()->Coord)
 			{
 				SetPathFound(true);
 				break;
@@ -79,7 +79,7 @@ void Astar::ProcessNeighbourTiles(Tile* pTile)
 	}
 
 	//Look for neighbouring tiles and update them
-	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
+	sf::Vector2u CurrentTileCoord = pTile->Coord;
 
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
@@ -93,7 +93,7 @@ void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 
 	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
 	{
-		unsigned int newGCost = m_finalCost[pPreviousTile].first + pTile->GetWeight();
+		unsigned int newGCost = m_finalCost[pPreviousTile].first + pTile->Weight;
 		unsigned int newHCost = GetTileHCost(pTile);
 
 		unsigned int newFCost = newGCost + newHCost;
@@ -142,8 +142,8 @@ Tile* Astar::GetPriorityTile()
 
 unsigned int Astar::GetTileHCost(Tile* pTile)
 {
-	sf::Vector2u finalTileCoord = GetGrid()->GetEndTile()->GetCoord();
-	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
+	sf::Vector2u finalTileCoord = GetGrid()->GetEndTile()->Coord;
+	sf::Vector2u CurrentTileCoord = pTile->Coord;
 
 	unsigned int xValue = (unsigned int)std::abs((int)CurrentTileCoord.x - (int)finalTileCoord.x);
 	unsigned int yValue = (unsigned int)std::abs((int)CurrentTileCoord.y - (int)finalTileCoord.y);

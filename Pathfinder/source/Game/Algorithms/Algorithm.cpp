@@ -47,7 +47,7 @@ bool Algorithms::Execute(AlgorithmType algorithmType)
 		m_pScene->GetDisplay()->Log("Select End Tile (Press 'E')");
 		return false;
 	}
-	if (m_pGrid->GetStartTile()->GetCoord() == m_pGrid->GetEndTile()->GetCoord()) { return false; }
+	if (m_pGrid->GetStartTile()->Coord == m_pGrid->GetEndTile()->Coord) { return false; }
 
 	m_pScene->GetDisplay()->Log("Executing Algorithm");
 

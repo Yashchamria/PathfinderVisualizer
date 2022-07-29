@@ -42,7 +42,7 @@ void DepthFirstSearch::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord())
+			if (pTile->Coord == GetGrid()->GetEndTile()->Coord)
 			{
 				SetPathFound(true);
 				break;
@@ -64,7 +64,7 @@ void DepthFirstSearch::AddToOpenlist(Tile* pTile)
 
 Tile* DepthFirstSearch::GetNeighbourTile(Tile* pCurrentTile, Direction tileDirection)
 {
-	sf::Vector2u CurrentTileCoord = pCurrentTile->GetCoord();
+	sf::Vector2u CurrentTileCoord = pCurrentTile->Coord;
 
 	Tile* neighbourTile = GetGrid()->GetNeighborTile(CurrentTileCoord, tileDirection).get();
 

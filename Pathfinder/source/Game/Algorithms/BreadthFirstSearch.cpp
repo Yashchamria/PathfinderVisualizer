@@ -46,7 +46,7 @@ void BreadthFirstSearch::OnExecute()
 
 		if (pTile)
 		{
-			if (pTile->GetCoord() == GetGrid()->GetEndTile()->GetCoord()) 
+			if (pTile->Coord == GetGrid()->GetEndTile()->Coord)
 			{
 				SetPathFound(true); 
 				break; 
@@ -72,7 +72,7 @@ void BreadthFirstSearch::ProcessNeighbourTiles(Tile* pTile)
 	}
 
 	//Look for neighbouring tiles and update them
-	sf::Vector2u CurrentTileCoord = pTile->GetCoord();
+	sf::Vector2u CurrentTileCoord = pTile->Coord;
 
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get(), pTile);
 	ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get(), pTile);
