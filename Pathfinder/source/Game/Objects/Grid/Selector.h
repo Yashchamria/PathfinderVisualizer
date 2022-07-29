@@ -21,6 +21,4 @@ public:
 
 public:
 	[[nodiscard]] sf::Vector2u GetCoord() const { return m_coord; }
-	[[nodiscard]] float GetSize() const { return m_body.getSize().x; }
-
 };
