@@ -14,10 +14,10 @@ DijkstrasAlgorithm::~DijkstrasAlgorithm()
 
 void DijkstrasAlgorithm::OnInit()
 {
-	//Intializing all the tiles to unvisited and setting the distance to infinite.
-	for (unsigned int x = 0; x < GetGrid()->GetGridSize().x; x++)
+	//Initializing all the tiles to unvisited and setting the distance to infinite.
+	for (int x = 0; x < GetGrid()->GridSize.x; x++)
 	{
-		for (unsigned int y = 0; y < GetGrid()->GetGridSize().y; y++)
+		for (int y = 0; y < GetGrid()->GridSize.y; y++)
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 	

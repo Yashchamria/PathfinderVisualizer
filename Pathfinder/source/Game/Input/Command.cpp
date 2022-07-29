@@ -21,41 +21,30 @@ Command::~Command()
 	m_pScene = nullptr;
 }
 
-void Command::ResizeGrid(int ZoomValue, unsigned int ScrollSteps)
+void Command::ResizeGrid(float zoomValue)
 {
-	const auto& pGrid = m_pScene->GetGrid();
+	m_zoomSteps += zoomValue;
 
-	if (pGrid->GetZoomedGridSize().x + ZoomValue >= 8 && pGrid->GetZoomedGridSize().x + ZoomValue <= pGrid->GetGridSize().x)
+	if(m_zoomSteps > Config::mouseSensitivity)
 	{
-		//For Zooming Out
-		if (ZoomValue > 0)
+		m_zoomSteps = 0.0f;
+
+		if (m_pScene->GetGrid()->ColumnZoomLevel + 1 <= m_pScene->GetGrid()->GridSize.x)
 		{
-			m_ZoomOutSteps += ScrollSteps;
-
-			if (m_ZoomOutSteps >= 10)
-			{
-				pGrid->SetZoomedGridSize(pGrid->GetZoomedGridSize().x + ZoomValue);
-
-				m_ZoomOutSteps = 0;
-				pGrid->ResizeGrid(pGrid->GetZoomedGridSize().x, sf::Vector2f(Config::windowWidth, Config::windowHeight), m_pScene->GetDisplay()->GetSize());
-
-				m_pScene->GetSelector()->SetSizeAndPosition(Config::windowWidth / pGrid->GetZoomedGridSize().x);
-			}
+			++m_pScene->GetGrid()->ColumnZoomLevel;
+			m_pScene->GetGrid()->ResizeGrid();
+			m_pScene->GetSelector()->SetSizeAndPosition(Config::windowWidth / m_pScene->GetGrid()->ColumnZoomLevel);
 		}
+	}
+	else if (m_zoomSteps < -Config::mouseSensitivity)
+	{
+		m_zoomSteps = 0.0f;
 
-		//For Zooming In
-		if (ZoomValue < 0)
+		if (m_pScene->GetGrid()->ColumnZoomLevel - 1 > 16)
 		{
-			m_ZoomInSteps += ScrollSteps;
-
-			if (m_ZoomInSteps >= 10)
-			{
-				pGrid->SetZoomedGridSize(pGrid->GetZoomedGridSize().x + ZoomValue);
-
-				m_ZoomInSteps = 0;
-				pGrid->ResizeGrid(pGrid->GetZoomedGridSize().x, sf::Vector2f(Config::windowWidth, Config::windowHeight), m_pScene->GetDisplay()->GetSize());
-				m_pScene->GetSelector()->SetSizeAndPosition(Config::windowWidth / pGrid->GetZoomedGridSize().x);
-			}
+			--m_pScene->GetGrid()->ColumnZoomLevel;
+			m_pScene->GetGrid()->ResizeGrid();
+			m_pScene->GetSelector()->SetSizeAndPosition(Config::windowWidth / m_pScene->GetGrid()->ColumnZoomLevel);
 		}
 	}
 }
@@ -72,7 +61,7 @@ void Command::SetSelectorPosition(Direction direction)
 
 void Command::UpdateTileProperty(TileType tileType)
 {
-	m_pScene->GetGrid()->SetTileType(m_mouseCoord, tileType);
+	m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), tileType);
 	HandleOngoingAlgorithm(true);
 }
 
@@ -132,23 +121,6 @@ void Command::GenerateRandomGrid(const int wallPercent)
 	HandleOngoingAlgorithm(false);
 	m_pScene->GetGrid()->ClearGrid();
 	m_pScene->GetGrid()->GenerateRandomWalls(wallPercent);
-}
-
-
-//Helper Functions
-sf::Vector2u Command::GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow)
-{
-	sf::Vector2f currentTileSizeOnScreen;
-	currentTileSizeOnScreen.x = (float)pWindow->getSize().x / (float)m_pScene->GetGrid()->GetZoomedGridSize().x;
-	currentTileSizeOnScreen.y = ((float)pWindow->getSize().y - m_pScene->GetDisplay()->GetSize().y) / (float)m_pScene->GetGrid()->GetZoomedGridSize().y;
-
-	float tileCoordX = (float)mousePosition.x / currentTileSizeOnScreen.x;
-	float tileCoordY = (((float)mousePosition.y - m_pScene->GetDisplay()->GetSize().y) / currentTileSizeOnScreen.y);
-
-
-	sf::Vector2u mouseTileCoord = sf::Vector2u((unsigned int)floor(tileCoordX), (unsigned int)floor(tileCoordY));
-
-	return mouseTileCoord;
 }
 
 void Command::HandleOngoingAlgorithm(bool bReRunAlgorithm)

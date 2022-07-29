@@ -23,15 +23,15 @@ void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindo
 	{
 	case sf::Event::MouseWheelMoved:
 
-		if		(pEvent->mouseWheel.delta > 0) { m_pCommand->ResizeGrid(-8, 5); }
-		else if (pEvent->mouseWheel.delta < 0) { m_pCommand->ResizeGrid( 8, 5); }
+		if		(pEvent->mouseWheel.delta > 0) { m_pCommand->ResizeGrid(-8); }
+		else if (pEvent->mouseWheel.delta < 0) { m_pCommand->ResizeGrid( 8); }
 
 		break;
 
 	case sf::Event::KeyPressed:
 
-		if (pEvent->key.code == sf::Keyboard::Subtract || pEvent->key.code == sf::Keyboard::Dash) { m_pCommand->ResizeGrid(-8, 10); }
-		else if (pEvent->key.code == sf::Keyboard::Add || pEvent->key.code == sf::Keyboard::Equal) { m_pCommand->ResizeGrid(8, 10); }
+		if (pEvent->key.code == sf::Keyboard::Subtract || pEvent->key.code == sf::Keyboard::Dash) { m_pCommand->ResizeGrid(-8); }
+		else if (pEvent->key.code == sf::Keyboard::Add || pEvent->key.code == sf::Keyboard::Equal) { m_pCommand->ResizeGrid(8); }
 		
 		if		(pEvent->key.code == sf::Keyboard::S) { m_pCommand->UpdateTileProperty(TileType::StartTile); }
 		else if (pEvent->key.code == sf::Keyboard::E) { m_pCommand->UpdateTileProperty(TileType::EndTile  ); }

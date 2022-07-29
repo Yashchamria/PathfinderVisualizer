@@ -16,9 +16,9 @@ Astar::~Astar()
 void Astar::OnInit()
 {
 	//Intializing all the tiles to unvisited and setting the distance to infinite.
-	for (unsigned int x = 0; x < GetGrid()->GetGridSize().x; x++)
+	for (unsigned int x = 0; x < GetGrid()->GridSize.x; x++)
 	{
-		for (unsigned int y = 0; y < GetGrid()->GetGridSize().y; y++)
+		for (unsigned int y = 0; y < GetGrid()->GridSize.y; y++)
 		{
 			const auto& pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
 	

@@ -15,9 +15,9 @@ BreadthFirstSearch::~BreadthFirstSearch()
 void BreadthFirstSearch::OnInit()
 {
 	//Intializing all the tiles to unvisited.
-	for (unsigned int x = 0; x < GetGrid()->GetGridSize().x; x++)
+	for (int x = 0; x < GetGrid()->GridSize.x; x++)
 	{
-		for (unsigned int y = 0; y < GetGrid()->GetGridSize().y; y++)
+		for (int y = 0; y < GetGrid()->GridSize.y; y++)
 		{
 			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
 

@@ -15,6 +15,8 @@ public:
 
 	constexpr static float gridOutlineStrength = 0.1f;
 
+	constexpr static float mouseSensitivity = 5.0f;
+
 	#define START_TILE_COLOR      sf::Color(57, 191, 66, 255)
 	#define END_TILE_COLOR        sf::Color(200, 60, 60, 255)
 	#define WALL_TILE_COLOR       sf::Color(50, 50, 50, 255)

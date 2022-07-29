@@ -5,7 +5,8 @@
 #include "TileType.h"
 #include "Direction.h"
 
-Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize) : m_gridSize(gridSize)
+Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize)
+	: GridSize(gridSize), ColumnZoomLevel(gridSize.x)
 {
 	// Setting up the widget box.
 	m_pCanvas = std::make_unique<sf::RectangleShape>(sf::Vector2f(windowSize.x, windowSize.y - displaySize.y));
@@ -14,19 +15,17 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf:
 
 	const float tileSize = windowSize.x / (float)gridSize.x;
 
-	m_pTiles.reserve(m_gridSize.x * m_gridSize.y);
+	m_pTiles.reserve(GridSize.x * GridSize.y);
 
-	for (int x = 0; x < m_gridSize.x; x++)
+	for (int x = 0; x < GridSize.x; x++)
 	{
-		for (int y = 0; y < m_gridSize.y; y++)
+		for (int y = 0; y < GridSize.y; y++)
 		{
 			const auto& pTile =std::make_shared<Tile>(sf::Vector2u(x, y),
 				tileSize * (1.0f - Config::gridOutlineStrength), 10, TileType::Default);
 			m_pTiles.push_back(pTile);
 		}
 	}
-
-	SetZoomedGridSize(gridSize.x);
 }
 
 Grid::~Grid() { m_pTiles.clear(); }
@@ -48,9 +47,9 @@ void Grid::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 	}
 }
 
-void Grid::ResizeGrid(unsigned int numberOfColumns, sf::Vector2f windowSize, sf::Vector2f TopWidgetSize) const
+void Grid::ResizeGrid() const
 {
-	const float tileSize = windowSize.x / (float)numberOfColumns;
+	const float tileSize = Config::windowWidth / (float)ColumnZoomLevel;
 
 	for (const auto& pTile : m_pTiles)
 	{

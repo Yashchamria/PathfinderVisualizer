@@ -27,12 +27,6 @@ enum class AlgorithmType : char
 	AStar,
 };
 
-//#define Slow 16
-//#define Average 48
-//#define Fast 144
-//#define SuperFast 296
-//#define Instant 400
-
 enum class VisualSpeed
 {
 	Slow = 16,

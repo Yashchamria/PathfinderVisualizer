@@ -7,15 +7,6 @@ class Scene;
 enum class TileType : char;
 enum class AlgorithmType : char;
 
-//enum class TileSelectorMove : char
-//{
-//	Up,
-//	Down,
-//	Left,
-//	Right,
-//	Mouse
-//};
-
 class Command
 {
 public:	
@@ -23,7 +14,7 @@ public:
 	~Command();
 
 public:
-	void ResizeGrid(int ColumnIncrement, unsigned int ScrollSteps = 6);
+	void ResizeGrid(float ColumnIncrement);
 	void SetSelectorPosition(Direction direction);
 	void SetSelectorPosition(const sf::Vector2f position);
 
@@ -38,13 +29,11 @@ public:
 private:
 	class Scene* m_pScene;
 
-	unsigned int m_ZoomInSteps = 0, m_ZoomOutSteps = 0;
-	sf::Vector2u m_mouseCoord = sf::Vector2u(0, 0);
+	float m_zoomSteps {0.0f};
 
 	AlgorithmType m_CurrentAlgorithm;
 
 private:
-	sf::Vector2u GetMouseTileCoord(sf::Vector2i mousePosition, sf::RenderWindow* pWindow);
 	void HandleOngoingAlgorithm(bool bReRunAlgorithm = false);
 	bool m_AlgorithmStopped = false;
 };

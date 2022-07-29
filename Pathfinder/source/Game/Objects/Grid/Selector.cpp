@@ -19,6 +19,7 @@ void Selector::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 void Selector::SetSizeAndPosition(float size)
 {
 	m_body.setSize({size, size});
+	m_body.setOutlineThickness(size * Config::gridOutlineStrength * 2.0f);
 
 	const float posX = (m_coord.x * size) - Config::windowWidth / 2.0f;
 	const float posY = (m_coord.y * size) - (Config::windowHeight / 2.0f) + Config::displayHeight;
