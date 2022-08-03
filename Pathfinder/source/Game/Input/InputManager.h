@@ -1,17 +1,15 @@
 #pragma once
 
-class Command;
 class Scene;
 
 class InputManager
 {
 public:	
-	InputManager(Scene* pScene);
-	~InputManager();
+	InputManager(const std::shared_ptr<Scene>& pScene);
 
 public:
-	void ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindow);
+	void ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, const std::shared_ptr<sf::Window>& pWindow);
 
 private:
-	Command* m_pCommand;
+	const std::shared_ptr<Scene> m_pScene;
 };

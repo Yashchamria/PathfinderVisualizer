@@ -30,3 +30,12 @@ public:
 
 	#define SELECTOR_COLOR        sf::Color(250, 109, 5, 255)
 };
+
+enum class VisualSpeed
+{
+	Slow = 16,
+	Average = 48,
+	Fast = 144,
+	SuperFast = 296,
+	Instant = 400,
+};

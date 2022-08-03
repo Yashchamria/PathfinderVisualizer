@@ -6,7 +6,7 @@
 #include "Direction.h"
 
 Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize)
-	: GridSize(gridSize), ColumnZoomLevel(gridSize.x)
+	: GridSize(gridSize), m_columnZoomLevel(gridSize.x)
 {
 	// Setting up the widget box.
 	m_pCanvas = std::make_unique<sf::RectangleShape>(sf::Vector2f(windowSize.x, windowSize.y - displaySize.y));
@@ -47,13 +47,39 @@ void Grid::Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow)
 	}
 }
 
-void Grid::ResizeGrid() const
+void Grid::Zoom(const float value)
 {
-	const float tileSize = Config::windowWidth / (float)ColumnZoomLevel;
-
-	for (const auto& pTile : m_pTiles)
+	auto resizeTiles = [&]
 	{
-		pTile->SetSizeAndPosition(tileSize * (1.0f - Config::gridOutlineStrength));
+		const float tileSize = Config::windowWidth / (float)m_columnZoomLevel;
+
+		for (const auto& pTile : m_pTiles)
+		{
+			pTile->SetSizeAndPosition(tileSize * (1.0f - Config::gridOutlineStrength));
+		}
+	};
+
+	m_zoomSteps += value;
+
+	if (m_zoomSteps > Config::mouseSensitivity)
+	{
+		m_zoomSteps = 0.0f;
+
+		if (m_columnZoomLevel + 1 <= GridSize.x)
+		{
+			++m_columnZoomLevel;
+			resizeTiles();
+		}
+	}
+	else if (m_zoomSteps < -Config::mouseSensitivity)
+	{
+		m_zoomSteps = 0.0f;
+
+		if (m_columnZoomLevel - 1 > 16)
+		{
+			--m_columnZoomLevel;
+			resizeTiles();
+		}
 	}
 }
 
@@ -88,26 +114,52 @@ void Grid::SetTileType(const sf::Vector2u coord, const TileType type)
 
 	switch(type)
 	{
-		case TileType::Default: case TileType::WallTile:
+		case TileType::Default:
 		{
 			if (m_startIndex == index) { m_startIndex = -1; }
 			if (m_endIndex == index) { m_endIndex = -1; }
-			pTile->Animate(type == TileType::Default ? DEFAULT_TILE_COLOR : WALL_TILE_COLOR);
+
+			pTile->Type = TileType::Default;
+			pTile->Animate(DEFAULT_TILE_COLOR);
+		}
+		break;
+
+		case TileType::WallTile:
+		{
+			if (m_startIndex == index) { m_startIndex = -1; }
+			if (m_endIndex == index) { m_endIndex = -1; }
+
+			pTile->Type = TileType::WallTile;
+			pTile->Animate(WALL_TILE_COLOR);
 		}
 		break;
 
 		case TileType::EndTile:
 		{
+			if (m_endIndex != -1)
+			{
+				pTile->Type = TileType::Default;
+				m_pTiles[m_endIndex]->Animate(DEFAULT_TILE_COLOR);
+			}
+
 			if (m_startIndex == index) { m_startIndex = -1; }
 			m_endIndex = index;
+			pTile->Type = TileType::EndTile;
 			pTile->Animate(END_TILE_COLOR);
 		}
 		break;
 
 		case TileType::StartTile:
 		{
+			if(m_startIndex != -1)
+			{
+				pTile->Type = TileType::Default;
+				m_pTiles[m_startIndex]->Animate(DEFAULT_TILE_COLOR);
+			}
+
 			if (m_endIndex == index) { m_endIndex = -1; }
 			m_startIndex = index;
+			pTile->Type = TileType::StartTile;
 			pTile->Animate(START_TILE_COLOR);
 		}
 		break;
@@ -123,7 +175,7 @@ std::shared_ptr<Tile> Grid::GetNeighborTile(sf::Vector2u coord, const Direction 
 
 void Grid::GenerateRandomWalls(const int wallPercent) const
 {
-	for (int i = 0; i < (int)m_pTiles.size() * wallPercent / 100;)
+	for (int i = 0, loop = 0; i < (int)m_pTiles.size() * wallPercent / 100;)
 	{
 		const int index = rand() % m_pTiles.size();
 
@@ -133,5 +185,7 @@ void Grid::GenerateRandomWalls(const int wallPercent) const
 			m_pTiles[index]->Animate(WALL_TILE_COLOR);
 			i++;
 		}
+
+		if(++loop > GridSize.x * GridSize.y) { break; }
 	}
 }

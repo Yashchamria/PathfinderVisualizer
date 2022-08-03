@@ -1,76 +1,134 @@
 #include "FrameworkPCH.h"
 #include "InputManager.h"
 
-#include "Command.h"
+#include "Game/Scene.h"
+#include "Game/Objects/Grid/Grid.h"
+#include "Game/Objects/Grid/Selector.h"
 
 #include "Game/Objects/Grid/TileType.h"
 #include "Game/Objects/Grid/Direction.h"
-#include "Game/Algorithms/AlgorithmEnum.h"
 
-InputManager::InputManager(Scene* pScene)
+InputManager::InputManager(const std::shared_ptr<Scene>& pScene): m_pScene(pScene)
 {
-	m_pCommand = new Command(pScene);
 }
 
-InputManager::~InputManager()
-{
-	delete m_pCommand;
-}
-
-void InputManager::ProcessInputEvent(sf::Event* pEvent, sf::RenderWindow* pWindow)
+void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, const std::shared_ptr<sf::Window>& pWindow)
 {
 	switch (pEvent->type)
 	{
-	case sf::Event::MouseWheelMoved:
+		case sf::Event::KeyPressed:
+		{
+			switch (pEvent->key.code)
+			{
+				case sf::Keyboard::Subtract: case sf::Keyboard::Dash:
+					m_pScene->GetGrid()->Zoom(-8);
+					break;
 
-		if		(pEvent->mouseWheel.delta > 0) { m_pCommand->ResizeGrid(-8); }
-		else if (pEvent->mouseWheel.delta < 0) { m_pCommand->ResizeGrid( 8); }
+				case sf::Keyboard::Add: case sf::Keyboard::Equal:
+					m_pScene->GetGrid()->Zoom(8);
+					break;
 
+				case sf::Keyboard::S:
+					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::StartTile);
+					break;
+
+				case sf::Keyboard::E:
+					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::EndTile);
+					break;
+
+				case sf::Keyboard::W:
+					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::WallTile);
+					break;
+
+				case sf::Keyboard::D:
+					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::Default);
+					break;
+
+				case sf::Keyboard::R:
+					m_pScene->GetGrid()->GenerateRandomWalls(25);
+					break;
+
+				case sf::Keyboard::Up:
+					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Up);
+					break;
+
+				case sf::Keyboard::Down:
+					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Down);
+					break;
+
+				case sf::Keyboard::Right:
+					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Right);
+					break;
+
+				case sf::Keyboard::Left:
+					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Left);
+					break;
+
+				case sf::Keyboard::Delete:
+					m_pScene->GetGrid()->ClearGrid();
+					break;
+
+				case sf::Keyboard::BackSpace:
+					m_pScene->GetGrid()->ResetDefaultTiles();
+					break;
+
+				case sf::Keyboard::Comma:
+					// TODO - Decrement visualization speed.
+					break;
+
+				case sf::Keyboard::Period:
+					// TODO - Increment visualization speed.
+					break;
+
+				case sf::Keyboard::Num1: case sf::Keyboard::Numpad1:
+					//TODO - Execute BFS.
+					break;
+
+				case sf::Keyboard::Num2: case sf::Keyboard::Numpad2:
+					//TODO - Execute DFS.
+					break;
+
+				case sf::Keyboard::Num3: case sf::Keyboard::Numpad3:
+					//TODO - Execute Dijkstra.
+					break;
+
+				case sf::Keyboard::Num4: case sf::Keyboard::Numpad4:
+					//TODO - Execute A*.
+					break;
+			}
+		}
 		break;
 
-	case sf::Event::KeyPressed:
-
-		if (pEvent->key.code == sf::Keyboard::Subtract || pEvent->key.code == sf::Keyboard::Dash) { m_pCommand->ResizeGrid(-8); }
-		else if (pEvent->key.code == sf::Keyboard::Add || pEvent->key.code == sf::Keyboard::Equal) { m_pCommand->ResizeGrid(8); }
-		
-		if		(pEvent->key.code == sf::Keyboard::S) { m_pCommand->UpdateTileProperty(TileType::StartTile); }
-		else if (pEvent->key.code == sf::Keyboard::E) { m_pCommand->UpdateTileProperty(TileType::EndTile  ); }
-		else if (pEvent->key.code == sf::Keyboard::W) { m_pCommand->UpdateTileProperty(TileType::WallTile ); }
-		else if (pEvent->key.code == sf::Keyboard::D) { m_pCommand->UpdateTileProperty(TileType::Default  ); }
-		
-		if (pEvent->key.code == sf::Keyboard::R) { m_pCommand->GenerateRandomGrid(25); }
-
-		if      (pEvent->key.code == sf::Keyboard::Down ) { m_pCommand->SetSelectorPosition(Direction::Down ); }
-		else if (pEvent->key.code == sf::Keyboard::Up   ) { m_pCommand->SetSelectorPosition(Direction::Up   ); }
-		else if (pEvent->key.code == sf::Keyboard::Right) { m_pCommand->SetSelectorPosition(Direction::Right); }
-		else if (pEvent->key.code == sf::Keyboard::Left ) { m_pCommand->SetSelectorPosition(Direction::Left ); }
-
-		if		(pEvent->key.code == sf::Keyboard::Delete   ) { m_pCommand->ClearGrid();			}
-		else if (pEvent->key.code == sf::Keyboard::Backspace) { m_pCommand->ClearAlgorithmSearch(); }
-
-		if		(pEvent->key.code == sf::Keyboard::Comma ) { m_pCommand->DecreaseVisualSpeed(); }
-		else if (pEvent->key.code == sf::Keyboard::Period) { m_pCommand->IncreaseVisualSpeed(); }
-
-		if (pEvent->key.code == sf::Keyboard::Num1 || pEvent->key.code == sf::Keyboard::Numpad1) { m_pCommand->ExecuteAlgorithm(AlgorithmType::BreadthFirstSearch); }
-		if (pEvent->key.code == sf::Keyboard::Num2 || pEvent->key.code == sf::Keyboard::Numpad2) { m_pCommand->ExecuteAlgorithm(AlgorithmType::DepthFirstSearch); }
-		if (pEvent->key.code == sf::Keyboard::Num3 || pEvent->key.code == sf::Keyboard::Numpad3) { m_pCommand->ExecuteAlgorithm(AlgorithmType::Dijkstra); }
-		if (pEvent->key.code == sf::Keyboard::Num4 || pEvent->key.code == sf::Keyboard::Numpad4) { m_pCommand->ExecuteAlgorithm(AlgorithmType::AStar); }
-
+		case sf::Event::MouseMoved:
+		{
+			m_pScene->GetSelector()->SetCoordAndPosition((sf::Vector2f)sf::Mouse::getPosition(*pWindow));
+		}
 		break;
 
-	case sf::Event::MouseMoved:
-		
-		m_pCommand->SetSelectorPosition((sf::Vector2f)sf::Mouse::getPosition(*pWindow));
+		case sf::Event::MouseWheelMoved:
+		{
+			if (pEvent->mouseWheel.delta > 0)
+			{
+				m_pScene->GetGrid()->Zoom(-8);
+			}
+			else if (pEvent->mouseWheel.delta < 0)
+			{
+				m_pScene->GetGrid()->Zoom(8);
+			}
+		}
 		break;
-				
-	case sf::Event::MouseButtonPressed:
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))  { m_pCommand->UpdateTileProperty(TileType::WallTile); }
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) { m_pCommand->UpdateTileProperty(TileType::Default ); }
-
-		break;
-
-	default:
+		case sf::Event::MouseButtonPressed:
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::WallTile);
+			}
+			else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			{
+				m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::Default);
+			}
+		}
 		break;
 	}
 }

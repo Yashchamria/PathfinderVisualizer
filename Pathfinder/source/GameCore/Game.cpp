@@ -11,30 +11,30 @@ Game::Game(const std::string& windowName, const sf::Vector2u windowSize)
 	m_pView = std::make_shared<sf::View>(sf::Vector2f(0.0f, 0.0f), (sf::Vector2f)windowSize);
 
 	m_pScene = std::make_shared<Scene>(m_pRenderWindow);
-	m_pInputManager = std::make_shared<InputManager>(m_pScene.get());
+	m_pInputManager = std::make_shared<InputManager>(m_pScene);
 
 	srand(static_cast<unsigned>(time(nullptr)));
 }
 
-void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) const
+void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& pEvent) const
 {
-	while (m_pRenderWindow->pollEvent(*event))
+	while (m_pRenderWindow->pollEvent(*pEvent))
 	{
-		switch (event->type)
+		switch (pEvent->type)
 		{
 		case sf::Event::Closed:
 			m_pRenderWindow->close();
 			break;
 
 		case sf::Event::KeyPressed:
-			if (event->key.code == sf::Keyboard::Escape)
+			if (pEvent->key.code == sf::Keyboard::Escape)
 				m_pRenderWindow->close();
 			break;
 
 		default:
 			break;
 		}
-		m_pInputManager->ProcessInputEvent(event.get(), m_pRenderWindow.get());
+		m_pInputManager->ProcessInputEvent(pEvent, m_pRenderWindow);
 	}
 }
 

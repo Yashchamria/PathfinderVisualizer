@@ -14,17 +14,20 @@ public:
 	void Update(float deltaTime) override;
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) override;
 
+public:
+	const sf::Vector2u GridSize;
+
 private:
 	std::unique_ptr<sf::RectangleShape> m_pCanvas{};
 	std::vector<std::shared_ptr<Tile>> m_pTiles;
 	int m_startIndex {-1}, m_endIndex {-1};
 
-public:
-	const sf::Vector2u GridSize;
-	unsigned int ColumnZoomLevel;
+private:
+	unsigned int m_columnZoomLevel;
+	float m_zoomSteps;
 
 public:
-	void ResizeGrid() const;
+	void Zoom(const float value);
 	void SetTileType(const sf::Vector2u coord, const TileType type);
 
 	void ClearGrid();

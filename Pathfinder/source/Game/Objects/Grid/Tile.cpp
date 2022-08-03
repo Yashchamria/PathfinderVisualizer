@@ -17,7 +17,7 @@ void Tile::Update(float deltaTime)
 {
 	if(m_bAnimate)
 	{
-		m_body.setOutlineThickness(m_body.getOutlineThickness() + (m_body.getSize().x * 0.01f));
+		m_body.setOutlineThickness(m_body.getOutlineThickness() + (m_body.getSize().x * 0.05f));
 
 		if(m_body.getOutlineThickness() > 0.0f)
 		{

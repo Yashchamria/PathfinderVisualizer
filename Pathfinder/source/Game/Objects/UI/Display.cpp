@@ -1,6 +1,6 @@
 #include "FrameworkPCH.h"
 #include "Display.h"
-#include "Game/Algorithms/AlgorithmEnum.h"
+#include "Game/Algorithm/AlgorithmData.h"
 
 Display::Display(const float height, const sf::Color color, const sf::Vector2u windowSize, const sf::Vector2u gridSize) :
 	m_pCanvas(std::make_unique<sf::RectangleShape>(sf::Vector2f(windowSize.x, height)))
