@@ -29,5 +29,5 @@ public:
 	[[nodiscard]] const std::shared_ptr<Grid>& GetGrid() const { return m_pGrid; }
 	[[nodiscard]] const std::shared_ptr<Selector>& GetSelector() const { return m_pSelector; }
 	[[nodiscard]] const std::shared_ptr<Display>& GetDisplay() const { return m_pDisplay; }
-	[[nodiscard]] const std::shared_ptr<AlgorithmManager>& GetAlgorithms() const { return m_pAlgorithmManager; }
+	[[nodiscard]] const std::shared_ptr<AlgorithmManager>& GetAlgorithmManager() const { return m_pAlgorithmManager; }
 };

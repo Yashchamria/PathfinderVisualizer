@@ -1,17 +1,19 @@
 #pragma once
 #include <string>
 
+#define InvalidData "--"
+
 struct AlgorithmData
 {
 public:
-	std::string Name {"--"};
-	std::string TimeTaken { "--" };
-	std::string PathCost { "--" };
-	std::string TilesExplored { "--" };
+	std::string Name {InvalidData};
+	std::string TimeTaken {InvalidData};
+	std::string PathCost {InvalidData};
+	std::string TilesExplored {InvalidData};
 
 public:
-	AlgorithmData(const std::string& name = "--", const std::string& timeTaken = "--",
-		const std::string& pathCost = "--", const std::string& tilesExplored = "--") :
+	AlgorithmData(const std::string& name = InvalidData, const std::string& timeTaken = InvalidData,
+		const std::string& pathCost = InvalidData, const std::string& tilesExplored = InvalidData) :
 		Name(name),
 		TimeTaken(timeTaken),
 		PathCost(pathCost),
