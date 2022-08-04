@@ -13,11 +13,9 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 
 	// Loading the font.
 	#if PF_DEBUG
-	if (!m_pFont.loadFromFile("../../Pathfinder/Data/font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
+	if (!m_pFont.loadFromFile("../Pathfinder/Data/font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
 	#elif PF_RELEASE
 	if (!m_pFont.loadFromFile("font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
-	#else
-	std::cout << "Font not found!\n";
 	#endif
 
 	// Setting the grid size label.

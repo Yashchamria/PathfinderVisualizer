@@ -4,7 +4,6 @@ workspace "Pathfinder"
 	platforms	{ "x64" }
 	startproject	"Pathfinder"
 	cppdialect      "C++20"
-	location	"build"
 
 filter "configurations:Debug"
 	defines "PF_DEBUG"
@@ -24,23 +23,23 @@ filter "system:windows"
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "Pathfinder"
-	location "build/%{prj.name}"
+	location "%{wks.location}/intermediate"
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("Executables/")
-	objdir("build/intermediate/" ..outputDir.."/")
+	targetdir ("%{wks.location}/binaries/" ..outputDir.. "/")
+	objdir ("%{wks.location}/intermediate/" ..outputDir.. "/")
 	
 	pchheader "FrameworkPCH.h"
 	pchsource "%{prj.name}/source/main.cpp"
 	
 	includedirs{
-		"Framework/include",
+		"External/SFML/include",
 		"%{prj.name}/source" 
 	}
 
 	libdirs{
-		"Framework/lib"
+		"External/SFML/lib"
 	}
 
 	files{
@@ -50,14 +49,16 @@ project "Pathfinder"
 	}
 	
 	filter "configurations:Debug"
-		links{
+		links
+		{
 			"sfml-system-d.lib",
 			"sfml-graphics-d.lib",
 			"sfml-window-d.lib"
 		}
 		
 	filter "configurations:Release"
-		links{
+		links
+		{
 			"sfml-system.lib",
 			"sfml-graphics.lib",
 			"sfml-window.lib"
