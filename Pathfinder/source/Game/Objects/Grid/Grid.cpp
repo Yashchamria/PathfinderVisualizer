@@ -138,7 +138,7 @@ void Grid::SetTileType(const sf::Vector2u coord, const TileType type)
 		{
 			if (m_endIndex != -1)
 			{
-				pTile->Type = TileType::Default;
+				m_pTiles[m_endIndex]->Type = TileType::Default;
 				m_pTiles[m_endIndex]->Animate(DEFAULT_TILE_COLOR);
 			}
 
@@ -153,7 +153,7 @@ void Grid::SetTileType(const sf::Vector2u coord, const TileType type)
 		{
 			if(m_startIndex != -1)
 			{
-				pTile->Type = TileType::Default;
+				m_pTiles[m_startIndex]->Type = TileType::Default;
 				m_pTiles[m_startIndex]->Animate(DEFAULT_TILE_COLOR);
 			}
 
@@ -170,6 +170,23 @@ std::shared_ptr<Tile> Grid::GetNeighborTile(sf::Vector2u coord, const Direction 
 {
 	coord = GetNeighborCoord(coord, direction);
 	return IsCoordValid(coord) ? GetTile(coord) : std::shared_ptr<Tile>(nullptr);
+}
+
+std::vector<uint32_t> Grid::GetValidNeighborIndices(const uint32_t index) const
+{
+	const sf::Vector2u coord = m_pTiles[index]->Coord;
+
+	std::vector<uint32_t> neighbors;
+
+	for (const auto& neighbor : GetNeighborCoords(coord))
+	{
+		if(IsCoordValid(neighbor))
+		{
+			neighbors.push_back(GetTileIndex(neighbor));
+		}
+	}
+
+	return neighbors;
 }
 
 

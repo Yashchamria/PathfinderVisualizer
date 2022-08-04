@@ -37,13 +37,18 @@ public:
 
 public:
 	[[nodiscard]] const std::shared_ptr<Tile>& GetTile(const sf::Vector2u coord) const { return m_pTiles[GetTileIndex(coord)]; }
+	[[nodiscard]] const std::shared_ptr<Tile>& GetTile(const uint32_t index) const { return m_pTiles[index]; }
+
 	[[nodiscard]] std::shared_ptr<Tile> GetNeighborTile(sf::Vector2u coord, const Direction direction) const;
+	[[nodiscard]] std::vector<uint32_t> GetValidNeighborIndices(const uint32_t index) const;
+
+	[[nodiscard]] uint32_t GetStartIndex() const { return m_startIndex; }
 	[[nodiscard]] std::shared_ptr<Tile> GetStartTile() const { return IsIndexValid(m_startIndex) ? m_pTiles[m_startIndex] : std::shared_ptr<Tile>(nullptr); }
+
+	[[nodiscard]] uint32_t GetEndIndex() const { return m_endIndex; }
 	[[nodiscard]] std::shared_ptr<Tile> GetEndTile() const { return IsIndexValid(m_endIndex) ? m_pTiles[m_endIndex] : std::shared_ptr<Tile>(nullptr); }
 
 	[[nodiscard]] bool IsCoordValid(const sf::Vector2u coord) const { return coord.x < GridSize.x && coord.y < GridSize.y; }
-
-private:
 	[[nodiscard]] bool IsIndexValid(const int index) const { return index > -1 && index < m_pTiles.size(); }
 	[[nodiscard]] int GetTileIndex(const sf::Vector2u coord) const { return coord.y + coord.x * GridSize.y; }
 };

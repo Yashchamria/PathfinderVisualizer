@@ -8,7 +8,7 @@ enum class Direction : char
 	Left
 };
 
-static sf::Vector2u GetNeighborCoord(sf::Vector2u coord, Direction direction)
+static sf::Vector2u GetNeighborCoord(sf::Vector2u coord, const Direction direction)
 {
 	switch (direction)
 	{
@@ -18,4 +18,9 @@ static sf::Vector2u GetNeighborCoord(sf::Vector2u coord, Direction direction)
 		case Direction::Right: ++coord.x; break;
 	}
 	return coord;
+}
+
+static std::vector<sf::Vector2u> GetNeighborCoords(const sf::Vector2u coord)
+{
+	return std::vector<sf::Vector2u> { {coord.x + 1, coord.y}, {coord.x - 1, coord.y}, {coord.x, coord.y + 1}, {coord.x, coord.y - 1} };
 }
