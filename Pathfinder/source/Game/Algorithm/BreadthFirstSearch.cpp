@@ -1,104 +1,76 @@
 #include "FrameworkPCH.h"
 #include "BreadthFirstSearch.h"
+
+#include "AlgorithmData.h"
+#include "Game/Objects/Grid/Grid.h"
 #include "Game/Objects/Grid/Tile.h"
 #include "Game/Objects/Grid/TileType.h"
-#include "Game/Objects/Grid/Direction.h"
 
-AlgorithmData BreadthFirstSearch::OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles,
-	const std::shared_ptr<Tile> pStartTile, const std::shared_ptr<Tile> pEndTile)
+std::shared_ptr<AlgorithmData> BreadthFirstSearch::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
-	//Intializing all the tiles to unvisited.
-	/*for (int x = 0; x < GetGrid()->GridSize.x; x++)
+	std::vector visitedTiles(pGrid->GridSize.x * pGrid->GridSize.y, false);
+	std::queue<uint32_t> openTiles;
+	openTiles.push(pGrid->GetStartIndex());
+
+	int pathCost = 0;
+	int tilesExplored = 0;
+	std::unordered_map<std::shared_ptr<Tile>, std::shared_ptr<Tile>> tailSequence;
+
+	while(!openTiles.empty())
 	{
-		for (int y = 0; y < GetGrid()->GridSize.y; y++)
+		++tilesExplored;
+		const uint32_t visitingIndex = openTiles.front();
+		const auto& visitingTile = pGrid->GetTile(visitingIndex);
+
+		if(visitingIndex != pGrid->GetStartIndex() && visitingIndex != pGrid->GetEndIndex())
 		{
-			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
-
-			if (pTile->Type == TileType::WallTile)
-				continue;
-
-			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile, false));
+			m_animationSequence.push({visitingTile, PROCESSED_TILE_COLOR});
 		}
-	}
+		openTiles.pop();
 
-	AddToClosestPreviousTile(pStartTile, pStartTile);
-	ProcessNeighbourTiles(pStartTile);
-	IncrementTileExplored();
+		visitedTiles[visitingIndex] = true;
 
-	while (!m_pOpenTiles.empty() && !IsPathFound() && !IsExecutionStopped())
-	{
-		Tile* pTile = GetPriorityTile();
-
-		if (pTile)
+		// If the path is discovered.
+		if(visitingTile->Type == TileType::EndTile)
 		{
-			if (pTile->Coord == GetGrid()->GetEndTile()->Coord)
+			std::stack<std::shared_ptr<Tile>> path;
+			auto pTile = tailSequence[visitingTile];
+			pathCost += pTile->Weight;
+
+			while (pTile->Type != TileType::StartTile)
 			{
-				SetPathFound(true); 
-				break; 
+				path.push(pTile);
+				pathCost += pTile->Weight;
+				pTile = tailSequence[pTile];
+			}
+
+			while(!path.empty())
+			{
+				m_animationSequence.push({ path.top(), FOUND_TILE_COLOR });
+				path.pop();
+			}
+			break;
+		}
+
+		// Inserts the valid neighbors to the open list.
+		for (const uint32_t& index : pGrid->GetValidNeighborIndices(visitingIndex))
+		{
+			const auto& neighbor = pGrid->GetTile(index);
+
+			if(!visitedTiles[index] && neighbor->Type != TileType::WallTile)
+			{
+				openTiles.push(index);
+				visitedTiles[index] = true;
+				tailSequence[neighbor] = visitingTile;
+
+				if (index != pGrid->GetStartIndex() && index != pGrid->GetEndIndex())
+				{
+					m_animationSequence.push({neighbor, PROCESSING_TILE_COLOR});
+				}
 			}
 		}
-
-		ProcessNeighbourTiles(pTile);
-	}*/
-	return AlgorithmData();
-}
-
-void BreadthFirstSearch::ProcessNeighbourTiles(Tile* pTile)
-{
-	if (pTile == nullptr) { return; }
-
-	m_IsTileVisited[pTile] = true;
-
-	//AddToTileAnimationArray(pTile, TileAnimState::Processed);
-
-	//Pop from the open list if exist
-	if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) != m_pOpenTiles.end())
-	{
-		m_pOpenTiles.erase(std::remove(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile), m_pOpenTiles.end());
 	}
 
-	//Look for neighbouring tiles and update them
-	sf::Vector2u CurrentTileCoord = pTile->Coord;
-
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get(), pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get(), pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Right).get(), pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Left).get(), pTile);
-}
-
-void BreadthFirstSearch::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
-{
-	if (pTile == nullptr) { return; }
-
-	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
-	{
-		//AddToClosestPreviousTile(pTile, pPreviousTile);
-
-		//Pushes the tile to the open list.
-		//if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) == m_pOpenTiles.end())
-		//{
-		//	AddToTileAnimationArray(pTile, TileAnimState::Processing);
-		//
-		//	m_pOpenTiles.push_back(pTile);
-		//	IncrementTileExplored();
-		//}
-	}
-}
-
-Tile* BreadthFirstSearch::GetPriorityTile()
-{
-	if (!m_pOpenTiles.empty())
-	{
-		return m_pOpenTiles.front();
-	}
-
-	return nullptr;
-}
-
-void BreadthFirstSearch::OnAbort()
-{
-	m_pOpenTiles.clear();
-	m_pOpenTiles.shrink_to_fit();
-
-	m_IsTileVisited.clear();
+	return std::make_shared<AlgorithmData>("Breadth First Search", InvalidData,
+		pathCost == 0 ? InvalidData : std::to_string(pathCost), std::to_string(tilesExplored));
 }
