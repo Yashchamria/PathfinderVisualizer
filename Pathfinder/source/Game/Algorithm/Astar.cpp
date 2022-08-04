@@ -1,10 +1,12 @@
 #include "FrameworkPCH.h"
 #include "Astar.h"
+
+#include "AlgorithmData.h"
 #include "Game/Objects/Grid/Tile.h"
 #include "Game/Objects/Grid/TileType.h"
 #include "Game/Objects/Grid/Direction.h"
 
-AlgorithmData Astar::OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles, const std::shared_ptr<Tile> pStartTile, const std::shared_ptr<Tile> pEndTile)
+std::shared_ptr<AlgorithmData> AStar::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
 	//Intializing all the tiles to unvisited and setting the distance to infinite.
 	/*for (unsigned int x = 0; x < GetGrid()->GridSize.x; x++)
@@ -48,10 +50,14 @@ AlgorithmData Astar::OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles, 
 
 		ProcessNeighbourTiles(pTile);
 	}*/
-	return AlgorithmData();
+	return std::make_shared<AlgorithmData>();
 }
 
-void Astar::ProcessNeighbourTiles(Tile* pTile)
+void AStar::OnAbort()
+{
+}
+
+void AStar::ProcessNeighbourTiles(Tile* pTile)
 {
 	if (pTile == nullptr) { return; }
 
@@ -74,7 +80,7 @@ void Astar::ProcessNeighbourTiles(Tile* pTile)
 	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Left).get() , pTile);
 }
 
-void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
+void AStar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 {
 	if (pTile == nullptr) { return; }
 
@@ -105,7 +111,7 @@ void Astar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
 }
 
 //Searches the open list and returns the tile with the shortest cost from the start.
-Tile* Astar::GetPriorityTile()
+Tile* AStar::GetPriorityTile()
 {
 	std::pair<Tile*, unsigned int> MinDistanceTile = std::make_pair(nullptr, UINT_MAX);
 
@@ -127,7 +133,7 @@ Tile* Astar::GetPriorityTile()
 	return MinDistanceTile.first;
 }
 
-unsigned int Astar::GetTileHCost(Tile* pTile)
+unsigned int AStar::GetTileHCost(Tile* pTile)
 {
 	sf::Vector2u finalTileCoord;// = GetGrid()->GetEndTile()->Coord;
 	sf::Vector2u CurrentTileCoord = pTile->Coord;

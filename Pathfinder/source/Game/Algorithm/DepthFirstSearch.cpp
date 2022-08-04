@@ -1,13 +1,15 @@
 #include "FrameworkPCH.h"
 #include "DepthFirstSearch.h"
+
+#include "AlgorithmData.h"
 #include "Game/Objects/Grid/Tile.h"
 #include "Game/Objects/Grid/TileType.h"
 #include "Game/Objects/Grid/Direction.h"
 
-AlgorithmData DepthFirstSearch::OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles, const std::shared_ptr<Tile> pStartTile, const std::shared_ptr<Tile> pEndTile)
+std::shared_ptr<AlgorithmData> DepthFirstSearch::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
 	//Intializing all the tiles to unvisited.
-	for (auto pTile : pTiles)
+	/*for (auto pTile : pTiles)
 	{
 		if (pTile->Type != TileType::WallTile)
 		{
@@ -31,8 +33,8 @@ AlgorithmData DepthFirstSearch::OnExecute(const std::vector<std::shared_ptr<Tile
 		}
 
 		AddToOpenlist(pTile);
-	}
-	return AlgorithmData();
+	}*/
+	return std::make_shared<AlgorithmData>();
 }
 
 void DepthFirstSearch::AddToOpenlist(const std::shared_ptr<Tile>& pTile)

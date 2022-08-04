@@ -8,8 +8,7 @@ enum class Direction : char;
 class DepthFirstSearch : public IAlgorithm
 {
 public:
-	AlgorithmData OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles,
-		const std::shared_ptr<Tile> pStartTile, const std::shared_ptr<Tile> pEndTile) override;
+	std::shared_ptr<AlgorithmData> OnExecute(const std::shared_ptr<Grid>& pGrid) override;
 
 	void OnAbort() override;
 

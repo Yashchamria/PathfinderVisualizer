@@ -2,15 +2,14 @@
 
 #include "IAlgorithm.h"
 
+class Grid;
 class Tile;
 
-class Astar : public IAlgorithm
+class AStar final : public IAlgorithm
 {
 public:
-	AlgorithmData OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles,
-		const std::shared_ptr<Tile> pStartTile, const std::shared_ptr<Tile> pEndTile) override;
-
-	virtual void OnAbort() override;
+	std::shared_ptr<AlgorithmData> OnExecute(const std::shared_ptr<Grid>& pGrid) override;
+	void OnAbort() override;
 	
 private:
 	std::vector<Tile*> m_pOpenTiles;
