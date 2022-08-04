@@ -1,15 +1,16 @@
 #include "FrameworkPCH.h"
 #include "AlgorithmManager.h"
 
-#include <utility>
-
+#include "AlgorithmData.h"
 #include "IAlgorithm.h"
+
 #include "Game/Objects/Grid/Grid.h"
+#include "Game/Objects/Grid/Tile.h"
 #include "Game/Objects/UI/Display.h"
 
 
 AlgorithmManager::AlgorithmManager(const std::shared_ptr<Grid>& pGrid, const std::shared_ptr<Display>& pDisplay)
-	: m_pGrid(pGrid), m_pDisplay(pDisplay)
+	: m_pGrid(pGrid), m_pDisplay(pDisplay), m_pCurrentData(std::make_shared<AlgorithmData>())
 {
 }
 
@@ -17,28 +18,19 @@ void AlgorithmManager::Update(float deltaTime)
 {
 	if(m_bAnimate)
 	{
-		m_pDisplay->Log("");
-		//if (IsPathFound())
-		//{
-		//	m_pScene->GetDisplay()->Log("Path Found! Visualizing Path!");
-		//}
-		//else
-		//{
-		//	m_pScene->GetDisplay()->Log("Path Not Found! Visualizing Path!");
-		//}
-		//
-		//if (m_pCurrentAlgorithm)
-		//{
-		//	return m_pCurrentAlgorithm->PlayVisualization(speed, deltaTime);
-		//}
-		//
-		//return true;
+		AnimationSequence& sequence = m_pCurrentAlgorithm->GetAnimationSequence();
+		sequence.front().first->Animate(sequence.front().second);
+		sequence.pop();
+
+		if(sequence.empty())
+		{
+			m_bAnimate = false;
+		}
 	}
 }
 
 void AlgorithmManager::Execute(std::shared_ptr<IAlgorithm> pAlgorithm)
 {
-	//Check for start and end tile
 	if (m_pGrid->GetStartTile() == nullptr)
 	{
 		m_pDisplay->Log("Select Start Tile (Press 'S')");
@@ -51,64 +43,44 @@ void AlgorithmManager::Execute(std::shared_ptr<IAlgorithm> pAlgorithm)
 	}
 
 	m_pDisplay->Log("Executing Algorithm");
+	m_pDisplay->SetPreviousData(*m_pCurrentData);
 
-	const auto start{ std::chrono::high_resolution_clock::now() };
-
-	m_pCurrentAlgorithm = std::move(pAlgorithm);
 	m_bAnimate = true;
-	//m_pCurrentAlgorithm.swap(pAlgorithm);
+	m_pCurrentAlgorithm = std::move(pAlgorithm);
 
-	const auto end{ std::chrono::high_resolution_clock::now() };
-	std::cout << "Processing Time: " << (std::chrono::duration<float>)(end - start) << "\n";
+	// Executing the search algorithm.
+	const auto start{std::chrono::high_resolution_clock::now()};
+	m_pCurrentData = m_pCurrentAlgorithm->OnExecute(m_pGrid);
+	const auto end{std::chrono::high_resolution_clock::now()};
+
+	m_pCurrentData->TimeTaken = std::to_string(std::chrono::duration<float>(end - start).count()) + 's';
+	m_pDisplay->SetCurrentData(*m_pCurrentData);
+
+	m_pDisplay->Log(m_pCurrentData->PathCost == InvalidData ? "Path not found!" : "Path found!");
 }
+
+void AlgorithmManager::ReExecuteIfRequired()
+{
+	if(!m_bAnimate)
+	{
+		Abort();
+		return;
+	}
+
+	Abort();
+	if(m_pCurrentAlgorithm)
+	{
+		Execute(m_pCurrentAlgorithm);
+	}
+}
+
 void AlgorithmManager::Abort()
 {
-}
-/*
-void BaseAlgorithm::GetFinalPathAnimationSequence()
-{
-	std::stack<Tile*> FinalPath;
+	m_bAnimate = false;
 
-	Tile* pEndTile = m_pGrid->GetEndTile().get();
-	Tile* pStartTile = m_pGrid->GetStartTile().get();
-
-	bool pathfinsihed = false;
-	Tile* pTile = m_ClosestPreviousTile[pEndTile];
-
-	while (!pathfinsihed)
+	if(m_pCurrentAlgorithm)
 	{
-		FinalPath.push(pTile);
-		pTile = m_ClosestPreviousTile[FinalPath.top()];
-		pathfinsihed = pTile->Coord == pStartTile->Coord;
+		m_pCurrentAlgorithm->OnAbort();
 	}
-
-	while (!FinalPath.empty())
-	{
-		m_PendingTileAnimation.push(std::make_pair(FinalPath.top(), TileAnimState::Found));
-		m_pathCost += FinalPath.top()->Weight;
-		FinalPath.pop();
-	}
-
-	m_pathCost += pEndTile->Weight; //Adding cost to go to the end tile.
+	m_pGrid->ResetDefaultTiles();
 }
-
-
-void BaseAlgorithm::AddToTileAnimationArray(Tile* pTile, TileAnimState tileAnimation)
-{
-	if (pTile->Coord != m_pGrid->GetStartTile()->Coord && pTile->Coord != m_pGrid->GetEndTile()->Coord)
-	{
-		m_PendingTileAnimation.push(std::make_pair(pTile, tileAnimation)); //For Visualization
-	}
-}
-
-void BaseAlgorithm::AddToClosestPreviousTile(Tile* pTile, Tile* pPreviousTile)
-{
-	if (pTile && pPreviousTile)
-	{
-		if (m_ClosestPreviousTile.find(pTile) == m_ClosestPreviousTile.end())
-		{
-			m_ClosestPreviousTile.insert_or_assign(pTile, pPreviousTile);
-		}
-	}
-}
-*/

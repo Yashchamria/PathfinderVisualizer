@@ -15,6 +15,7 @@ public:
 
 public:
 	void Execute(std::shared_ptr<IAlgorithm> pAlgorithm);
+	void ReExecuteIfRequired();
 	void Abort();
 
 private:
@@ -24,5 +25,8 @@ private:
 private:
 	const std::shared_ptr<Grid> m_pGrid{};
 	const std::shared_ptr<Display> m_pDisplay{};
+
+private:
 	std::shared_ptr<IAlgorithm> m_pCurrentAlgorithm;
+	std::shared_ptr<AlgorithmData> m_pCurrentData;
 };

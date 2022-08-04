@@ -1,15 +1,28 @@
 #pragma once
-#include "AlgorithmData.h"
 
+class Grid;
 class Tile;
+struct AlgorithmData;
+
+typedef std::queue<std::pair<std::shared_ptr<Tile>, sf::Color>> AnimationSequence;
 
 class IAlgorithm
 {
 public:
 	virtual ~IAlgorithm() = default;
 
-	virtual AlgorithmData OnExecute(const std::vector<std::shared_ptr<Tile>> pTiles,
-		const std::shared_ptr<Tile> pStartTile, const std::shared_ptr<Tile> pEndTile) = 0;
+public:
+	virtual std::shared_ptr<AlgorithmData> OnExecute(const std::shared_ptr<Grid>& pGrid) = 0;
 
-	virtual void OnAbort() = 0;
+	virtual void OnAbort()
+	{
+		AnimationSequence empty;
+		m_animationSequence.swap(empty);
+	}
+
+public:
+	[[nodiscard]] AnimationSequence& GetAnimationSequence() { return m_animationSequence; }
+
+protected:
+	AnimationSequence m_animationSequence;
 };
