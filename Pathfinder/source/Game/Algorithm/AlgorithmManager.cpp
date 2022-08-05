@@ -55,7 +55,7 @@ void AlgorithmManager::Execute(std::shared_ptr<IAlgorithm> pAlgorithm)
 	m_pCurrentData = m_pCurrentAlgorithm->OnExecute(m_pGrid);
 	const auto end{std::chrono::high_resolution_clock::now()};
 
-	m_pCurrentData->TimeTaken = std::to_string(std::chrono::duration<float>(end - start).count()) + 's';
+	m_pCurrentData->TimeTaken = std::to_string(std::chrono::duration<float>(end - start).count() * 1000.0f) + "ms";
 	m_pDisplay->SetCurrentData(*m_pCurrentData);
 
 	m_pDisplay->Log(m_pCurrentData->PathCost == InvalidData ? "Path not found!" : "Path found!");
