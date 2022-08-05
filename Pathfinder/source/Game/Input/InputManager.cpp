@@ -31,10 +31,12 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 			{
 				case sf::Keyboard::Subtract: case sf::Keyboard::Dash:
 					m_pGrid->Zoom(-8);
+					m_pSelector->SetSizeAndPosition(Config::windowWidth / (float)m_pGrid->GetZoomLevel());
 					break;
 
 				case sf::Keyboard::Add: case sf::Keyboard::Equal:
 					m_pGrid->Zoom(8);
+					m_pSelector->SetSizeAndPosition(Config::windowWidth / (float)m_pGrid->GetZoomLevel());
 					break;
 
 				case sf::Keyboard::S:
@@ -139,10 +141,12 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 			if (pEvent->mouseWheel.delta > 0)
 			{
 				m_pGrid->Zoom(-8);
+				m_pSelector->SetSizeAndPosition(Config::windowWidth / (float)m_pGrid->GetZoomLevel());
 			}
 			else if (pEvent->mouseWheel.delta < 0)
 			{
 				m_pGrid->Zoom(8);
+				m_pSelector->SetSizeAndPosition(Config::windowWidth / (float)m_pGrid->GetZoomLevel());
 			}
 		}
 		break;

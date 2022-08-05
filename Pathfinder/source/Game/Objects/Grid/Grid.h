@@ -23,7 +23,7 @@ private:
 	int m_startIndex {-1}, m_endIndex {-1};
 
 private:
-	unsigned int m_columnZoomLevel;
+	uint64_t m_columnZoomLevel;
 	float m_zoomSteps;
 
 public:
@@ -51,4 +51,6 @@ public:
 	[[nodiscard]] bool IsCoordValid(const sf::Vector2u coord) const { return coord.x < GridSize.x && coord.y < GridSize.y; }
 	[[nodiscard]] bool IsIndexValid(const int index) const { return index > -1 && index < m_pTiles.size(); }
 	[[nodiscard]] int GetTileIndex(const sf::Vector2u coord) const { return coord.y + coord.x * GridSize.y; }
+
+	[[nodiscard]] uint64_t GetZoomLevel() const { return m_columnZoomLevel; }
 };

@@ -8,6 +8,5 @@ int main()
 	const Game pathfinderVisualizer("Pathfinder Visualizer", { 1200, 600 });
 	pathfinderVisualizer.Run();
 
-	std::cin.get();
 	return 0;
 }
