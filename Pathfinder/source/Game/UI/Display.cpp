@@ -28,7 +28,7 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 	m_pLabels[0]->setPosition(sf::Vector2f{ windowSize.x - 260.0f, windowSize.y - 120.0f } / 2.0f);
 
 	// Positioning the data labels.
-	const sf::Vector2f initialLabelPosition{ m_pCanvas->getPosition() + sf::Vector2f(80.0f, 20.0f) };
+	const sf::Vector2f initialLabelPosition{ m_pCanvas->getPosition() + sf::Vector2f(60.0f, 20.0f) };
 	sf::Vector2f labelPosition{ initialLabelPosition };
 
 	for (int i = 1; i < m_totalLabels; i++)
@@ -37,14 +37,14 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 		m_pLabels[i]->setFillColor(sf::Color::Black);
 		m_pLabels[i]->setPosition(labelPosition);
 
-		if (i % 3 == 0) { labelPosition.x += 350.0f; labelPosition.y = initialLabelPosition.y; }
-		else { labelPosition.y += 36.0f; }
+		if (i % 4 == 0) { labelPosition.y += 36.0f; labelPosition.x = initialLabelPosition.x; }
+		else { labelPosition.x += 285.0f; }
 	}
 }
 
 void Display::Log(const std::string& message) const
 {
-	m_pLabels[6]->setString(m_labelText[6] + message);
+	m_pLabels[10]->setString(m_labelText[10] + message);
 }
 
 void Display::SetSpeed(const VisualSpeed speed) const
@@ -57,22 +57,23 @@ void Display::SetSpeed(const VisualSpeed speed) const
 		case Fast:		speedText = "Fast"; break;
 		case Peak:	speedText = "Peak"; break;
 	}
-	m_pLabels[3]->setString(m_labelText[3] + speedText);
+	m_pLabels[9]->setString(m_labelText[9] + speedText);
 }
 
 void Display::SetCurrentData(const AlgorithmData& currentData) const
 {
 	m_pLabels[1]->setString(m_labelText[1] + currentData.Name);
-	m_pLabels[2]->setString(m_labelText[2] + currentData.TimeTaken);
-	m_pLabels[4]->setString(m_labelText[4] + currentData.PathCost);
-	m_pLabels[5]->setString(m_labelText[5] + currentData.TilesExplored);
+	m_pLabels[2]->setString(m_labelText[2] + currentData.PathCost);
+	m_pLabels[3]->setString(m_labelText[3] + currentData.TilesExplored);
+	m_pLabels[4]->setString(m_labelText[4] + currentData.TimeTaken);
 }
 
 void Display::SetPreviousData(const AlgorithmData& previousData) const
 {
-	m_pLabels[7]->setString(m_labelText[7] + previousData.Name);
+	m_pLabels[5]->setString(m_labelText[5] + previousData.Name);
+	m_pLabels[6]->setString(m_labelText[6] + previousData.PathCost);
+	m_pLabels[7]->setString(m_labelText[7] + previousData.TilesExplored);
 	m_pLabels[8]->setString(m_labelText[8] + previousData.TimeTaken);
-	m_pLabels[9]->setString(m_labelText[9] + previousData.PathCost);
 }
 
 void Display::Draw(const std::shared_ptr<sf::RenderWindow>& pWindow)

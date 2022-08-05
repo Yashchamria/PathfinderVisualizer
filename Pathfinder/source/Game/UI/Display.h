@@ -20,23 +20,24 @@ private:
 	std::unique_ptr<sf::RectangleShape> m_pCanvas{};
 	sf::Font m_pFont;
 
-	uint8_t m_fontSize = 20;
-	static constexpr uint8_t m_totalLabels = 10;
+	uint8_t m_fontSize = 19;
+	static constexpr uint8_t m_totalLabels = 11;
 
 	std::unique_ptr<sf::Text> m_pLabels[m_totalLabels]{};
 
 	const std::string m_labelText[m_totalLabels] =
 	{
 		"Grid Size",
-		"Algorithm - ",
-		"Time Taken - ",
-		"Visualization Speed - ",
-		"Path Cost- "          ,
-		"Tiles Explored - "     ,
+		"Current - ",
+		"Cost- ",
+		"Explored - ",
+		"Time - ",
+		"Previous - ",
+		"Cost - ",
+		"Explored - ",
+		"Time - ",
+		"Speed - ",
 		"Log - ",
-		"Previous Algorithm - ",
-		"Previous Time Taken - ",
-		"Previous Cost - "
 	};
 
 public:
