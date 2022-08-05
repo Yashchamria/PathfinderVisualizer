@@ -2,9 +2,8 @@
 #include "Astar.h"
 
 #include "AlgorithmData.h"
-#include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/Grid/TileType.h"
-#include "Game/Objects/Grid/Direction.h"
+#include "Game/Grid/Tile.h"
+#include "Game/Grid/TileType.h"
 
 std::shared_ptr<AlgorithmData> AStar::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "GameCore/Objects/GameObject.h"
+#include "GameObject/GameObject.h"
 
 enum class TileType : char;
 

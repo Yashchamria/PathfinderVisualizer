@@ -2,9 +2,9 @@
 #include "DijkstrasAlgorithm.h"
 
 #include "AlgorithmData.h"
-#include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/Grid/TileType.h"
-#include "Game/Objects/Grid/Direction.h"
+#include "Game/Grid/Tile.h"
+#include "Game/Grid/TileType.h"
+#include "Game/Grid/Direction.h"
 
 std::shared_ptr<AlgorithmData> DijkstrasAlgorithm::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {

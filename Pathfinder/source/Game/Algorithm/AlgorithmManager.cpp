@@ -4,9 +4,9 @@
 #include "AlgorithmData.h"
 #include "IAlgorithm.h"
 
-#include "Game/Objects/Grid/Grid.h"
-#include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/UI/Display.h"
+#include "Game/Grid/Grid.h"
+#include "Game/Grid/Tile.h"
+#include "Game/UI/Display.h"
 
 AlgorithmManager::AlgorithmManager(const std::shared_ptr<Grid>& pGrid, const std::shared_ptr<Display>& pDisplay)
 	: m_pGrid(pGrid), m_pDisplay(pDisplay), m_pCurrentData(std::make_shared<AlgorithmData>())

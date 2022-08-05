@@ -2,17 +2,17 @@
 #include "InputManager.h"
 #include "Game/Scene.h"
 
-#include "Game/Objects/Grid/Grid.h"
-#include "Game/Objects/Grid/Selector.h"
-#include "Game/Objects/Grid/TileType.h"
-#include "Game/Objects/Grid/Direction.h"
+#include "Game/Grid/Grid.h"
+#include "Game/Grid/Selector.h"
+#include "Game/Grid/TileType.h"
+#include "Game/Grid/Direction.h"
 
 #include "Game/Algorithm/AlgorithmManager.h"
 #include "Game/Algorithm/BreadthFirstSearch.h"
 #include "Game/Algorithm/DepthFirstSearch.h"
 #include "Game/Algorithm/DijkstrasAlgorithm.h"
 #include "Game/Algorithm/Astar.h"
-#include "Game/Objects/UI/Display.h"
+#include "Game/UI/Display.h"
 
 
 InputManager::InputManager(const std::shared_ptr<Scene>& pScene):

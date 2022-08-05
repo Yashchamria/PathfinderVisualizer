@@ -2,9 +2,9 @@
 #include "BreadthFirstSearch.h"
 
 #include "AlgorithmData.h"
-#include "Game/Objects/Grid/Grid.h"
-#include "Game/Objects/Grid/Tile.h"
-#include "Game/Objects/Grid/TileType.h"
+#include "Game/Grid/Grid.h"
+#include "Game/Grid/Tile.h"
+#include "Game/Grid/TileType.h"
 
 std::shared_ptr<AlgorithmData> BreadthFirstSearch::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {

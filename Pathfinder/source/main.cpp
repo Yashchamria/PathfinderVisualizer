@@ -1,5 +1,5 @@
 #include "FrameworkPCH.h"
-#include "GameCore/Game.h"
+#include "Game.h"
 
 int main()
 {

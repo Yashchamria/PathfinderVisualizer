@@ -1,13 +1,13 @@
 #include "FrameworkPCH.h"
 #include "Scene.h"
 
-#include "GameCore/Objects/GameObject.h"
+#include "GameObject/GameObject.h"
 
-#include "Game/Objects/UI/Display.h"
-#include "Objects/Grid/Grid.h"
+#include "Grid/Grid.h"
+#include "Grid/Selector.h"
 
+#include "UI/Display.h"
 #include "Algorithm/AlgorithmManager.h"
-#include "Objects/Grid/Selector.h"
 
 Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
