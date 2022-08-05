@@ -17,12 +17,12 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf:
 
 	m_pTiles.reserve(GridSize.x * GridSize.y);
 
-	for (int x = 0; x < GridSize.x; x++)
+	for (uint32_t x = 0; x < GridSize.x; x++)
 	{
-		for (int y = 0; y < GridSize.y; y++)
+		for (uint32_t y = 0; y < GridSize.y; y++)
 		{
 			const auto& pTile =std::make_shared<Tile>(sf::Vector2u(x, y),
-				tileSize * (1.0f - Config::gridOutlineStrength), 10, TileType::Default);
+				tileSize * (1.0f - Config::gridOutlineStrength), TileType::Default, 1);
 			m_pTiles.push_back(pTile);
 		}
 	}
@@ -192,7 +192,7 @@ std::vector<uint32_t> Grid::GetValidNeighborIndices(const uint32_t index) const
 
 void Grid::GenerateRandomWalls(const int wallPercent) const
 {
-	for (int i = 0, loop = 0; i < (int)m_pTiles.size() * wallPercent / 100;)
+	for (uint32_t i = 0, loop = 0; i < (uint32_t)m_pTiles.size() * wallPercent / 100;)
 	{
 		const int index = rand() % m_pTiles.size();
 

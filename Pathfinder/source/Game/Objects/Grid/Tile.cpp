@@ -1,8 +1,8 @@
 #include "FrameworkPCH.h"
 #include "Tile.h"
 
-Tile::Tile(const sf::Vector2u coord, const float size, int weight, TileType type) :
-	Coord(coord), Weight(weight), Type(type)
+Tile::Tile(const sf::Vector2u coord, const float size, TileType type, int weight) :
+	Coord(coord), Type(type), Weight(weight)
 {
 	SetSizeAndPosition(size);
 	m_body.setFillColor(DEFAULT_TILE_COLOR);

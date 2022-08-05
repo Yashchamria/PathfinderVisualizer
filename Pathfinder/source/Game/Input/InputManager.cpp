@@ -15,12 +15,13 @@
 #include "Game/Objects/UI/Display.h"
 
 
-InputManager::InputManager(const std::shared_ptr<Scene>& pScene): m_pScene(pScene)
+InputManager::InputManager(const std::shared_ptr<Scene>& pScene):
+	m_pGrid(pScene->GetGrid()), m_pSelector(pScene->GetSelector()), m_pDisplay(pScene->GetDisplay()), m_pAlgorithmManager(pScene->GetAlgorithmManager())
 {
-	m_pScene->GetDisplay()->SetSpeed(Normal);
+	m_pDisplay->SetSpeed(Normal);
 }
 
-void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, const std::shared_ptr<sf::Window>& pWindow)
+void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, const std::shared_ptr<sf::Window>& pWindow) const
 {
 	switch (pEvent->type)
 	{
@@ -29,99 +30,99 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 			switch (pEvent->key.code)
 			{
 				case sf::Keyboard::Subtract: case sf::Keyboard::Dash:
-					m_pScene->GetGrid()->Zoom(-8);
+					m_pGrid->Zoom(-8);
 					break;
 
 				case sf::Keyboard::Add: case sf::Keyboard::Equal:
-					m_pScene->GetGrid()->Zoom(8);
+					m_pGrid->Zoom(8);
 					break;
 
 				case sf::Keyboard::S:
-					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::StartTile);
-					m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+					m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::StartTile);
+					m_pAlgorithmManager->ReExecuteIfRequired();
 					break;
 
 				case sf::Keyboard::E:
-					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::EndTile);
-					m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+					m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::EndTile);
+					m_pAlgorithmManager->ReExecuteIfRequired();
 					break;
 
 				case sf::Keyboard::W:
-					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::WallTile);
-					m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+					m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::WallTile);
+					m_pAlgorithmManager->ReExecuteIfRequired();
 					break;
 
 				case sf::Keyboard::D:
-					m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::Default);
-					m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+					m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::Default);
+					m_pAlgorithmManager->ReExecuteIfRequired();
 					break;
 
 				case sf::Keyboard::R:
-					m_pScene->GetGrid()->GenerateRandomWalls(20);
-					m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+					m_pGrid->GenerateRandomWalls(20);
+					m_pAlgorithmManager->ReExecuteIfRequired();
 					break;
 
 				case sf::Keyboard::Up:
-					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Up);
+					m_pSelector->SetCoordAndPosition(Direction::Up);
 					break;
 
 				case sf::Keyboard::Down:
-					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Down);
+					m_pSelector->SetCoordAndPosition(Direction::Down);
 					break;
 
 				case sf::Keyboard::Right:
-					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Right);
+					m_pSelector->SetCoordAndPosition(Direction::Right);
 					break;
 
 				case sf::Keyboard::Left:
-					m_pScene->GetSelector()->SetCoordAndPosition(Direction::Left);
+					m_pSelector->SetCoordAndPosition(Direction::Left);
 					break;
 
 				case sf::Keyboard::Delete:
-					m_pScene->GetAlgorithmManager()->Abort();
-					m_pScene->GetGrid()->ClearGrid();
+					m_pAlgorithmManager->Abort();
+					m_pGrid->ClearGrid();
 					break;
 
 				case sf::Keyboard::BackSpace:
-					m_pScene->GetAlgorithmManager()->Abort();
+					m_pAlgorithmManager->Abort();
 					break;
 
 				case sf::Keyboard::Comma:
-					switch(m_pScene->GetAlgorithmManager()->AnimSpeed)
+					switch (m_pAlgorithmManager->AnimSpeed)
 					{
-						case Fast: m_pScene->GetAlgorithmManager()->AnimSpeed = Normal; break;
-						case Instant: m_pScene->GetAlgorithmManager()->AnimSpeed = Fast; break;
+						case Fast: m_pAlgorithmManager->AnimSpeed = Normal; break;
+						case Peak: m_pAlgorithmManager->AnimSpeed = Fast; break;
 					}
-					m_pScene->GetDisplay()->SetSpeed(m_pScene->GetAlgorithmManager()->AnimSpeed);
+					m_pDisplay->SetSpeed(m_pAlgorithmManager->AnimSpeed);
 					break;
 
 				case sf::Keyboard::Period:
-					switch (m_pScene->GetAlgorithmManager()->AnimSpeed)
+					switch (m_pAlgorithmManager->AnimSpeed)
 					{
-					case Normal: m_pScene->GetAlgorithmManager()->AnimSpeed = Fast; break;
-					case Fast: m_pScene->GetAlgorithmManager()->AnimSpeed = Instant; break;
+						case Normal: m_pAlgorithmManager->AnimSpeed = Fast; break;
+						case Fast:   m_pAlgorithmManager->AnimSpeed = Peak; break;
 					}
-					m_pScene->GetDisplay()->SetSpeed(m_pScene->GetAlgorithmManager()->AnimSpeed);
+					m_pDisplay->SetSpeed(m_pAlgorithmManager->AnimSpeed);
 					break;
 
 				case sf::Keyboard::Num1: case sf::Keyboard::Numpad1:
-					m_pScene->GetAlgorithmManager()->Abort();
-					m_pScene->GetAlgorithmManager()->Execute(std::make_shared<BreadthFirstSearch>());
+					m_pAlgorithmManager->Abort();
+					m_pAlgorithmManager->Execute(std::make_shared<BreadthFirstSearch>());
 					break;
 
 				case sf::Keyboard::Num2: case sf::Keyboard::Numpad2:
-					m_pScene->GetAlgorithmManager()->Abort();
-					m_pScene->GetAlgorithmManager()->Execute(std::make_shared<DepthFirstSearch>());
+					m_pAlgorithmManager->Abort();
+					m_pAlgorithmManager->Execute(std::make_shared<DepthFirstSearch>());
 					break;
 
 				case sf::Keyboard::Num3: case sf::Keyboard::Numpad3:
-					m_pScene->GetAlgorithmManager()->Abort();
-					m_pScene->GetAlgorithmManager()->Execute(std::make_shared<DijkstrasAlgorithm>());
+					m_pAlgorithmManager->Abort();
+					m_pAlgorithmManager->Execute(std::make_shared<DijkstrasAlgorithm>());
 					break;
 
 				case sf::Keyboard::Num4: case sf::Keyboard::Numpad4:
-					m_pScene->GetAlgorithmManager()->Abort();
-					m_pScene->GetAlgorithmManager()->Execute(std::make_shared<AStar>());
+					m_pAlgorithmManager->Abort();
+					m_pAlgorithmManager->Execute(std::make_shared<AStar>());
 					break;
 			}
 		}
@@ -129,7 +130,7 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 
 		case sf::Event::MouseMoved:
 		{
-			m_pScene->GetSelector()->SetCoordAndPosition((sf::Vector2f)sf::Mouse::getPosition(*pWindow));
+			m_pSelector->SetCoordAndPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(*pWindow)));
 		}
 		break;
 
@@ -137,11 +138,11 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 		{
 			if (pEvent->mouseWheel.delta > 0)
 			{
-				m_pScene->GetGrid()->Zoom(-8);
+				m_pGrid->Zoom(-8);
 			}
 			else if (pEvent->mouseWheel.delta < 0)
 			{
-				m_pScene->GetGrid()->Zoom(8);
+				m_pGrid->Zoom(8);
 			}
 		}
 		break;
@@ -150,13 +151,13 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 		{
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::WallTile);
-				m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+				m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::WallTile);
+				m_pAlgorithmManager->ReExecuteIfRequired();
 			}
 			else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 			{
-				m_pScene->GetGrid()->SetTileType(m_pScene->GetSelector()->GetCoord(), TileType::Default);
-				m_pScene->GetAlgorithmManager()->ReExecuteIfRequired();
+				m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::Default);
+				m_pAlgorithmManager->ReExecuteIfRequired();
 			}
 		}
 		break;

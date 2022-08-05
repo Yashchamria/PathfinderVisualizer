@@ -14,7 +14,7 @@ Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 	m_pDisplay = std::make_shared<Display>(Config::displayHeight, DISPLAY_COLOR, pWindow->getSize(), sf::Vector2u(Config::gridColumns, Config::gridRows));
 
 	m_pGrid = std::make_shared<Grid>(sf::Vector2u(Config::gridColumns, Config::gridRows), (sf::Vector2f)pWindow->getSize(),
-		sf::Vector2f(pWindow->getSize().x, Config::displayHeight));
+		sf::Vector2f((float)pWindow->getSize().x, Config::displayHeight));
 
 	const float selectorSize = pWindow->getSize().x / (float)Config::gridColumns;
 	m_pSelector = std::make_shared<Selector>(sf::Vector2u(0, 0), selectorSize, sf::Color::Transparent,
@@ -41,7 +41,7 @@ void Scene::Initialize() const
 	}
 }
 
-void Scene::Update(float deltaTime)
+void Scene::Update(float deltaTime) const
 {
 	for (const auto& pGameObject : m_pGameObjects)
 	{

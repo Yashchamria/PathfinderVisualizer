@@ -11,7 +11,7 @@ public:
 	constexpr static float displayHeight = windowHeight / 4.0f;
 
 	constexpr static uint64_t gridColumns = 64;
-	constexpr static uint64_t gridRows = gridColumns / (windowWidth / (windowHeight - displayHeight));
+	constexpr static uint64_t gridRows = (uint64_t)(gridColumns / (windowWidth / (windowHeight - displayHeight)));
 
 	constexpr static float gridOutlineStrength = 0.1f;
 
@@ -37,5 +37,5 @@ enum VisualSpeed : uint32_t
 {
 	Normal = 2,
 	Fast = 4,
-	Instant = 8,
+	Peak = 8,
 };

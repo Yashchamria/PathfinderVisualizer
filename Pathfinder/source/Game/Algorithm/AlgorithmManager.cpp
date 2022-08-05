@@ -15,7 +15,7 @@ AlgorithmManager::AlgorithmManager(const std::shared_ptr<Grid>& pGrid, const std
 
 void AlgorithmManager::Update(float deltaTime)
 {
-	uint32_t iteration = AnimSpeed * 100.f * deltaTime;
+	uint32_t iteration = AnimSpeed;
 
 	while(m_bAnimate && iteration > 0)
 	{

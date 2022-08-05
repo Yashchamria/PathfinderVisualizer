@@ -30,8 +30,8 @@ void Selector::SetSizeAndPosition(float size)
 void Selector::SetCoordAndPosition(const sf::Vector2f worldPosition)
 {
 	const float size = m_body.getSize().x;
-	const unsigned int coordX = floor(worldPosition.x / size);
-	const unsigned int coordY = floor((worldPosition.y - Config::displayHeight) / size);
+	const auto coordX = (uint32_t)floor(worldPosition.x / size);
+	const auto coordY = (uint32_t)floor((worldPosition.y - Config::displayHeight) / size);
 
 	SetCoordAndPosition(sf::Vector2u{coordX, coordY});
 }

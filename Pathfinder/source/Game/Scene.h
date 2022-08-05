@@ -14,7 +14,7 @@ public:
 	~Scene();
 
 	void Initialize() const;
-	void Update(float deltaTime);
+	void Update(float deltaTime) const;
 	void Draw(const std::shared_ptr<sf::RenderWindow>& renderWindow) const;
 
 private:
