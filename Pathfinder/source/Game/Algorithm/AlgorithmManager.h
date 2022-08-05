@@ -18,13 +18,15 @@ public:
 	void ReExecuteIfRequired();
 	void Abort();
 
-private:
-	bool m_bAnimate {false};
-	std::queue<std::pair<std::shared_ptr<Tile>, sf::Color>> m_tileAnim;
+public:
+	VisualSpeed AnimSpeed {Normal};
 
 private:
-	const std::shared_ptr<Grid> m_pGrid{};
-	const std::shared_ptr<Display> m_pDisplay{};
+	bool m_bAnimate {false};
+
+private:
+	const std::shared_ptr<Grid> m_pGrid {};
+	const std::shared_ptr<Display> m_pDisplay {};
 
 private:
 	std::shared_ptr<IAlgorithm> m_pCurrentAlgorithm;

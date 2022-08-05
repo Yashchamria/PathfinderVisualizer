@@ -6,8 +6,8 @@ class InputManager;
 class Game final
 {
 public:	
-	Game(const std::string& windowName, const sf::Vector2u screenSize);
-	void Run(const float deltaTime = 1.0f/60.0f) const;
+	Game(const std::string& windowName, const sf::Vector2u windowSize);
+	void Run() const;
 
 private:
 	void ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& event) const;

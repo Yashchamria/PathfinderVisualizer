@@ -2,7 +2,7 @@
 #include "GameCore/Objects/GameObject.h"
 
 struct AlgorithmData;
-enum class VisualSpeed : int;
+enum VisualSpeed : uint32_t;
 
 class Display final : public GameObject
 {

@@ -12,10 +12,12 @@
 #include "Game/Algorithm/DepthFirstSearch.h"
 #include "Game/Algorithm/DijkstrasAlgorithm.h"
 #include "Game/Algorithm/Astar.h"
+#include "Game/Objects/UI/Display.h"
 
 
 InputManager::InputManager(const std::shared_ptr<Scene>& pScene): m_pScene(pScene)
 {
+	m_pScene->GetDisplay()->SetSpeed(Normal);
 }
 
 void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, const std::shared_ptr<sf::Window>& pWindow)
@@ -85,11 +87,21 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 					break;
 
 				case sf::Keyboard::Comma:
-					// TODO - Decrement visualization speed.
+					switch(m_pScene->GetAlgorithmManager()->AnimSpeed)
+					{
+						case Fast: m_pScene->GetAlgorithmManager()->AnimSpeed = Normal; break;
+						case Instant: m_pScene->GetAlgorithmManager()->AnimSpeed = Fast; break;
+					}
+					m_pScene->GetDisplay()->SetSpeed(m_pScene->GetAlgorithmManager()->AnimSpeed);
 					break;
 
 				case sf::Keyboard::Period:
-					// TODO - Increment visualization speed.
+					switch (m_pScene->GetAlgorithmManager()->AnimSpeed)
+					{
+					case Normal: m_pScene->GetAlgorithmManager()->AnimSpeed = Fast; break;
+					case Fast: m_pScene->GetAlgorithmManager()->AnimSpeed = Instant; break;
+					}
+					m_pScene->GetDisplay()->SetSpeed(m_pScene->GetAlgorithmManager()->AnimSpeed);
 					break;
 
 				case sf::Keyboard::Num1: case sf::Keyboard::Numpad1:

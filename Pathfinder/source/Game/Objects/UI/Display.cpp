@@ -52,11 +52,9 @@ void Display::SetSpeed(const VisualSpeed speed) const
 
 	switch (speed)
 	{
-		case VisualSpeed::Slow:		speedText = "Slow"; break;
-		case VisualSpeed::Average:	speedText = "Normal"; break;
-		case VisualSpeed::Fast:		speedText = "Fast"; break;
-		case VisualSpeed::SuperFast:speedText = "SuperFast"; break;
-		case VisualSpeed::Instant:	speedText = "Instant"; break;
+		case Normal:	speedText = "Normal"; break;
+		case Fast:		speedText = "Fast"; break;
+		case Instant:	speedText = "Instant"; break;
 	}
 	m_pLabels[3]->setString(m_labelText[3] + speedText);
 }

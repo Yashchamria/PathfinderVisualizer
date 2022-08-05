@@ -12,7 +12,7 @@ public:
 
 public:
 	void SetSizeAndPosition(float size);
-	void Animate(const sf::Color color);
+	void Animate(const sf::Color color, const VisualSpeed animSpeed = Normal);
 
 public:
 	TileType Type;
@@ -24,4 +24,5 @@ private:
 
 private:
 	bool m_bAnimate {false};
+	VisualSpeed m_animSpeed {Normal};
 };

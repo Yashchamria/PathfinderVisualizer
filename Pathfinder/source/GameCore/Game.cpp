@@ -8,6 +8,7 @@ Game::Game(const std::string& windowName, const sf::Vector2u windowSize)
 {
 	m_pRenderWindow = std::make_shared<sf::RenderWindow>
 	(sf::VideoMode(windowSize.x, windowSize.y), windowName, sf::Style::Titlebar);
+	m_pRenderWindow->setFramerateLimit(Config::fps);
 	m_pView = std::make_shared<sf::View>(sf::Vector2f(0.0f, 0.0f), (sf::Vector2f)windowSize);
 
 	m_pScene = std::make_shared<Scene>(m_pRenderWindow);
@@ -38,7 +39,7 @@ void Game::ProcessGameWindowEvents(const std::shared_ptr<sf::Event>& pEvent) con
 	}
 }
 
-void Game::Run(const float deltaTime) const
+void Game::Run() const
 {
 	PrintGameInfo();
 	m_pScene->Initialize();
@@ -49,15 +50,8 @@ void Game::Run(const float deltaTime) const
 
 	while (m_pRenderWindow->isOpen())
 	{
-		//To get fixed time steps
-		timeSinceLastUpdate += clock.restart().asSeconds();
-
-		while (timeSinceLastUpdate > deltaTime)
-		{
-			timeSinceLastUpdate -= deltaTime;
-			ProcessGameWindowEvents(event);
-			m_pScene->Update(deltaTime);
-		}
+		ProcessGameWindowEvents(event);
+		m_pScene->Update(1.0f / Config::fps);
 		Draw();
 	}
 }

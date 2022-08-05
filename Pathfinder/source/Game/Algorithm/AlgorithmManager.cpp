@@ -8,7 +8,6 @@
 #include "Game/Objects/Grid/Tile.h"
 #include "Game/Objects/UI/Display.h"
 
-
 AlgorithmManager::AlgorithmManager(const std::shared_ptr<Grid>& pGrid, const std::shared_ptr<Display>& pDisplay)
 	: m_pGrid(pGrid), m_pDisplay(pDisplay), m_pCurrentData(std::make_shared<AlgorithmData>())
 {
@@ -16,16 +15,19 @@ AlgorithmManager::AlgorithmManager(const std::shared_ptr<Grid>& pGrid, const std
 
 void AlgorithmManager::Update(float deltaTime)
 {
-	if(m_bAnimate)
+	uint32_t iteration = AnimSpeed * 100.f * deltaTime;
+
+	while(m_bAnimate && iteration > 0)
 	{
 		AnimationSequence& sequence = m_pCurrentAlgorithm->GetAnimationSequence();
-		sequence.front().first->Animate(sequence.front().second);
+		sequence.front().first->Animate(sequence.front().second, AnimSpeed);
 		sequence.pop();
 
-		if(sequence.empty())
+		if (sequence.empty())
 		{
 			m_bAnimate = false;
 		}
+		--iteration;
 	}
 }
 

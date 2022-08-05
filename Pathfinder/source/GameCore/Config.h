@@ -15,7 +15,9 @@ public:
 
 	constexpr static float gridOutlineStrength = 0.1f;
 
+	constexpr static uint32_t fps = 90;
 	constexpr static float mouseSensitivity = 5.0f;
+
 
 	#define START_TILE_COLOR      sf::Color(57, 191, 66, 255)
 	#define END_TILE_COLOR        sf::Color(200, 60, 60, 255)
@@ -31,11 +33,9 @@ public:
 	#define SELECTOR_COLOR        sf::Color(250, 109, 5, 255)
 };
 
-enum class VisualSpeed
+enum VisualSpeed : uint32_t
 {
-	Slow = 16,
-	Average = 48,
-	Fast = 144,
-	SuperFast = 296,
-	Instant = 400,
+	Normal = 2,
+	Fast = 4,
+	Instant = 8,
 };

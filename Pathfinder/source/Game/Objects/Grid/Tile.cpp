@@ -17,7 +17,7 @@ void Tile::Update(float deltaTime)
 {
 	if(m_bAnimate)
 	{
-		m_body.setOutlineThickness(m_body.getOutlineThickness() + (m_body.getSize().x * 0.05f));
+		m_body.setOutlineThickness(m_body.getOutlineThickness() + (m_body.getSize().x * (float)m_animSpeed * 3.0f * deltaTime));
 
 		if(m_body.getOutlineThickness() > 0.0f)
 		{
@@ -37,9 +37,10 @@ void Tile::SetSizeAndPosition(float size)
 	m_body.setPosition({posX, posY});
 }
 
-void Tile::Animate(const sf::Color color)
+void Tile::Animate(const sf::Color color, const VisualSpeed animSpeed)
 {
 	m_bAnimate = true;
+	m_animSpeed = animSpeed;
 	m_body.setOutlineThickness(- m_body.getSize().x / 2.0f);
 	m_body.setOutlineColor(m_body.getFillColor());
 	m_body.setFillColor(color);
