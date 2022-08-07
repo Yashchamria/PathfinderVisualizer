@@ -24,6 +24,7 @@ private:
 	std::shared_ptr<Selector> m_pSelector;
 	std::shared_ptr<Display> m_pDisplay;
 	std::shared_ptr<AlgorithmManager> m_pAlgorithmManager;
+	sf::Font m_font;
 
 public:
 	[[nodiscard]] const std::shared_ptr<Grid>& GetGrid() const { return m_pGrid; }

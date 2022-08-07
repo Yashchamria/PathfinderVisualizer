@@ -2,7 +2,7 @@
 #include "Display.h"
 #include "Game/Algorithm/AlgorithmData.h"
 
-Display::Display(const float height, const sf::Color color, const sf::Vector2u windowSize, const sf::Vector2u gridSize) :
+Display::Display(const float height, const sf::Color color, const sf::Vector2u windowSize, const sf::Vector2u gridSize, const sf::Font& font) :
 	m_pCanvas(std::make_unique<sf::RectangleShape>(sf::Vector2f((float)windowSize.x, height)))
 {
 	// Setting up the widget box.
@@ -12,16 +12,9 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 	const sf::Vector2f canvasPos{ -(float)windowSize.x / 2.0f, -(float)windowSize.y / 2.0f };
 	m_pCanvas->setPosition(canvasPos);
 
-	// Loading the font.
-	#if PF_DEBUG
-	if (!m_pFont.loadFromFile("../Pathfinder/Data/font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
-	#elif PF_RELEASE
-	if (!m_pFont.loadFromFile("font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
-	#endif
-
 	// Setting the grid size label.
 	const std::string gridSizeText = std::to_string(gridSize.x) + " X " + std::to_string(gridSize.y);
-	m_pLabels[0] = std::make_unique<sf::Text>(gridSizeText, m_pFont, m_fontSize + m_fontSize / 2);
+	m_pLabels[0] = std::make_unique<sf::Text>(gridSizeText, font, m_fontSize + m_fontSize / 2);
 	m_pLabels[0]->setFillColor(sf::Color(242, 166, 73));
 	m_pLabels[0]->setOutlineThickness(3.0f);
 	m_pLabels[0]->setOutlineColor(sf::Color::Black);
@@ -33,7 +26,7 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 
 	for (int i = 1; i < m_totalLabels; i++)
 	{
-		m_pLabels[i] = std::make_unique<sf::Text>(m_labelText[i], m_pFont, m_fontSize);
+		m_pLabels[i] = std::make_unique<sf::Text>(m_labelText[i], font, m_fontSize);
 		m_pLabels[i]->setFillColor(sf::Color::Black);
 		m_pLabels[i]->setPosition(labelPosition);
 

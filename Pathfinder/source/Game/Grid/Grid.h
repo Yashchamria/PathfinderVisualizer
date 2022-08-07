@@ -8,7 +8,7 @@ enum class Direction : char;
 class Grid final: public GameObject
 {
 public:	
-	Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize);
+	Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize, const sf::Font& font);
 	~Grid() override;
 
 	void Update(float deltaTime) override;

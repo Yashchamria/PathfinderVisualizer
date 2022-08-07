@@ -11,10 +11,17 @@
 
 Scene::Scene(const std::shared_ptr<sf::RenderWindow>& pWindow)
 {
-	m_pDisplay = std::make_shared<Display>(Config::displayHeight, DISPLAY_COLOR, pWindow->getSize(), sf::Vector2u(Config::gridColumns, Config::gridRows));
+	// Loading the font.
+	#if PF_DEBUG
+	if (!m_font.loadFromFile("../Pathfinder/Data/font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
+	#elif PF_RELEASE
+	if (!m_font.loadFromFile("font/Pixellari.ttf")) { std::cout << "Font not found!\n"; }
+	#endif
+
+	m_pDisplay = std::make_shared<Display>(Config::displayHeight, DISPLAY_COLOR, pWindow->getSize(), sf::Vector2u(Config::gridColumns, Config::gridRows), m_font);
 
 	m_pGrid = std::make_shared<Grid>(sf::Vector2u(Config::gridColumns, Config::gridRows), (sf::Vector2f)pWindow->getSize(),
-		sf::Vector2f((float)pWindow->getSize().x, Config::displayHeight));
+		sf::Vector2f((float)pWindow->getSize().x, Config::displayHeight), m_font);
 
 	const float selectorSize = pWindow->getSize().x / (float)Config::gridColumns;
 	m_pSelector = std::make_shared<Selector>(sf::Vector2u(0, 0), selectorSize, sf::Color::Transparent,

@@ -12,6 +12,7 @@
 #include "Game/Algorithm/DepthFirstSearch.h"
 #include "Game/Algorithm/DijkstrasAlgorithm.h"
 #include "Game/Algorithm/Astar.h"
+#include "Game/Grid/Tile.h"
 #include "Game/UI/Display.h"
 
 
@@ -30,14 +31,20 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 			switch (pEvent->key.code)
 			{
 				case sf::Keyboard::Subtract: case sf::Keyboard::Dash:
-					m_pGrid->Zoom(-8);
-					m_pSelector->SetSizeAndPosition(Config::windowWidth / (float)m_pGrid->GetZoomLevel());
-					break;
+				{
+					const auto& tile = m_pGrid->GetTile(m_pSelector->GetCoord());
+					tile->SetWeightAndLabel(tile->Weight - 1);
+					m_pAlgorithmManager->ReExecuteIfRequired();
+				}
+				break;
 
 				case sf::Keyboard::Add: case sf::Keyboard::Equal:
-					m_pGrid->Zoom(8);
-					m_pSelector->SetSizeAndPosition(Config::windowWidth / (float)m_pGrid->GetZoomLevel());
-					break;
+				{
+					const auto& tile = m_pGrid->GetTile(m_pSelector->GetCoord());
+					tile->SetWeightAndLabel(tile->Weight + 1);
+					m_pAlgorithmManager->ReExecuteIfRequired();
+				}
+				break;
 
 				case sf::Keyboard::S:
 					m_pGrid->SetTileType(m_pSelector->GetCoord(), TileType::StartTile);

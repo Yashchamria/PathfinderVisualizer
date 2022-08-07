@@ -5,7 +5,7 @@
 #include "TileType.h"
 #include "Direction.h"
 
-Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize)
+Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf::Vector2f displaySize, const sf::Font& font)
 	: GridSize(gridSize), m_columnZoomLevel(gridSize.x)
 {
 	// Setting up the widget box.
@@ -21,8 +21,8 @@ Grid::Grid(const sf::Vector2u gridSize, const sf::Vector2f windowSize, const sf:
 	{
 		for (uint32_t y = 0; y < GridSize.y; y++)
 		{
-			const auto& pTile =std::make_shared<Tile>(sf::Vector2u(x, y),
-				tileSize * (1.0f - Config::gridOutlineStrength), TileType::Default, 1);
+			const auto& pTile =std::make_shared<Tile>(sf::Vector2u(x, y), tileSize * (1.0f - Config::gridOutlineStrength),
+				TileType::Default, 1, font);
 			m_pTiles.push_back(pTile);
 		}
 	}

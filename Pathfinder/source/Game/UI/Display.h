@@ -7,7 +7,7 @@ enum VisualSpeed : uint32_t;
 class Display final : public GameObject
 {
 public:
-	Display(const float height, const sf::Color color, const sf::Vector2u windowSize, const sf::Vector2u gridSize);
+	Display(const float height, const sf::Color color, const sf::Vector2u windowSize, const sf::Vector2u gridSize, const sf::Font& font);
 	void Draw(const std::shared_ptr<sf::RenderWindow>& pWindow) override;
 
 public:
@@ -18,7 +18,6 @@ public:
 
 private:
 	std::unique_ptr<sf::RectangleShape> m_pCanvas{};
-	sf::Font m_pFont;
 
 	uint8_t m_fontSize = 19;
 	static constexpr uint8_t m_totalLabels = 11;
