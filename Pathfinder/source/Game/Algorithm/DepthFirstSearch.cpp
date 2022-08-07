@@ -37,7 +37,7 @@ std::shared_ptr<AlgorithmData> DepthFirstSearch::OnExecute(const std::shared_ptr
 		{
 			std::stack<std::shared_ptr<Tile>> path;
 			auto pTile = tailSequence[visitingTile];
-			pathCost += pTile->Weight;
+			pathCost += visitingTile->Weight;
 	
 			while (pTile->Type != TileType::StartTile)
 			{

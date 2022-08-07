@@ -35,7 +35,7 @@ std::shared_ptr<AlgorithmData> BreadthFirstSearch::OnExecute(const std::shared_p
 		{
 			std::stack<std::shared_ptr<Tile>> path;
 			auto pTile = tailSequence[visitingTile];
-			pathCost += pTile->Weight;
+			pathCost += visitingTile->Weight;
 
 			while (pTile->Type != TileType::StartTile)
 			{
