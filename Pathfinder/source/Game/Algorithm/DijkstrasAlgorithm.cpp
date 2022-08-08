@@ -2,125 +2,80 @@
 #include "DijkstrasAlgorithm.h"
 
 #include "AlgorithmData.h"
+#include "Game/Grid/Grid.h"
 #include "Game/Grid/Tile.h"
 #include "Game/Grid/TileType.h"
-#include "Game/Grid/Direction.h"
 
 std::shared_ptr<AlgorithmData> DijkstrasAlgorithm::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
-	//Initializing all the tiles to unvisited and setting the distance to infinite.
-	/*for (int x = 0; x < GetGrid()->GridSize.x; x++)
+	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> openTiles;
+	std::vector<uint32_t> minCost(pGrid->GridSize.x * pGrid->GridSize.y, UINT32_MAX);
+
+	int pathCost = 0;
+	int tilesExplored = 0;
+	std::unordered_map<std::shared_ptr<Tile>, std::shared_ptr<Tile>> tailSequence;
+
+	openTiles.push({0, pGrid->GetStartIndex()});
+	minCost[pGrid->GetStartIndex()] = 0;
+
+	while (!openTiles.empty())
 	{
-		for (int y = 0; y < GetGrid()->GridSize.y; y++)
+		tilesExplored++;
+		const uint32_t visitingIndex = openTiles.top().second;
+		const auto& visitingTile = pGrid->GetTile(visitingIndex);
+
+		openTiles.pop();
+
+		if (visitingIndex != pGrid->GetStartIndex() && visitingIndex != pGrid->GetEndIndex())
 		{
-			Tile* pTile = GetGrid()->GetTile(sf::Vector2u(x, y)).get();
-	
-			if (pTile->Type == TileType::WallTile)
-				continue;
-	
-			m_totalCostfromStartTile.insert(std::make_pair(pTile, UINT_MAX));
-			m_IsTileVisited.insert(std::make_pair(pTile, false));
+			m_animationSequence.push({ visitingTile, PROCESSED_TILE_COLOR });
 		}
-	}
 
-	//Dealing with the Start Tile
-	Tile* StartTile = GetGrid()->GetStartTile().get();
-
-	m_totalCostfromStartTile[StartTile] = 0;
-	AddToClosestPreviousTile(StartTile, StartTile);
-	ProcessNeighbourTiles(StartTile);
-	IncrementTileExplored();
-
-	while (!m_pOpenTiles.empty() && !IsPathFound() && !IsExecutionStopped())
-	{
-		Tile* pTile = GetPriorityTile();
-
-		if (pTile)
+		// If the path is discovered.
+		if (visitingTile->Type == TileType::EndTile)
 		{
-			if (pTile->Coord == GetGrid()->GetEndTile()->Coord)
+			std::stack<std::shared_ptr<Tile>> path;
+			auto pTile = tailSequence[visitingTile];
+			pathCost += visitingTile->Weight;
+
+			while (pTile->Type != TileType::StartTile)
 			{
-				SetPathFound(true);
-				break;
+				path.push(pTile);
+				pathCost += pTile->Weight;
+				pTile = tailSequence[pTile];
 			}
-		}
 
-		ProcessNeighbourTiles(pTile);
-	}*/
-	return std::make_shared<AlgorithmData>();
-}
-
-void DijkstrasAlgorithm::ProcessNeighbourTiles(Tile* pTile)
-{
-	if (pTile == nullptr) { return; }
-
-	m_IsTileVisited[pTile] = true;
-
-	//AddToTileAnimationArray(pTile, TileAnimState::Processed);
-	
-	if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) != m_pOpenTiles.end())
-	{
-		m_pOpenTiles.erase(std::remove(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile), m_pOpenTiles.end());
-	}
-
-	//Look for neighboring tiles and update them.
-	sf::Vector2u CurrentTileCoord = pTile->Coord;
-
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Right).get(), pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Left).get() , pTile);
-}
-
-void DijkstrasAlgorithm::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
-{
-	if (pTile == nullptr) { return; }
-	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
-	{
-		//Stores the previous tile and updates the total cost if valid.
-		unsigned int newCost = m_totalCostfromStartTile[pPreviousTile] + pTile->Weight;
-
-		if (newCost <= m_totalCostfromStartTile[pTile])
-		{
-			m_totalCostfromStartTile[pTile] = newCost;
-
-			//AddToClosestPreviousTile(pTile, pPreviousTile);
-		}
-
-		//Pushes the tile to the open list.
-		if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) == m_pOpenTiles.end())
-		{
-			//AddToTileAnimationArray(pTile, TileAnimState::Processing);
-
-			m_pOpenTiles.push_back(pTile);
-			//IncrementTileExplored();
-		}
-	}
-}
-
-//Searches the open list and returns the tile with the shortest cost from the start.
-Tile* DijkstrasAlgorithm::GetPriorityTile()
-{
-	std::pair<Tile*,unsigned int> MinDistanceTile = std::make_pair(nullptr , UINT_MAX);
-
-	for (Tile* pTile : m_pOpenTiles)
-	{
-		if (m_totalCostfromStartTile.find(pTile) != m_totalCostfromStartTile.end()) 
-		{
-			if (m_totalCostfromStartTile[pTile] <= MinDistanceTile.second)
+			while (!path.empty())
 			{
-				MinDistanceTile = std::make_pair(pTile, m_totalCostfromStartTile[pTile]);
+				m_animationSequence.push({ path.top(), FOUND_TILE_COLOR });
+				path.pop();
+			}
+			break;
+		}
+
+		// Inserts the valid neighbors to the open list.
+		for (const uint32_t& index : pGrid->GetValidNeighborIndices(visitingIndex))
+		{
+			const auto& neighbor = pGrid->GetTile(index);
+
+			if (neighbor->Type != TileType::WallTile)
+			{
+				if (minCost[visitingIndex] + neighbor->Weight < minCost[index])
+				{
+					minCost[index] = minCost[visitingIndex] + neighbor->Weight;
+					openTiles.push({ minCost[index], index });
+
+					tailSequence[neighbor] = visitingTile;
+
+					if (index != pGrid->GetStartIndex() && index != pGrid->GetEndIndex())
+					{
+						m_animationSequence.push({ neighbor, PROCESSING_TILE_COLOR });
+					}
+				}
 			}
 		}
 	}
-	
-	return MinDistanceTile.first;
-}
 
-void DijkstrasAlgorithm::OnAbort()
-{
-	m_pOpenTiles.clear();
-	m_pOpenTiles.shrink_to_fit();
-
-	m_totalCostfromStartTile.clear();
-	m_IsTileVisited.clear();
+	return std::make_shared<AlgorithmData>(R"(Dijkstra's shortest path)", InvalidData,
+		pathCost == 0 ? InvalidData : std::to_string(pathCost), std::to_string(tilesExplored));
 }
