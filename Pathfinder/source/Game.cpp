@@ -66,34 +66,31 @@ void Game::Draw() const
 
 void Game::PrintGameInfo()
 {
-	std::cout << "Welcome to Pathfinder Visualizer!!\n\n";
+	std::cout << "****************** Grid Navigation ******************\n\n";
 
-	std::cout << "Let's go over the simple shortcuts to navigate through the application.\n\n";
+	std::cout << "Mouse | Arrow keys: Moves the tile selector.\n";
+	std::cout << "Mouse scroll:       Zoom in or out.\n";
 
-	std::cout << "Use 'Mouse pointer' - To change the Tile Selector location.\n";
-	std::cout << "Or, Use 'Arrow Keys' - To change the Tile Selector location.\n\n";
+	std::cout << "\n****************** Tile Creation ******************\n\n";
 
-	std::cout << "Use 'Scroll Wheel' - To Zoom In or Zoom Out the Grid.\n";
-	std::cout << "Or, Press '+' - To Zoom Out.\n";
-	std::cout << "And Press '-' - To Zoom In.\n\n";
-	
-	std::cout << "Press 'S' - To set the Start Tile.\n";
-	std::cout << "Press 'E' - To set the End Tile.\n";
-	std::cout << "Press 'W' - To create the Wall Tile.\n";
-	std::cout << "Press 'D' - To reset the tile to Default Tile.\n\n";
-	
-	std::cout << "Press 'Delete' - To clear the entire grid.\n\n";
-	
-	std::cout << "Press '1' - To run Breadth First Search.\n";
-	std::cout << "Press '2' - To run Depth First Search.\n";
-	std::cout << "Press '3' - To run Dijkstra's Algorithm.\n";
-	std::cout << "Press '4' - To run Astar(*) Algorithm.\n";
-	std::cout << "Press 'R' - To Generate Random Start, End and Wall Tiles.\n\n";
-	
-	std::cout << "Press '<' - To decrease the Visualization Speed.\n";
-	std::cout << "Press '>' - To increase the Visualization Speed.\n\n";
-	
-	std::cout << "Press 'Backspace' - To clear the algorithm search from the grid.\n\n";
+	std::cout << "S:      Creates start tile.\n";
+	std::cout << "E:      Creates end tile.\n";
+	std::cout << "W:      Creates wall tile.\n";
+	std::cout << "D:      Creates default tile.\n";
+	std::cout << "+ | -:  Add or subtract tile weight.\n";
+	std::cout << "R:      Generates random grid layout.\n";
+	std::cout << "Delete: Clears the grid.\n";
 
-	std::cout << "That's all. Have a great day!!";
+	std::cout << "\n****************** Algorithm Visualization ******************\n\n";
+
+	
+	std::cout << "1:         Runs Breadth First Search\n";
+	std::cout << "2:         Runs Depth First Search\n";
+	std::cout << "3:         Runs Dijkstra's Algorithm\n";
+	std::cout << "4:         Runs AStar(*) Algorithm\n";
+	
+	std::cout << "< | >:     Adjust the Visualization speed.\n";
+	std::cout << "Backspace: Clears the algorithm search.\n";
+
+	std::cout << "\n******************************************************\n";
 }
