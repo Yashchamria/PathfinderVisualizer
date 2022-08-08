@@ -34,6 +34,8 @@ public:
 	void ResetDefaultTiles() const;
 
 	void GenerateRandomWalls(const int wallPercent) const;
+	void GenerateRandomWeights(const int min, const int max) const;
+
 
 public:
 	[[nodiscard]] const std::shared_ptr<Tile>& GetTile(const sf::Vector2u coord) const { return m_pTiles[GetTileIndex(coord)]; }

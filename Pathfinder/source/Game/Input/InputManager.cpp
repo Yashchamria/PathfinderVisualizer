@@ -67,7 +67,12 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 					break;
 
 				case sf::Keyboard::R:
+					m_pGrid->ClearGrid();
 					m_pGrid->GenerateRandomWalls(20);
+					m_pGrid->GenerateRandomWeights(1, 4);
+					m_pGrid->SetTileType({ rand() % (m_pGrid->GridSize.x / 4), rand() % (m_pGrid->GridSize.y - 1)}, TileType::StartTile);
+					m_pGrid->SetTileType({ rand() % ((m_pGrid->GridSize.x / 4)) + (3 * ((m_pGrid->GridSize.x / 4))), rand() % (m_pGrid->GridSize.y - 1)}, TileType::EndTile);
+
 					m_pAlgorithmManager->ReExecuteIfRequired();
 					break;
 
@@ -174,3 +179,4 @@ void InputManager::ProcessInputEvent(const std::shared_ptr<sf::Event>& pEvent, c
 		break;
 	}
 }
+

@@ -203,6 +203,17 @@ void Grid::GenerateRandomWalls(const int wallPercent) const
 			i++;
 		}
 
-		if(++loop > GridSize.x * GridSize.y) { break; }
+		if (++loop > GridSize.x * GridSize.y) { break; }
+	}
+}
+
+void Grid::GenerateRandomWeights(const int min, const int max) const
+{
+	for (const auto& pTile : m_pTiles)
+	{
+		if (pTile->Type != TileType::WallTile)
+		{
+			pTile->SetWeightAndLabel(rand() % max + min);
+		}
 	}
 }
