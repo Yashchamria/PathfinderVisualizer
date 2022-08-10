@@ -68,8 +68,8 @@ void Game::PrintGameInfo()
 {
 	std::cout << "****************** Grid Navigation ******************\n\n";
 
-	std::cout << "Mouse | Arrow keys: Moves the tile selector.\n";
-	std::cout << "Mouse scroll:       Zoom in or out.\n";
+	std::cout << "Mouse/Arrow keys: Moves the tile selector.\n";
+	std::cout << "Mouse scroll:     Zoom in or out.\n";
 
 	std::cout << "\n****************** Tile Creation ******************\n\n";
 
@@ -77,7 +77,7 @@ void Game::PrintGameInfo()
 	std::cout << "E:      Creates end tile.\n";
 	std::cout << "W:      Creates wall tile.\n";
 	std::cout << "D:      Creates default tile.\n";
-	std::cout << "+ | -:  Add or subtract tile weight.\n";
+	std::cout << "+/-:    Adjust the tile weight.\n";
 	std::cout << "R:      Generates random grid layout.\n";
 	std::cout << "Delete: Clears the grid.\n";
 
@@ -89,7 +89,7 @@ void Game::PrintGameInfo()
 	std::cout << "3:         Runs Dijkstra's Algorithm\n";
 	std::cout << "4:         Runs AStar(*) Algorithm\n";
 	
-	std::cout << "< | >:     Adjust the Visualization speed.\n";
+	std::cout << "</>:       Adjust the visualization speed.\n";
 	std::cout << "Backspace: Clears the algorithm search.\n";
 
 	std::cout << "\n******************************************************\n";

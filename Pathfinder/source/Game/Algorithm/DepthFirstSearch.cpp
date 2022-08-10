@@ -9,7 +9,7 @@
 
 std::shared_ptr<AlgorithmData> DepthFirstSearch::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
-	std::vector visitedTiles(pGrid->GridSize.x * pGrid->GridSize.y, false);
+	std::vector visitedTiles(pGrid->GetTiles().size(), false);
 	std::stack<uint32_t> openTiles;
 	openTiles.push(pGrid->GetStartIndex());
 
@@ -28,8 +28,6 @@ std::shared_ptr<AlgorithmData> DepthFirstSearch::OnExecute(const std::shared_ptr
 			m_animationSequence.push({ visitingTile, PROCESSED_TILE_COLOR });
 		}
 		openTiles.pop();
-
-		if(visitedTiles[visitingIndex]) { continue; }
 		visitedTiles[visitingIndex] = true;
 	
 		// If the path is discovered.

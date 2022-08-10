@@ -38,6 +38,8 @@ public:
 
 
 public:
+	[[nodiscard]] const std::vector<std::shared_ptr<Tile>>& GetTiles() const { return m_pTiles; }
+
 	[[nodiscard]] const std::shared_ptr<Tile>& GetTile(const sf::Vector2u coord) const { return m_pTiles[GetTileIndex(coord)]; }
 	[[nodiscard]] const std::shared_ptr<Tile>& GetTile(const uint32_t index) const { return m_pTiles[index]; }
 

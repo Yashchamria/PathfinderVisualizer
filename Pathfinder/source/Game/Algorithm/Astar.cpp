@@ -2,145 +2,106 @@
 #include "Astar.h"
 
 #include "AlgorithmData.h"
+#include "Game/Grid/Grid.h"
 #include "Game/Grid/Tile.h"
 #include "Game/Grid/TileType.h"
 
 std::shared_ptr<AlgorithmData> AStar::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
-	//Intializing all the tiles to unvisited and setting the distance to infinite.
-	/*for (unsigned int x = 0; x < GetGrid()->GridSize.x; x++)
+	std::vector<std::pair<int, uint32_t>> openTiles;
+	std::vector<std::pair<int, int>> minCost(pGrid->GetTiles().size(), { 1000000, 1000000 });
+
+	const auto& endCoord = static_cast<sf::Vector2i>(pGrid->GetEndTile()->Coord);
+
+	int pathCost = 0;
+	int tilesExplored = 0;
+	std::unordered_map<std::shared_ptr<Tile>, std::shared_ptr<Tile>> tailSequence;
+
+	openTiles.emplace_back(0, pGrid->GetStartIndex());
+	minCost[pGrid->GetStartIndex()] = { 0, 0 };
+
+	while (!openTiles.empty())
 	{
-		for (unsigned int y = 0; y < GetGrid()->GridSize.y; y++)
+		tilesExplored++;
+		uint32_t visitingIndex = 0;
+
+		int lowestFCost = INT_MAX;
+		int indexToPop = 0;
+
+		for (int i = 0; i < openTiles.size(); i++)
 		{
-			const auto& pTile = GetGrid()->GetTile(sf::Vector2u(x, y));
-	
-			if (pTile->Type == TileType::WallTile)
-				continue;
-	
-			m_finalCost.insert(std::make_pair(pTile.get(), std::make_pair(UINT_MAX, UINT_MAX)));
-			m_IsTileVisited.insert(std::pair <Tile*, bool>(pTile.get(), false));
+			const int currentFCost = minCost[openTiles[i].second].first + minCost[openTiles[i].second].second;
 
-			m_averageTileWeight += pTile->Weight;
-		}
-	}
-
-	m_averageTileWeight /= m_IsTileVisited.size();
-
-	//Dealing with the Start Tile
-	Tile* StartTile = GetGrid()->GetStartTile().get();
-
-	m_finalCost[StartTile] = std::make_pair(0, 0);
-	AddToClosestPreviousTile(StartTile, StartTile);
-	ProcessNeighbourTiles(StartTile);
-	IncrementTileExplored();
-
-	while (!m_pOpenTiles.empty() && !IsPathFound() && !IsExecutionStopped())
-	{
-		Tile* pTile = GetPriorityTile();
-
-		if (pTile)
-		{
-			if (pTile->Coord == GetGrid()->GetEndTile()->Coord)
+			if (currentFCost <= lowestFCost)
 			{
-				SetPathFound(true);
-				break;
+				lowestFCost = currentFCost;
+				visitingIndex = openTiles[i].second;
+				indexToPop = i;
 			}
 		}
+		const auto& visitingTile = pGrid->GetTile(visitingIndex);
+		openTiles.erase(openTiles.begin() + indexToPop);
 
-		ProcessNeighbourTiles(pTile);
-	}*/
-	return std::make_shared<AlgorithmData>();
-}
 
-void AStar::OnAbort()
-{
-}
-
-void AStar::ProcessNeighbourTiles(Tile* pTile)
-{
-	if (pTile == nullptr) { return; }
-
-	m_IsTileVisited[pTile] = true;
-
-	//AddToTileAnimationArray(pTile, TileAnimState::Processed);
-	
-	//Pop from the open list if exist
-	if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) != m_pOpenTiles.end())
-	{
-		m_pOpenTiles.erase(std::remove(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile), m_pOpenTiles.end());
-	}
-
-	//Look for neighbouring tiles and update them
-	sf::Vector2u CurrentTileCoord = pTile->Coord;
-
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Up).get()   , pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Down).get() , pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Right).get(), pTile);
-	//ProcessTileParameters(GetGrid()->GetNeighborTile(CurrentTileCoord, Direction::Left).get() , pTile);
-}
-
-void AStar::ProcessTileParameters(Tile* pTile, Tile* pPreviousTile)
-{
-	if (pTile == nullptr) { return; }
-
-	if (!m_IsTileVisited[pTile] && pTile->Type != TileType::WallTile)
-	{
-		unsigned int newGCost = m_finalCost[pPreviousTile].first + pTile->Weight;
-		unsigned int newHCost = GetTileHCost(pTile);
-
-		unsigned int newFCost = newGCost + newHCost;
-		unsigned int CurrentFCost = m_finalCost[pTile].first + m_finalCost[pTile].second;
-
-		//Stores the previous tile and updates the path costs if valid.
-		if (newFCost <= CurrentFCost)
+		if (visitingIndex != pGrid->GetStartIndex() && visitingIndex != pGrid->GetEndIndex())
 		{
-			m_finalCost[pTile] = std::make_pair(newGCost, newHCost);
-			//AddToClosestPreviousTile(pTile, pPreviousTile);
+			m_animationSequence.push({ visitingTile, PROCESSED_TILE_COLOR });
 		}
 
-		//Pushes the tile to the open list.
-		if (std::find(m_pOpenTiles.begin(), m_pOpenTiles.end(), pTile) == m_pOpenTiles.end())
+		// If the path is discovered.
+		if (visitingTile->Type == TileType::EndTile)
 		{
-			//AddToTileAnimationArray(pTile, TileAnimState::Processing);
+			std::stack<std::shared_ptr<Tile>> path;
+			auto pTile = tailSequence[visitingTile];
+			pathCost += visitingTile->Weight;
 
-			m_pOpenTiles.push_back(pTile);
-			//IncrementTileExplored();
-		}
-	}
-}
-
-//Searches the open list and returns the tile with the shortest cost from the start.
-Tile* AStar::GetPriorityTile()
-{
-	std::pair<Tile*, unsigned int> MinDistanceTile = std::make_pair(nullptr, UINT_MAX);
-
-	unsigned int CurrentFCost = UINT_MAX;
-
-	for (Tile* pTile : m_pOpenTiles)
-	{
-		if (m_finalCost.find(pTile) != m_finalCost.end())
-		{
-			CurrentFCost = m_finalCost[pTile].first + m_finalCost[pTile].second;
-
-			if (CurrentFCost <= MinDistanceTile.second)
+			while (pTile->Type != TileType::StartTile)
 			{
-				MinDistanceTile = std::make_pair(pTile, CurrentFCost);
+				path.push(pTile);
+				pathCost += pTile->Weight;
+				pTile = tailSequence[pTile];
+			}
+
+			while (!path.empty())
+			{
+				m_animationSequence.push({ path.top(), FOUND_TILE_COLOR });
+				path.pop();
+			}
+			break;
+		}
+
+		// Inserts the valid neighbors to the open list.
+		for (const uint32_t& index : pGrid->GetValidNeighborIndices(visitingIndex))
+		{
+			const auto& neighbor = pGrid->GetTile(index);
+
+			const int currentFCost = minCost[index].first + minCost[index].second;
+			if (neighbor->Type != TileType::WallTile)
+			{
+				// Calculating H-cost based on Manhattan distance.
+				const int gCost = minCost[visitingIndex].first + neighbor->Weight;
+				const int hCost = (std::abs((int)neighbor->Coord.x - endCoord.x) +
+					std::abs((int)neighbor->Coord.y - endCoord.y));
+				const int fCost = gCost + hCost;
+
+				if (fCost < currentFCost)
+				{
+					minCost[index] = { gCost, hCost };
+
+					//Pushes the tile to the open list.
+					openTiles.emplace_back(fCost, index);
+
+					tailSequence[neighbor] = visitingTile;
+
+					if (index != pGrid->GetStartIndex() && index != pGrid->GetEndIndex())
+					{
+						m_animationSequence.push({ neighbor, PROCESSING_TILE_COLOR });
+					}
+				}
 			}
 		}
 	}
-	
-	return MinDistanceTile.first;
-}
 
-unsigned int AStar::GetTileHCost(Tile* pTile)
-{
-	sf::Vector2u finalTileCoord;// = GetGrid()->GetEndTile()->Coord;
-	sf::Vector2u CurrentTileCoord = pTile->Coord;
-
-	unsigned int xValue = (unsigned int)std::abs((int)CurrentTileCoord.x - (int)finalTileCoord.x);
-	unsigned int yValue = (unsigned int)std::abs((int)CurrentTileCoord.y - (int)finalTileCoord.y);
-
-	unsigned int hcost = (xValue + yValue) * m_averageTileWeight;
-
-	return hcost;
+	return std::make_shared<AlgorithmData>("A* Search", InvalidData,
+		pathCost == 0 ? InvalidData : std::to_string(pathCost), std::to_string(tilesExplored));
 }

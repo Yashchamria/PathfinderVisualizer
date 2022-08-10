@@ -88,6 +88,7 @@ void Grid::ClearGrid()
 	for (const auto& pTile : m_pTiles)
 	{
 		pTile->Type = TileType::Default;
+		pTile->SetWeightAndLabel(1);
 		pTile->Animate(DEFAULT_TILE_COLOR);
 	}
 

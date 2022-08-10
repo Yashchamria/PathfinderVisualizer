@@ -8,8 +8,8 @@
 
 std::shared_ptr<AlgorithmData> DijkstrasAlgorithm::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
-	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> openTiles;
-	std::vector<uint32_t> minCost(pGrid->GridSize.x * pGrid->GridSize.y, UINT32_MAX);
+	std::priority_queue<std::pair<int, uint32_t>, std::vector<std::pair<int, uint32_t>>, std::greater<>> openTiles;
+	std::vector<int> minCost(pGrid->GetTiles().size(), INT_MAX);
 
 	int pathCost = 0;
 	int tilesExplored = 0;
@@ -60,10 +60,12 @@ std::shared_ptr<AlgorithmData> DijkstrasAlgorithm::OnExecute(const std::shared_p
 
 			if (neighbor->Type != TileType::WallTile)
 			{
-				if (minCost[visitingIndex] + neighbor->Weight < minCost[index])
+				const int currentCost = minCost[visitingIndex] + neighbor->Weight;
+
+				if (currentCost < minCost[index])
 				{
-					minCost[index] = minCost[visitingIndex] + neighbor->Weight;
-					openTiles.push({ minCost[index], index });
+					minCost[index] = currentCost;
+					openTiles.push({currentCost, index});
 
 					tailSequence[neighbor] = visitingTile;
 

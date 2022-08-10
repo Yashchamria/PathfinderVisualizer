@@ -8,7 +8,7 @@
 
 std::shared_ptr<AlgorithmData> BreadthFirstSearch::OnExecute(const std::shared_ptr<Grid>& pGrid)
 {
-	std::vector visitedTiles(pGrid->GridSize.x * pGrid->GridSize.y, false);
+	std::vector visitedTiles(pGrid->GetTiles().size(), false);
 	std::queue<uint32_t> openTiles;
 	openTiles.push(pGrid->GetStartIndex());
 
