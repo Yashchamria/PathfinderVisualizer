@@ -21,12 +21,3 @@ public:
 	{
 	}
 };
-
-enum class AlgorithmState : char
-{
-	UnExecuted,
-	Executing,
-	Executed,
-	Visualizing,
-	Visualized,
-};
