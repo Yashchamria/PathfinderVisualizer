@@ -31,7 +31,7 @@ Display::Display(const float height, const sf::Color color, const sf::Vector2u w
 		m_pLabels[i]->setPosition(labelPosition);
 
 		if (i % 4 == 0) { labelPosition.y += 36.0f; labelPosition.x = initialLabelPosition.x; }
-		else { labelPosition.x += 285.0f; }
+		else { labelPosition.x += 300.0f; }
 	}
 }
 
